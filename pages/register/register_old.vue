@@ -94,7 +94,7 @@
           <u-input
             type="password"
             v-model="passwordConfirm"
-            placeholder="请再次输入密码"
+            placeholder="请在次输入密码"
           />
         </view>
       </view>
@@ -231,6 +231,7 @@ export default {
         return;
       }
       if (!isAgree) {
+        // this.$toast({ title: "请阅读并同意《服务协议》《隐私协议》" });
         this.showModel = true;
         return;
       }
@@ -241,18 +242,15 @@ export default {
         client: 2,
       };
       register(data).then((res) => {
-        if (res.code==1) {
+        if (res.code == 1) {
           this.$toast({ title: res.msg });
           //  跳转到登录页
           setTimeout(() => {
             uni.navigateBack();
           }, 1000);
         }
-      }
-	  
-	  );
+      });
     },
-	
 
     countDownFinish() {
       this.canSendSms = true;
