@@ -124,30 +124,126 @@
                 </navigator>
                 <!-- 领卷 -->
                 <swipers :is-swiper="false" :pid="23" height="170rpx" padding="20rpx 0 0"></swipers>
-                <!-- 活动专区 -->
-                <view class="special-area mt20">
-                    <view>
-                        <scroll-view style="white-space: nowrap" :scroll-x="true">
-                            <navigator
-                                class="item bg-white"
-                                v-for="(item, index) in activityArea"
-                                :key="index"
-                                hover-class="none"
-                                :url="`/bundle/pages/activity_detail/activity_detail?id=${item.id}&name=${item.title}&title=${item.name}`"
-                            >
-                                <view class="column-center">
-                                    <custom-image
-                                        width="300rpx"
-                                        height="436rpx"
-                                        :src="item.image"
-                                    ></custom-image>
-                                    <!-- <view class="title xxl">{{item.name}}</view>
-									<view class="desc primary xxs line1">{{item.title}}</view> -->
-                                </view>
-                            </navigator>
-                        </scroll-view>
-                    </view>
-                </view>
+                <!-- 超值秒杀 -->
+                <!-- <view class="special-area mt20" v-if="seckillGoods.length">
+                    <active-area type="seckill" progressBarColor="#FF2C3C" :lists="seckillGoods">
+                        <navigator
+                            slot="header"
+                            hover-class="none"
+                            class="row activity-header white"
+                            open-type="navigate"
+                            url="/bundle/pages/goods_seckill/goods_seckill"
+                        >
+                            <view class="title xxl bold">超值秒杀</view>
+                            <view class="row flex1">
+                            </view>
+                            <view class="row xs">
+                                更多
+                                <u-icon name="arrow-right" size="28"></u-icon>
+                            </view>
+                        </navigator>
+                    </active-area>
+                </view> -->
+				
+				<!-- 当季精选 -->
+				<view class="special-area mt20" v-if="seckillGoods.length">
+					<!-- 标题块 -->
+					<view class="title-container column-center">
+						<view class="title-text">当季精选</view>
+						<view class="desc-text">探索当季精彩活动，发现更多惊喜！</view>
+					</view>
+					<!-- 一日游 -->
+					<view class="goods-section">
+						<view class="activity-container">
+							<view v-if="newGoods.length && seting.news" class="new-goods">
+								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+									<navigator
+										slot="header"
+										hover-class="none"
+										open-type="navigate"
+										url=""
+									></navigator>
+								</active-area>
+							</view>
+						</view>
+					</view>
+				</view>
+				
+				<!-- 每周活动 -->
+				<view class="special-area mt20" v-if="seckillGoods.length">
+					<!-- 标题块 -->
+					<view class="title-container column-center">
+						<view class="title-text">每周活动</view>
+						<view class="desc-text">探索最新的精彩活动，发现更多惊喜！</view>
+					</view>
+					<!-- 一日游 -->
+					<view class="goods-section">
+						<!-- 竖向标题栏 -->
+						<view class="vertical-title">一日游</view>
+						<!-- 活动区域 -->
+						<view class="activity-container">
+							<view v-if="newGoods.length && seting.news" class="new-goods">
+								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+									<navigator
+										slot="header"
+										hover-class="none"
+										open-type="navigate"
+										url=""
+									></navigator>
+								</active-area>
+							</view>
+						</view>
+					</view>
+					<!-- 多日游 -->
+					<view class="goods-section">
+						<!-- 竖向标题栏 -->
+						<view class="vertical-title">多日游</view>
+						<!-- 活动区域 -->
+						<view class="activity-container">
+							<view v-if="newGoods.length && seting.news" class="new-goods">
+								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+									<navigator
+										slot="header"
+										hover-class="none"
+										open-type="navigate"
+										url=""
+									></navigator>
+								</active-area>
+							</view>
+						</view>
+					</view>
+				</view>
+				
+				<!-- 其他线路 -->
+				<view class="special-area mt20">
+				    <!-- 标题块 -->
+				    <view class="title-container column-center">
+				        <view class="title-text">其他线路</view>
+				        <view class="desc-text">发现更多惊喜</view>
+				    </view>
+				    <view>
+				        <scroll-view style="white-space: nowrap" :scroll-x="true">
+				            <navigator
+				                class="item bg-white"
+				                v-for="(item, index) in activityArea"
+				                :key="index"
+				                hover-class="none"
+				                :url="`/bundle/pages/activity_detail/activity_detail?id=${item.id}&name=${item.title}&title=${item.name}`"
+				            >
+				                <view class="column-center">
+				                    <custom-image
+				                        width="300rpx"
+				                        height="436rpx"
+				                        :src="item.image"
+				                    ></custom-image>
+				                    <!-- <view class="title xxl">{{item.name}}</view>
+				                    <view class="desc primary xxs line1">{{item.title}}</view> -->
+				                </view>
+				            </navigator>
+				        </scroll-view>
+				    </view>
+				</view>
+
                 <!-- 秒杀 -->
                 <!-- <view class="seckill mt20" v-if="seckillGoods.length">
                     <active-area type="seckill" progressBarColor="#FF2C3C" :lists="seckillGoods">
@@ -220,10 +316,6 @@
                                     src="/static/images/new_title.png"
                                 ></image>
                             </view>
-                            <!-- 	<view class="row xs">
-								更多
-								<u-icon name="arrow-right" size="28"></u-icon>
-							</view> -->
                         </navigator>
                     </active-area>
                 </view>
@@ -702,6 +794,9 @@ export default {
                     width: 300rpx;
                     border-radius: 20rpx;
                     display: inline-block;
+					//display: flex;
+					flex-direction: column;
+					gap: 20rpx;
                     overflow: hidden;
                     margin-right: 20rpx;
 
@@ -722,7 +817,11 @@ export default {
                 height: 90rpx;
                 padding: 0 20rpx;
             }
-
+			
+			.activity-container {
+			    flex: 1; /* 让活动区域填充剩余空间 */
+			}
+			
             .seckill {
                 .dec {
                     background-color: #fffbdb;
@@ -757,6 +856,75 @@ export default {
             }
         }
     }
+	.title-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 20rpx;
+	}
+
+	.title-text {
+		font-size: 40rpx;  /* 标题较大 */
+		font-weight: bold; /* 加粗 */
+		color: #000; /* 黑色 */
+	}
+
+	.desc-text {
+		font-size: 28rpx; /* 说明文字较小 */
+		color: #666; /* 灰色 */
+		margin-top: 10rpx;
+		text-align: center;
+	}
+	.goods-section {
+		display: flex;
+		align-items: stretch; /* 让左右两栏高度一致 */
+		width: 100%;
+	}
+
+	.vertical-title {
+	    writing-mode: vertical-rl; /* 竖向排列 */
+	    background-color: #ddd; /* 灰色背景 */
+	    padding: 20rpx;
+	    font-size: 30rpx;
+	    font-weight: bold;
+	    color: #333;
+	    text-align: center;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    min-width: 60rpx; /* 设定固定宽度 */
+	}
+
+	.goods-list {
+		flex: 1;
+		display: flex;
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+
+	.goods-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 10rpx;
+		width: 220rpx;
+	}
+
+	.goods-name {
+		font-size: 24rpx;
+		color: #333;
+		margin-top: 10rpx;
+		text-align: center;
+	}
+
+	.goods-price {
+		font-size: 26rpx;
+		font-weight: bold;
+		color: #FF5722;
+		margin-top: 5rpx;
+	}
+
+
 
     .coupon-pop-container {
         background-image: url(../../static/images/home_coupon_bg.png);
