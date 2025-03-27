@@ -3,16 +3,38 @@
 		<view v-if="type === 'double'" class="goods-double row-between">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mt20" hover-class="none" open-type="navigate"
 			 :url="'/pages/goods_details/goods_details?id=' + (isBargain ? item.goods_id : item.id)">
-				<view class="goods-img" style="width: 347rpx;height:347rpx;">
-					<custom-image :lazy-load="true" width="347rpx" height="347rpx" radius="10rpx" lazy-load :src="item.image"></custom-image>
-				</view>
-				<view class="goods-info">
-					<view class="goods-name line2">{{item.name}}</view>
-					<view class="price mt10 row">
-						<price-format color="#FF2C3C"  class="mr10" :first-size="34" :second-size="26" :subscript-size="26" :price="item.price" :weight="500"></price-format>
-						<price-format class="muted" :firstSize="24" :secondSize="24" :subscript-size="24" line-through :price="item.market_price || item.activity_price"></price-format>
-					</view>
-				</view>
+				<view class="goods-img" style="width: 100%; height: 260rpx;"> <!-- 原347rpx -->
+				      <custom-image 
+				        :lazy-load="true" 
+				        width="100%" 
+				        height="260rpx"
+				        radius="10rpx" 
+				        :src="item.image"
+				      ></custom-image>
+				    </view>
+					
+				    <view class="goods-info">
+				      <view class="goods-name line2">{{item.name}}</view>
+				      <view class="price">
+				        <price-format 
+				          color="#FF2C3C"  
+				          class="mr10" 
+				          :first-size="34" 
+				          :second-size="26" 
+				          :subscript-size="26" 
+				          :price="item.price" 
+				          :weight="500"
+				        ></price-format>
+				        <price-format 
+				          class="muted" 
+				          :firstSize="24" 
+				          :secondSize="24" 
+				          :subscript-size="24" 
+				          line-through 
+				          :price="item.market_price || item.activity_price"
+				        ></price-format>
+				      </view>
+				    </view>
 			</navigator>
 		</view>
 		<view v-if="type === 'hot'" class="goods-hot">
@@ -127,18 +149,49 @@
 <style lang="scss" scoped>
 	.goods-list {
 		.goods-double {
-			flex-wrap: wrap;
-			padding: 0 20rpx;
-			align-items: stretch;
-			.item {
-				width: 347rpx;
-				border-radius: 10rpx;
-
-				.goods-info {
-					padding: 10rpx;
-				}
-			}
+		  flex-wrap: wrap;
+		  padding: 0 10rpx;
+		  display: flex;
+		  justify-content: space-between;
+		  
+		  .item {
+		    width: calc(33.33% - 8rpx);
+		    margin-bottom: 16rpx;
+		    box-sizing: border-box;
+		    border-radius: 8rpx;
+		    background: #fff;
+		    overflow: hidden;
+		    
+		    // 图片容器
+		    .goods-img {
+		      height: 280rpx !important; /* 覆盖行内样式 */
+		      padding: 8rpx; /* 图片与边框间距 */
+		      
+		      custom-image {
+		        display: block;
+		        border-radius: 6rpx;
+		      }
+		    }
+		    
+		    // 商品信息区域（增加内间距）
+		    .goods-info {
+		      padding: 5rpx 10rpx 15rpx; /* 上 左右 下 */
+		      
+		      .goods-name {
+		        font-size: 24rpx;
+		        line-height: 1.4;
+		        padding: 0 4rpx; /* 文字与边框间距 */
+		        min-height: 68rpx; /* 固定高度避免抖动 */
+		      }
+		      
+		      .price {
+		        margin-top: 5rpx;
+		        padding: 0 4rpx; /* 价格与边框间距 */
+		      }
+		    }
+		  }
 		}
+		
 		
 		.goods-hot {
 			&.goods-home-hot {
@@ -178,7 +231,8 @@
 				}
 			}
 		} 
-
+		
+		
 		.goods-one .item {
 			padding: 20rpx;
 			

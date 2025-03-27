@@ -58,9 +58,29 @@
             </navigator>
         </view>
         <view class="contain">
+			<!-- 新增宣传图轮播区块 -->
+			<view class="promo-swiper">
+				<swiper 
+				  :autoplay="true" 
+				  :interval="3000" 
+				  :circular="true" 
+				  indicator-dots
+				  indicator-color="rgba(255,255,255,0.5)"
+				  indicator-active-color="#ffffff"
+				>
+				  <swiper-item v-for="(item, index) in promoList" :key="index">
+					<image 
+					  :src="item.image" 
+					  mode="widthFix" 
+					  class="swiper-image"
+					  @tap="handlePromoClick(item.link)"
+					/>
+				  </swiper-item>
+				</swiper>
+			</view>
             <view class="main">
                 <bubble-tips top="50rpx" :discharge="isDischarge"></bubble-tips>
-                <swipers :pid="1" height="322rpx" padding="20rpx 0"></swipers>
+                <swipers :pid="1" height="322rpx" padding="10rpx 0"></swipers>
                 <!-- 导航入口 -->
                 <view class="nav bg-white" v-if="navList.length">
                     <swiper :style="'height:' + navSwiperH + 'rpx;'" @change="swiperChange">
@@ -87,7 +107,7 @@
                     </view>
                 </view>
                 <!-- 资讯 -->
-                <navigator
+<!--                <navigator
                     v-if="news.length"
                     class="information bg-white row mt20"
                     hover-class="none"
@@ -122,7 +142,8 @@
                     </view>
                     <image class="icon-sm ml20" src="/static/images/arrow_right.png" />
                 </navigator>
-                <!-- 领卷 -->
+                -->
+				<!-- 领卷 -->
                 <swipers :is-swiper="false" :pid="23" height="170rpx" padding="20rpx 0 0"></swipers>
                 <!-- 超值秒杀 -->
                 <!-- <view class="special-area mt20" v-if="seckillGoods.length">
@@ -144,31 +165,14 @@
                         </navigator>
                     </active-area>
                 </view> -->
-				
 				<!-- 当季精选 -->
-				<view class="special-area mt20" v-if="seckillGoods.length">
-					<!-- 标题块 -->
+				<view class="special-area mt20" v-if="goodsList.length">
 					<view class="title-container column-center">
 						<view class="title-text">当季精选</view>
 						<view class="desc-text">探索当季精彩活动，发现更多惊喜！</view>
 					</view>
-					<!-- 一日游 -->
-					<view class="goods-section">
-						<view class="activity-container">
-							<view v-if="newGoods.length && seting.news" class="new-goods">
-								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
-									<navigator
-										slot="header"
-										hover-class="none"
-										open-type="navigate"
-										url=""
-									></navigator>
-								</active-area>
-							</view>
-						</view>
-					</view>
+					<goods-list :list="goodsList"></goods-list>
 				</view>
-				
 				<!-- 每周活动 -->
 				<view class="special-area mt20" v-if="seckillGoods.length">
 					<!-- 标题块 -->
@@ -213,6 +217,19 @@
 						</view>
 					</view>
 				</view>
+				<!-- 地区小团 -->
+				<view class="goods mt20" v-if="goodsList.length">
+				    <view class="title-container row-center">
+				        <text class="line"></text>
+							<view class="row">
+								<view class="title-text">地区小团</view>
+							</view>
+						<text class="line"></text>
+						<view class="desc-text">拼包车小团出行，行程自由，随走随停，下方为已经发起的活动，加入即成行，任何人均可发起小团活动，2人成行最多8人</view>
+				    </view>
+					<!-- 卡片展览 -->
+
+				</view>
 				
 				<!-- 其他线路 -->
 				<view class="special-area mt20">
@@ -243,7 +260,6 @@
 				        </scroll-view>
 				    </view>
 				</view>
-
                 <!-- 秒杀 -->
                 <!-- <view class="seckill mt20" v-if="seckillGoods.length">
                     <active-area type="seckill" progressBarColor="#FF2C3C" :lists="seckillGoods">
@@ -334,7 +350,7 @@
                 <loading-footer :status="status"></loading-footer>
             </view>
         </view>
-
+		
         <u-popup class="coupons-popup" v-model="showCoupop" mode="center">
             <view class="wrap">
                 <image class="coupon-bg" src="/static/images/home_coupon_bg.png"></image>
@@ -406,6 +422,20 @@ const app = getApp()
 export default {
     data() {
         return {
+			promoList: [
+			        {
+			          image: "/static/images/promo/banner1.jpg",
+			          link: "/pages/promo/detail?id=1"
+			        },
+			        {
+			          image: "/static/images/promo/banner2.jpg",
+			          link: "/pages/promo/detail?id=2"
+			        },
+			        {
+			          image: "/static/images/promo/banner3.jpg",
+			          link: "/pages/promo/detail?id=3"
+			        }
+			      ],
             scrollTop: 0,
             navSwiperH: 374,
             logo: '',
@@ -429,7 +459,8 @@ export default {
             isDischarge: true,
             enable: true,
             isShowDownload: false,
-            showPrivacyPopup: false //微信用户隐私协议
+            showPrivacyPopup: false ,//微信用户隐私协议
+			radius: '4rpx', // 可动态修改（如根据设备类型调整）
         }
     },
     async onLoad(options) {
@@ -605,6 +636,11 @@ export default {
             this.goodsList = data.dataList
             this.status = data.status
         },
+		// 轮换图，待开发
+		handlePromoClick(link) {
+		      uni.navigateTo({ url: link });
+		},
+		
         async tapMenu(item) {
             if (!this.isLogin) return toLogin()
             menuJump(item)
@@ -716,11 +752,36 @@ export default {
     }
 
     .contain {
+		/* 宣传图轮播容器 */
+		.promo-swiper {
+		  width: 100%;
+		  height: 350rpx; /* 根据设计稿调整高度 */
+		  overflow: hidden;
+		  border-radius: 16rpx;
+		  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+		  background-color: #f5f5f5; /* 默认背景色 */
+		}
+		
+		/* 轮播图片样式 */
+		.swiper-image {
+		  width: 100%;
+		  height: 100%;
+		  display: block;
+		  border-radius: inherit;
+		}
+		
+		/* 适配不同屏幕 */
+		@media (min-width: 750rpx) {
+		  .promo-swiper {
+		    height: 350rpx;
+		  }
+		}
+		
         .main {
             position: relative;
             z-index: 9;
-            padding: 0 20rpx;
-
+            padding: 0 10rpx;
+			
             .nav {
                 position: relative;
                 border-radius: 14rpx;
@@ -840,7 +901,7 @@ export default {
 
         .goods {
             .goods-title {
-                height: 100rpx;
+                height: 160rpx;
 
                 .line {
                     width: 58rpx;
@@ -849,10 +910,10 @@ export default {
                     margin: 0 22rpx;
                 }
 
-                .icon {
-                    width: 38rpx;
-                    height: 38rpx;
-                }
+                // .icon {
+                //     width: 38rpx;
+                //     height: 38rpx;
+                // }
             }
         }
     }
@@ -865,8 +926,8 @@ export default {
 
 	.title-text {
 		font-size: 40rpx;  /* 标题较大 */
-		font-weight: bold; /* 加粗 */
-		color: #000; /* 黑色 */
+		font-weight: bold;
+		color: #000;
 	}
 
 	.desc-text {
@@ -895,20 +956,33 @@ export default {
 	    min-width: 60rpx; /* 设定固定宽度 */
 	}
 
-	.goods-list {
-		flex: 1;
-		display: flex;
-		overflow-x: auto;
-		white-space: nowrap;
-	}
+	// .goods-list {
+	// 	flex: 1;
+	// 	display: flex;
+	// 	overflow-x: auto;
+	// 	white-space: nowrap;
+	// }
 
-	.goods-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 10rpx;
-		width: 220rpx;
-	}
+	// .goods-item {
+	// 	display: flex;
+	// 	flex-direction: column;
+	// 	align-items: center;
+	// 	padding: 10rpx;
+	// 	width: 50rpx;
+	// }
+	// .goods-list {
+	//   display: flex;
+	//   flex-wrap: wrap;
+	//   justify-content: space-between; /* 均匀分布 */
+	//   padding: 0 5rpx; /* 左右留白 */
+	// }
+	
+	// .goods-item {
+	//   width: calc(33.33% - 10rpx); /* 三列布局，考虑间距 */
+	//   margin-bottom: 5rpx;
+	//   box-sizing: border-box; /* 防止padding影响宽度 */
+	// }
+	
 
 	.goods-name {
 		font-size: 24rpx;
