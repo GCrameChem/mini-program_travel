@@ -3,11 +3,9 @@
 		<view v-if="type === 'double'" class="goods-double row-between">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mt20" hover-class="none" open-type="navigate"
 			 :url="'/pages/goods_details/goods_details?id=' + (isBargain ? item.goods_id : item.id)">
-				<view class="goods-img" style="width: 100%; height: 260rpx;"> <!-- 原347rpx -->
+				<view class="goods-img" style="width: 100%"> <!-- 原347rpx -->
 				      <custom-image 
 				        :lazy-load="true" 
-				        width="100%" 
-				        height="260rpx"
 				        radius="10rpx" 
 				        :src="item.image"
 				      ></custom-image>
@@ -150,32 +148,36 @@
 	.goods-list {
 		.goods-double {
 		  flex-wrap: wrap;
-		  padding: 0 10rpx;
+		  padding: 10 10rpx;
 		  display: flex;
 		  justify-content: space-between;
 		  
-		  .item {
+		.item {
 		    width: calc(33.33% - 8rpx);
-		    margin-bottom: 16rpx;
 		    box-sizing: border-box;
 		    border-radius: 8rpx;
 		    background: #fff;
 		    overflow: hidden;
+			border: 1rpx solid #dddddd; /* 细灰色边框 */
 		    
 		    // 图片容器
 		    .goods-img {
-		      height: 280rpx !important; /* 覆盖行内样式 */
-		      padding: 8rpx; /* 图片与边框间距 */
+				height: 250rpx !important;  /* 正方形的高度 */
+				width: 250rpx !important;   /* 正方形的宽度 */
+				padding: 10rpx; /* 图片与边框间距 */
 		      
-		      custom-image {
+		        .custom-image {
 		        display: block;
-		        border-radius: 6rpx;
+				border-radius: 6rpx;
+				width: 100%;
+				height: 100%;
+				object-fit: cover; /* 确保图片自适应容器 */
 		      }
 		    }
 		    
-		    // 商品信息区域（增加内间距）
+		    // 商品信息区域
 		    .goods-info {
-		      padding: 5rpx 10rpx 15rpx; /* 上 左右 下 */
+		      padding: 5rpx 10rpx; /* 上 左右 下 */
 		      
 		      .goods-name {
 		        font-size: 24rpx;

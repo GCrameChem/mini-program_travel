@@ -145,26 +145,6 @@
                 -->
 				<!-- 领卷 -->
                 <swipers :is-swiper="false" :pid="23" height="170rpx" padding="20rpx 0 0"></swipers>
-                <!-- 超值秒杀 -->
-                <!-- <view class="special-area mt20" v-if="seckillGoods.length">
-                    <active-area type="seckill" progressBarColor="#FF2C3C" :lists="seckillGoods">
-                        <navigator
-                            slot="header"
-                            hover-class="none"
-                            class="row activity-header white"
-                            open-type="navigate"
-                            url="/bundle/pages/goods_seckill/goods_seckill"
-                        >
-                            <view class="title xxl bold">超值秒杀</view>
-                            <view class="row flex1">
-                            </view>
-                            <view class="row xs">
-                                更多
-                                <u-icon name="arrow-right" size="28"></u-icon>
-                            </view>
-                        </navigator>
-                    </active-area>
-                </view> -->
 				<!-- 当季精选 -->
 				<view class="special-area mt20" v-if="goodsList.length">
 					<view class="title-container column-center">
@@ -226,9 +206,37 @@
 							</view>
 						<text class="line"></text>
 						<view class="desc-text">拼包车小团出行，行程自由，随走随停，下方为已经发起的活动，加入即成行，任何人均可发起小团活动，2人成行最多8人</view>
-				    </view>
-					<!-- 卡片展览 -->
-
+					</view>
+		
+					<!-- 可折叠卡片组件-->
+					<view>
+					    <expandable-card 
+					      v-for="(card, index) in tourCards"
+					      :key="card.id"
+					      :title="card.title"
+					      :desc="card.desc"
+					      :bgImage="card.bgImage"
+					      :initiallyExpanded="card.expanded"
+					      @toggle="handleCardToggle(index)"
+					    >
+						<!-- 使用插槽传递详细内容 -->
+						<template #content>
+						  <view class="card-detail" v-if="card.expanded">
+							<view v-if="newGoods.length && seting.news" class="new-goods">
+								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+									<navigator
+									  slot="header"
+									  hover-class="none"
+									  open-type="navigate"
+									  url=""
+									>
+									</navigator>
+								</active-area>
+							</view>
+						  </view>
+						</template>	
+					    </expandable-card>
+					</view>
 				</view>
 				
 				<!-- 其他线路 -->
@@ -420,22 +428,66 @@ import Cache from '@/utils/cache'
 import { getConfig, userShare, getRegisterCoupon } from '@/api/app'
 const app = getApp()
 export default {
+	props: {
+	    cardData: {
+	      type: Object,
+	      default: () => ({
+	        bgImage: '/static/card-bg1.jpg',
+	        title: '默认标题',
+	        desc: '默认描述文字'
+	      })
+	    },
+	    newGoods: {
+	      type: Array,
+	      default: () => []
+	    },
+	    seting: {
+	      type: Object,
+	      default: () => ({ news: true })
+	    }
+	},
     data() {
         return {
 			promoList: [
+				{
+				  image: "/static/images/promo/banner1.jpg",
+				  link: "/pages/promo/detail?id=1"
+				},
+				{
+				  image: "/static/images/promo/banner2.jpg",
+				  link: "/pages/promo/detail?id=2"
+				},
+				{
+				  image: "/static/images/promo/banner3.jpg",
+				  link: "/pages/promo/detail?id=3"
+				}
+			],
+			tourCards: [
 			        {
-			          image: "/static/images/promo/banner1.jpg",
-			          link: "/pages/promo/detail?id=1"
+			          id: 1,
+			          title: "三日及以上",
+			          desc: "4-8人小团，随走随停",
+			          bgImage: "/static/images/card-bg/3day.jpg",
+			          expanded: false,
+			          details: {}
 			        },
 			        {
-			          image: "/static/images/promo/banner2.jpg",
-			          link: "/pages/promo/detail?id=2"
+			          id: 2,
+			          title: "两日游",
+			          desc: "发起活动，10人即可成行",
+			          bgImage: "/static/images/card-bg/2day.jpg",
+			          expanded: false,
+			          details: {}
 			        },
-			        {
-			          image: "/static/images/promo/banner3.jpg",
-			          link: "/pages/promo/detail?id=3"
-			        }
-			      ],
+					{
+					  id: 3,
+					  title: "一日游",
+					  desc: "成都周边景区直通车",
+					  bgImage: "/static/images/card-bg/1day.jpg",
+					  expanded: false,
+					  details: {}
+					}
+			],
             scrollTop: 0,
             navSwiperH: 374,
             logo: '',
@@ -459,6 +511,7 @@ export default {
             isDischarge: true,
             enable: true,
             isShowDownload: false,
+			isExpanded: false, // 卡片默认不展开
             showPrivacyPopup: false ,//微信用户隐私协议
 			radius: '4rpx', // 可动态修改（如根据设备类型调整）
         }
@@ -636,7 +689,7 @@ export default {
             this.goodsList = data.dataList
             this.status = data.status
         },
-		// 轮换图，待开发
+		// 轮换图，留接口待开发
 		handlePromoClick(link) {
 		      uni.navigateTo({ url: link });
 		},
@@ -654,6 +707,14 @@ export default {
         swiperChange(e) {
             this.currentSwiper = e.detail.current
         },
+		handleCardToggle(index) {
+		    this.tourCards[index].expanded = !this.tourCards[index].expanded;
+		},
+		toggleExpand() {
+		    this.isExpanded = !this.isExpanded
+		    // 触发动画事件
+		    this.$emit('toggle', this.isExpanded)
+		},
         getRegisterCouponFun() {
             getRegisterCoupon().then((res) => {
                 if (res.code == 1) {
@@ -685,7 +746,10 @@ export default {
         seting() {
             const { index_setting } = this.appConfig
             return index_setting
-        }
+        },
+		arrowRotation() {
+		    return this.isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+		}
     }
 }
 </script>
@@ -970,19 +1034,6 @@ export default {
 	// 	padding: 10rpx;
 	// 	width: 50rpx;
 	// }
-	// .goods-list {
-	//   display: flex;
-	//   flex-wrap: wrap;
-	//   justify-content: space-between; /* 均匀分布 */
-	//   padding: 0 5rpx; /* 左右留白 */
-	// }
-	
-	// .goods-item {
-	//   width: calc(33.33% - 10rpx); /* 三列布局，考虑间距 */
-	//   margin-bottom: 5rpx;
-	//   box-sizing: border-box; /* 防止padding影响宽度 */
-	// }
-	
 
 	.goods-name {
 		font-size: 24rpx;
@@ -997,8 +1048,6 @@ export default {
 		color: #FF5722;
 		margin-top: 5rpx;
 	}
-
-
 
     .coupon-pop-container {
         background-image: url(../../static/images/home_coupon_bg.png);
@@ -1027,7 +1076,81 @@ export default {
             }
         }
     }
-
+	
+	// 卡片
+	.expandable-card {
+	  border-radius: 16rpx;
+	  overflow: hidden;
+	  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+	  margin-bottom: 20rpx;
+	  transition: all 1s ease;
+	
+	  .card-header {
+	    position: relative;
+	    height: 180rpx; /* 默认高度 */
+	    padding: 30rpx;
+	    box-sizing: border-box;
+	    
+	    .card-bg {
+	      position: absolute;
+	      top: 0;
+	      left: 0;
+	      width: 100%;
+	      height: 100%;
+	      z-index: 1;
+	    }
+	    
+	    .card-content {
+	      position: relative;
+	      z-index: 2;
+	      height: 100%;
+	      display: flex;
+	      justify-content: space-between;
+	      align-items: center;
+	      color: #fff; /* 文字颜色 */
+	      text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.3);
+	      
+	        .text-content {
+				flex: 1;
+				.title {
+				  font-size: 32rpx;
+				  font-weight: bold;
+				  display: block;
+				  margin-bottom: 10rpx;
+				}
+				.desc {
+				  font-size: 24rpx;
+				  opacity: 0.9;
+				}
+			}
+	      
+			.arrow-icon {
+				width: 40rpx;
+				height: 40rpx;
+				transition: transform 0.3s ease;
+				image {
+				  width: 100%;
+				  height: 100%;
+				}
+			}
+	    }
+	}
+	  
+		.card-detail {
+			background: #fff;
+			padding: 5 0 5rpx;
+			// border-top: 0rpx solid #eeeeee;
+		}
+		  
+		  /* 展开状态样式 */
+		&.is-expanded {
+			.card-header {
+			  border-bottom-left-radius: 0;
+			  border-bottom-right-radius: 0;
+			}
+		}
+	}
+	
     .coupons-popup {
         .wrap {
             position: relative;
