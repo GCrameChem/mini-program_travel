@@ -58,7 +58,7 @@
             </navigator>
         </view>
         <view class="contain">
-			<!-- 新增宣传图轮播区块 -->
+			<!-- 宣传图轮播区块 -->
 			<view class="promo-swiper">
 				<swiper 
 				  :autoplay="true" 
@@ -78,7 +78,8 @@
 				  </swiper-item>
 				</swiper>
 			</view>
-            <view class="main">
+            
+			<view class="main">
                 <bubble-tips top="50rpx" :discharge="isDischarge"></bubble-tips>
                 <swipers :pid="1" height="322rpx" padding="10rpx 0"></swipers>
                 <!-- 导航入口 -->
@@ -151,7 +152,7 @@
 						<view class="title-text">当季精选</view>
 						<view class="desc-text">探索当季精彩活动，发现更多惊喜！</view>
 					</view>
-					<goods-list :list="goodsList"></goods-list>
+					<goods-list type="triple" :list="goodsList"></goods-list>
 				</view>
 				<!-- 每周活动 -->
 				<view class="special-area mt20" v-if="seckillGoods.length">
@@ -207,7 +208,17 @@
 						<text class="line"></text>
 						<view class="desc-text">拼包车小团出行，行程自由，随走随停，下方为已经发起的活动，加入即成行，任何人均可发起小团活动，2人成行最多8人</view>
 					</view>
-		
+					<!-- 宣传 -->
+					<view class="guide-container">
+					    <view class="guide-item" v-for="(item, index) in guideItems" :key="index">
+					      <view class="image-container">
+					        <image :src="item.image" class="guide-image" />
+					      </view>
+					      <view class="text-container">
+					        <text class="guide-text">{{ item.text }}</text>
+					      </view>
+					    </view>
+					  </view>
 					<!-- 可折叠卡片组件-->
 					<view>
 					    <expandable-card 
@@ -241,10 +252,9 @@
 				
 				<!-- 其他线路 -->
 				<view class="special-area mt20">
-				    <!-- 标题块 -->
 				    <view class="title-container column-center">
-				        <view class="title-text">其他线路</view>
-				        <view class="desc-text">发现更多惊喜</view>
+				        <view class="title-text">国内其他线路</view>
+				        <view class="desc-text">目前覆盖四川、重庆、湖北等地高校，在这些城市有一些经典的目的地线路，大家可以走出去看世界呀～</view>
 				    </view>
 				    <view>
 				        <scroll-view style="white-space: nowrap" :scroll-x="true">
@@ -261,14 +271,21 @@
 				                        height="436rpx"
 				                        :src="item.image"
 				                    ></custom-image>
-				                    <!-- <view class="title xxl">{{item.name}}</view>
-				                    <view class="desc primary xxs line1">{{item.title}}</view> -->
 				                </view>
 				            </navigator>
 				        </scroll-view>
 				    </view>
 				</view>
-                <!-- 秒杀 -->
+                <!-- 更多出行 -->
+				<view class="special-area mt20">
+                    <view class="title-container column-center">
+                        <view class="title-text">更多出行</view>
+                        <view class="desc-text">如果上面线路没有你合适的，或者想做大型团建活动/班级活动/三下乡等等 ……可以联系我们的客服，行程更加自由，更能满足你的个性化需求～</view>
+                    </view>
+                </view>
+                
+				
+				<!-- 秒杀 -->
                 <!-- <view class="seckill mt20" v-if="seckillGoods.length">
                     <active-area type="seckill" progressBarColor="#FF2C3C" :lists="seckillGoods">
                         <navigator
@@ -301,8 +318,8 @@
                         </navigator>
                     </active-area>
                 </view> -->
-                <!-- 热销 -->
-                <view class="hot mt20" v-if="hotGoods.length && seting.hots">
+                <!-- 热销,竖向选择-->
+<!--                <view class="hot mt20" v-if="hotGoods.length && seting.hots">
                     <active-area type="hot" progressBarColor="#9912FE" :lists="hotGoods">
                         <navigator
                             slot="header"
@@ -324,8 +341,9 @@
                         </navigator>
                     </active-area>
                 </view>
-                <!-- 新品推荐 -->
-                <view v-if="newGoods.length && seting.news" class="new-goods">
+ -->               
+				<!-- 新品推荐 -->
+<!--                <view v-if="newGoods.length && seting.news" class="new-goods">
                     <active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
                         <navigator
                             slot="header"
@@ -343,9 +361,37 @@
                         </navigator>
                     </active-area>
                 </view>
-            </view>
+            -->
+			</view>
+			
+			<!-- 末尾宣传 -->
+			<view class="special-area mt20">
+				<view class="promo-swiper">
+					<swiper 
+					  :autoplay="true" 
+					  :interval="3000" 
+					  :circular="true" 
+					  indicator-dots
+					  indicator-color="rgba(255,255,255,0.5)"
+					  indicator-active-color="#ffffff"
+					>
+					  <swiper-item v-for="(item, index) in promoList" :key="index">
+						<image 
+						  :src="item.image" 
+						  mode="widthFix" 
+						  class="swiper-image"
+						  @tap="handlePromoClick(item.link)"
+						/>
+					  </swiper-item>
+					</swiper>
+				</view>
+				<view class="title-container column-center">
+					<view class="title-text">关于我们</view>
+					<view class="desc-text">这是一个新青年社交旅行平台，做大学生最喜欢的旅行，在这里，你能结交来自天南海北志同道合的朋友，我们为你提供各种好玩有趣、深度体验、值得信赖的精品活动。</view>
+				</view>
+			</view>
             <!-- 好物优选 -->
-            <view class="goods mt20" v-if="goodsList.length">
+<!--            <view class="goods mt20" v-if="goodsList.length">
                 <view class="goods-title row-center">
                     <text class="line"></text>
                     <view class="row">
@@ -356,7 +402,7 @@
                 </view>
                 <goods-list :list="goodsList"></goods-list>
                 <loading-footer :status="status"></loading-footer>
-            </view>
+            </view> -->
         </view>
 		
         <u-popup class="coupons-popup" v-model="showCoupop" mode="center">
@@ -486,9 +532,17 @@ export default {
 					  bgImage: "/static/images/card-bg/1day.jpg",
 					  expanded: false,
 					  details: {}
-					}
+					},
 			],
-            scrollTop: 0,
+            // 导览数据
+			guideItems: [
+				{ image: '/static/images/img1.jpg', text: '示例 1' },
+				{ image: '/static/images/img2.jpg', text: '示例 2' },
+				{ image: '/static/images/img3.jpg', text: '示例 3' },
+				{ image: '/static/images/img4.jpg', text: '示例 4' },
+				{ image: '/static/images/img5.jpg', text: '示例 5' },
+			],
+			scrollTop: 0,
             navSwiperH: 374,
             logo: '',
             navHeight: 0,
@@ -844,7 +898,7 @@ export default {
         .main {
             position: relative;
             z-index: 9;
-            padding: 0 10rpx;
+            padding: 0rpx 10rpx;
 			
             .nav {
                 position: relative;
@@ -926,15 +980,19 @@ export default {
                     margin-right: 20rpx;
 
                     .title {
-                        padding: 10rpx 0;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-top: 60rpx;
+                        margin-bottom: 20rpx;
                     }
 
-                    .desc {
-                        background-color: #fee9eb;
-                        padding: 6rpx 20rpx;
-                        border-radius: 60rpx;
-                        max-width: 260rpx;
-                    }
+                    // .desc {
+                    //     background-color: #fee9eb;
+                    //     padding: 6rpx 20rpx;
+                    //     border-radius: 60rpx;
+                    //     max-width: 260rpx;
+                    // }
                 }
             }
 
@@ -947,12 +1005,12 @@ export default {
 			    flex: 1; /* 让活动区域填充剩余空间 */
 			}
 			
-            .seckill {
-                .dec {
-                    background-color: #fffbdb;
-                    width: 150rpx;
-                }
-            }
+            // .seckill {
+            //     .dec {
+            //         background-color: #fffbdb;
+            //         width: 150rpx;
+            //     }
+            // }
 
             .hot,
             .new-goods {
@@ -985,20 +1043,22 @@ export default {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		margin-top: 60rpx;
 		margin-bottom: 20rpx;
 	}
 
 	.title-text {
 		font-size: 40rpx;  /* 标题较大 */
 		font-weight: bold;
-		color: #000;
+		color: #3b3b3b;
 	}
 
 	.desc-text {
-		font-size: 28rpx; /* 说明文字较小 */
-		color: #666; /* 灰色 */
+		font-size: 20rpx;
+		color: #666;
 		margin-top: 10rpx;
 		text-align: center;
+		line-height: 1.8;
 	}
 	.goods-section {
 		display: flex;
@@ -1019,21 +1079,6 @@ export default {
 	    justify-content: center;
 	    min-width: 60rpx; /* 设定固定宽度 */
 	}
-
-	// .goods-list {
-	// 	flex: 1;
-	// 	display: flex;
-	// 	overflow-x: auto;
-	// 	white-space: nowrap;
-	// }
-
-	// .goods-item {
-	// 	display: flex;
-	// 	flex-direction: column;
-	// 	align-items: center;
-	// 	padding: 10rpx;
-	// 	width: 50rpx;
-	// }
 
 	.goods-name {
 		font-size: 24rpx;
@@ -1077,77 +1122,40 @@ export default {
         }
     }
 	
-	// 卡片
-	.expandable-card {
-	  border-radius: 16rpx;
-	  overflow: hidden;
-	  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-	  margin-bottom: 20rpx;
-	  transition: all 1s ease;
-	
-	  .card-header {
-	    position: relative;
-	    height: 180rpx; /* 默认高度 */
-	    padding: 30rpx;
-	    box-sizing: border-box;
-	    
-	    .card-bg {
-	      position: absolute;
-	      top: 0;
-	      left: 0;
-	      width: 100%;
-	      height: 100%;
-	      z-index: 1;
-	    }
-	    
-	    .card-content {
-	      position: relative;
-	      z-index: 2;
-	      height: 100%;
-	      display: flex;
-	      justify-content: space-between;
-	      align-items: center;
-	      color: #fff; /* 文字颜色 */
-	      text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.3);
-	      
-	        .text-content {
-				flex: 1;
-				.title {
-				  font-size: 32rpx;
-				  font-weight: bold;
-				  display: block;
-				  margin-bottom: 10rpx;
-				}
-				.desc {
-				  font-size: 24rpx;
-				  opacity: 0.9;
-				}
-			}
-	      
-			.arrow-icon {
-				width: 40rpx;
-				height: 40rpx;
-				transition: transform 0.3s ease;
-				image {
-				  width: 100%;
-				  height: 100%;
-				}
-			}
-	    }
-	}
-	  
-		.card-detail {
+	.guide-container {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		padding: 10rpx;
+		
+		.guide-item {
+			width: calc(20% - 10rpx); /* 一行5个元素，每个元素占宽度的20%，减去间隙 */
+			margin-bottom: 16rpx; /* 底部间隙 */
 			background: #fff;
-			padding: 5 0 5rpx;
-			// border-top: 0rpx solid #eeeeee;
+			border-radius: 8rpx;
+			box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1); /* 阴影 */
+			border: 1rpx solid #ddd; /* 浅灰色边框 */
+			text-align: center;
+			padding: 10rpx;
 		}
-		  
-		  /* 展开状态样式 */
-		&.is-expanded {
-			.card-header {
-			  border-bottom-left-radius: 0;
-			  border-bottom-right-radius: 0;
-			}
+
+		.image-container {
+			width: 100%;
+			height: 150rpx; /* 固定高度，保持图片正方形 */
+			margin-bottom: 8rpx;
+		}
+
+		.guide-image {
+			width: 100%;
+			height: 100%;
+			border-radius: 6rpx; /* 图片容器圆角 */
+			object-fit: cover; /* 保证图片自适应容器 */
+		}
+
+		.text-container {
+			font-size: 20rpx;
+			color: #333;
+			opacity: 0.8;
 		}
 	}
 	

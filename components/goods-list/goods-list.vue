@@ -35,6 +35,41 @@
 				    </view>
 			</navigator>
 		</view>
+		<view v-if="type === 'triple'" class="goods-triple row-between">
+			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mt20" hover-class="none" open-type="navigate"
+			 :url="'/pages/goods_details/goods_details?id=' + (isBargain ? item.goods_id : item.id)">
+				<view class="goods-img" style="width: 100%">
+				      <custom-image 
+				        :lazy-load="true" 
+				        radius="10rpx" 
+				        :src="item.image"
+				      ></custom-image>
+				    </view>
+					
+				    <view class="goods-info">
+				      <view class="goods-name line2">{{item.name}}</view>
+				      <view class="price">
+				        <price-format 
+				          color="#FF2C3C"  
+				          class="mr10" 
+				          :first-size="34" 
+				          :second-size="26" 
+				          :subscript-size="26" 
+				          :price="item.price" 
+				          :weight="500"
+				        ></price-format>
+				        <price-format 
+				          class="muted" 
+				          :firstSize="24" 
+				          :secondSize="24" 
+				          :subscript-size="24" 
+				          line-through 
+				          :price="item.market_price || item.activity_price"
+				        ></price-format>
+				      </view>
+				    </view>
+			</navigator>
+		</view>
 		<view v-if="type === 'hot'" class="goods-hot">
 			<navigator v-for="(item, index) in list" :key="index" class="item bg-white mt20 row" hover-class="none" open-type="navigate"
 			 :url="'/pages/goods_details/goods_details?id=' + item.id">
@@ -146,19 +181,66 @@
 
 <style lang="scss" scoped>
 	.goods-list {
-		.goods-double {
+.goods-double {
+  flex-wrap: wrap;
+  padding: 10rpx; /* 外部间距 */
+  display: flex;
+  justify-content: space-between;
+  
+  .item {
+    width: calc(50% - 8rpx); /* 两个项目在一行显示，宽度为50% */
+    box-sizing: border-box;
+    border-radius: 8rpx;
+    background: #fff;
+    overflow: hidden;
+    border: 1rpx solid #dddddd; /* 细灰色边框 */
+    
+    // 图片容器
+    .goods-img {
+      height: 350rpx !important;  /* 正方形的高度 */
+      width: 350rpx !important;   /* 正方形的宽度 */
+      padding: 10rpx; /* 图片与边框间距 */
+      
+      .custom-image {
+        display: block;
+        border-radius: 6rpx;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 确保图片自适应容器 */
+      }
+    }
+    
+    // 商品信息区域
+    .goods-info {
+      padding: 5rpx 10rpx; /* 上 左右 下 */
+      
+      .goods-name {
+        font-size: 24rpx;
+        line-height: 1.4;
+        padding: 0 4rpx; /* 文字与边框间距 */
+        min-height: 68rpx; /* 固定高度避免抖动 */
+      }
+      
+      .price {
+        margin-top: 5rpx;
+        padding: 0 4rpx; /* 价格与边框间距 */
+      }
+    }
+  }
+}
+
+		.goods-triple {
 		  flex-wrap: wrap;
 		  padding: 10 10rpx;
 		  display: flex;
 		  justify-content: space-between;
-		  
-		.item {
-		    width: calc(33.33% - 8rpx);
-		    box-sizing: border-box;
-		    border-radius: 8rpx;
-		    background: #fff;
-		    overflow: hidden;
-			border: 1rpx solid #dddddd; /* 细灰色边框 */
+			.item {
+				width: calc(33.33% - 8rpx);
+				box-sizing: border-box;
+				border-radius: 8rpx;
+				background: #fff;
+				overflow: hidden;
+				border: 1rpx solid #dddddd; /* 细灰色边框 */
 		    
 		    // 图片容器
 		    .goods-img {
