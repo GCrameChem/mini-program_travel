@@ -14,16 +14,31 @@
                     :data-id="item.id"
                     @tap="onSelect"
                 >
-                    <view class="address">
-                        <view class="consignee md bold">
-                            {{ item.contact }}
-                            <text class="phone ml10">{{ item.telephone }}</text>
+                    <view class="address row-between">
+                        <view class="column">
+                            <view class="consignee md bold">
+                                {{ item.province }} {{ item.city }} {{ item.district }} {{ item.address }}
+                            </view>
+                            <view class="lighter sm mt10">
+                                {{ item.contact }}
+                                <text class="phone ml10">{{ item.telephone }}</text>
+                            </view>
+                            <!-- 在此处显示标签 -->
+                            <view class="tag mt10" v-if="item.tag">{{ item.tag }}</view>
                         </view>
-                        <view class="lighter sm mt10">
-                            {{ item.province }} {{ item.city }} {{ item.district }}
-                            {{ item.address }}
+                    
+                        <!-- 让编辑和删除按钮紧靠右侧 -->
+                        <view class="row">
+                            <view class="row mr10" @click.stop="editAddress(item.id)">
+                                <image class="icon-md" src="/static/images/icon_edit.png"></image>
+                            </view>
+                            <view class="row ml10" :data-id="item.id" @tap.stop="showSurePop">
+                                <image class="icon-md" src="/static/images/icon_del_1.png"></image>
+                            </view>
                         </view>
                     </view>
+
+
                     <view class="operation row-between">
                         <view>
                             <radio
@@ -35,22 +50,6 @@
                                 <text>设为默认</text>
                             </radio>
                         </view>
-                        <view class="row-center">
-                            <view class="row mr20" @click.stop="editAddress(item.id)">
-                                <image
-                                    class="icon-md mr10"
-                                    src="/static/images/icon_edit.png"
-                                ></image>
-                                编辑
-                            </view>
-                            <view class="row ml20" :data-id="item.id" @tap.stop="showSurePop">
-                                <image
-                                    class="icon-md mr10"
-                                    src="/static/images/icon_del_1.png"
-                                ></image>
-                                删除
-                            </view>
-                        </view>
                     </view>
                 </view>
             </radio-group>
@@ -59,7 +58,7 @@
             id="delete-dialog"
             v-model="deleteSure"
             :showCancelButton="true"
-            confirm-text="狠心删除"
+            confirm-text="删除"
             confirm-color="#FF2C3C"
             :show-title="false"
             @confirm="delAddressFun"
@@ -67,7 +66,7 @@
         >
             <view class="column-center tips-dialog">
                 <image class="icon-lg" src="/static/images/icon_warning.png"></image>
-                <view style="margin-top: 30rpx">确认删除该地址吗？</view>
+                <view style="margin-top: 30rpx">确认删除？</view>
             </view>
         </u-modal>
         <view class="footer row-between fixed bg-white">
@@ -85,23 +84,6 @@
 </template>
 
 <script>
-// +----------------------------------------------------------------------
-// | likeshop开源商城系统
-// +----------------------------------------------------------------------
-// | 欢迎阅读学习系统程序代码，建议反馈是我们前进的动力
-// | gitee下载：https://gitee.com/likeshop_gitee
-// | github下载：https://github.com/likeshop-github
-// | 访问官网：https://www.likeshop.cn
-// | 访问社区：https://home.likeshop.cn
-// | 访问手册：http://doc.likeshop.cn
-// | 微信公众号：likeshop技术社区
-// | likeshop系列产品在gitee、github等公开渠道开源版本可免费商用，未经许可不能去除前后端官方版权标识
-// |  likeshop系列产品收费版本务必购买商业授权，购买去版权授权后，方可去除前后端官方版权标识
-// | 禁止对系统程序代码以任何目的，任何形式的再发布
-// | likeshop团队版权所有并拥有最终解释权
-// +----------------------------------------------------------------------
-// | author: likeshop.cn.team
-// +----------------------------------------------------------------------
 import { getAddressLists, delAddress, setDefaultAddress } from '@/api/user'
 import wechath5 from '@/utils/wechath5'
 import { isWeixinClient } from '@/utils/tools'
@@ -271,9 +253,10 @@ export default {
         text-align: center;
     }
     .address-list {
-        padding: 10rpx 0;
+        padding: 15rpx 5rpx;
         .item {
-            padding: 0 30rpx;
+            padding: 10rpx 30rpx;
+			border-radius: 30rpx;
             .address {
                 padding: 20rpx 0;
                 border-bottom: $-solid-border;

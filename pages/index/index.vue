@@ -78,10 +78,9 @@
 				  </swiper-item>
 				</swiper>
 			</view>
-            
 			<view class="main">
                 <bubble-tips top="50rpx" :discharge="isDischarge"></bubble-tips>
-                <swipers :pid="1" height="322rpx" padding="10rpx 0"></swipers>
+                <!-- <swipers :pid="1" height="322rpx" padding="10rpx 0"></swipers> -->
                 <!-- 导航入口 -->
                 <view class="nav bg-white" v-if="navList.length">
                     <swiper :style="'height:' + navSwiperH + 'rpx;'" @change="swiperChange">

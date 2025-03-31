@@ -78,27 +78,7 @@
                     </label>
                 </radio-group>
             </view>
-			<view class="bottom-container">
-				<button class="delete-btn" @click="deleteSure = true">删除地址</button>
-				<u-modal
-				    id="delete-dialog"
-				    v-model="deleteSure"
-				    :showCancelButton="true"
-				    confirm-text="删除"
-				    confirm-color="#FF2C3C"
-				    :show-title="false"
-				    @confirm="delAddressFun"
-				    @cancel="hidePop"
-				>
-				    <view class="column-center tips-dialog">
-				        <image class="icon-lg" src="/static/images/icon_warning.png"></image>
-				        <view style="margin-top: 30rpx">确认删除该地址</view>
-				    </view>
-				</u-modal>
-			    <button class="save-btn" form-type="submit">保存地址</button>
-			</view>
-<!--            <button class="my-btn bg-primary white br60" form-type="submit">保存</button>
-			<button class="my-btn bg-primary white br60" form-type="delete">删除</button> -->
+            <button class="my-btn bg-primary white br60" form-type="submit">保存</button>
         </form>
         <u-select
             v-model="showRegion"
@@ -110,7 +90,7 @@
 </template>
 
 <script>
-import { editAddress, getOneAddress, hasRegionCode, addAddress, getAddressLists, delAddress, setDefaultAddress, updateAddressTag } from '@/api/user'
+import { editAddress, getOneAddress, hasRegionCode, addAddress } from '@/api/user'
 import area from '@/utils/area'
 export default {
     data() {
@@ -130,7 +110,6 @@ export default {
             defaultRegion: ['广东省', '广州市', '番禺区'],
             defaultRegionCode: '440113',
             showRegion: false,
-			deleteSure: false,
             lists: []
         }
     },
@@ -243,22 +222,8 @@ export default {
         },
 		selectTag(tag) {
 			this.addressTag = this.addressTag === tag ? '' : tag;
-			this.$forceUpdate(); // 解决界面不刷新的问题
-	
-			// 调用后端接口同步数据
-			updateAddressTag({
-				id: this.addressId, // 传当前地址的 ID
-				tag: this.addressTag
-			}).then((res) => {
-				if (res.code == 1) {
-					this.$toast({ title: '标签更新成功' });
-				} else {
-					this.$toast({ title: '标签更新失败，请重试' });
-				}
-			}).catch((err) => {
-				console.error("标签更新失败:", err);
-				this.$toast({ title: '网络异常，请稍后重试' });
-			});
+			// 解决界面不刷新的问题（强制 Vue 更新）
+			this.$forceUpdate();
 		},
         regionChange(region) {
             this.addressObj.province_id = region[0].value
@@ -317,32 +282,7 @@ export default {
                     this.addressObj.address = address
                 }
             })
-        },
-        delAddressFun() {
-        if (!this.addressId) {
-            return this.$toast({ title: '没有可删除的地址' });
         }
-        delAddress(this.addressId)
-            .then((res) => {
-                if (res.code == 1) {
-                    this.$toast({
-                        title: res.msg
-                    });
-                    this.deleteSure = false; // 关闭弹窗
-                    setTimeout(() => {
-                        uni.navigateBack(); // 确保跳转回上一页
-                    }, 500);
-                } else {
-                    this.$toast({ title: '删除失败，请重试' });
-                }
-            })
-            .catch(() => {
-                this.$toast({ title: '删除请求失败，请检查网络' });
-            });
-    },
-    hidePop() {
-        this.deleteSure = false; // 取消删除时关闭弹窗
-    }
     }
 }
 </script>
@@ -374,14 +314,13 @@ export default {
 	.tag-container {
 	    display: flex;
 	    gap: 10px;
-	    margin-left: 50rpx;
+	    margin-left: 20rpx;
 	}
 	
 	.tag-item {
 	    padding: 10rpx 20rpx;
 	    border: 1px solid #ccc;
 	    border-radius: 10rpx;
-		margin-block:10rpx;
 	    color: #666;
 	    cursor: pointer;
 	}
@@ -392,40 +331,10 @@ export default {
 	    border-color: #007aff;
 	}
 
-	.bottom-container {
-	    position: fixed;
-	    bottom: 0;
-	    left: 0;
-	    width: 100%;
-	    background-color: white;
-	    padding: 10rpx 15rpx;
-	    display: flex;
-	    justify-content: space-between;
-	    align-items: center;
-	    border-top: 1px solid #ddd;
-	}
-	
-	.delete-btn, .save-btn {
-	    flex: 1;
-	    padding: 10rpx 0;
-	    font-size: 28rpx;
-	    border-radius: 30rpx;
-	}
-	
-	.delete-btn {
-	    border: 1px solid #ddd;
-	    background-color: white;
-	    color: #333;
-	    margin-right: 20rpx;
-	}
-	
-	.save-btn {
-	    border: none;
-	    background-color: #ff4d4f;
-	    color: white;
-	}
-
-
+    .my-btn {
+        margin: 30rpx 26rpx;
+        text-align: center;
+    }
 }
 
 van-field view {
