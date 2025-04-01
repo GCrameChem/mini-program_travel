@@ -20,7 +20,7 @@ function checkParams(params) {
 }
 
 const service = axios.create({
-  baseURL: `${baseURL}/api/`,
+  baseURL: `${baseURL}/`,
   timeout: 10000,
   header: {
     "content-type": "application/json",

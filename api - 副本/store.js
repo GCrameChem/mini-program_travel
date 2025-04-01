@@ -39,17 +39,12 @@ export function getCatrgory() {
 
 
 //商品详情
-// export function getGoodsDetail(data) {
-// 	return request.get('goods/getGoodsDetail', {
-// 		params: data
-// 	});
-// }
 export function getGoodsDetail(data) {
-    const { activityId, ...restParams } = data; // 解构出 activityId 和其他参数
-    return request.get(`activity/${activityId}`, {
-        params: restParams // 只传递其他参数
-    });
+	return request.get('goods/getGoodsDetail', {
+		params: data
+	});
 }
+
 // 商品搜索
 
 export function getGoodsSearch(data) {

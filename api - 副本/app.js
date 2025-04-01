@@ -77,11 +77,8 @@ export function sendSms(data) {
 }
 
 // Html5 注册账号
-// export function register(data) {
-//   return request.post("account/register", { ...data, client });
-// }
 export function register(data) {
-  return request.post("user", { ...data});
+  return request.post("account/register", { ...data, client });
 }
 
 // 获取服务协议

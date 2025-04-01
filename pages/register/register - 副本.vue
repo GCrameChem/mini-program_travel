@@ -251,7 +251,7 @@ export default {
 		    points: 0,
 		    phoneNumber: mobile,
 		    gender: "unknown",
-		    birthday: "2000-01-01",
+		    birthday: "2000-01-01", // 必须符合后端格式
 		    region: "默认地区"
 		  };
 		//code: smsCode,

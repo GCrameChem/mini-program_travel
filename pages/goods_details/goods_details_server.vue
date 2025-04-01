@@ -377,223 +377,232 @@
 		},
 		onLoad(options) {
 			this.onPageScroll = trottle(this.onPageScroll, 500, this)
-			////////////////////////
-			this.id = 1;  // 模拟传递活动 ID 参数
+			if (options && options.scene) {
+				let scene = strToParams(decodeURIComponent(options.scene));
+				console.log(scene, decodeURIComponent(options.scene))
+				options.id = scene.id;
+			}
+			// #ifdef H5
+			if (options && options.isapp == 1) {
+				this.showDownload = true;
+			}
+			// #endif
+			if (!options.id) {
+				return this.$toast({
+					title: '缺少参数，无法查看商品'
+				}, {
+					tab: 3
+				});
+			} else {
+				this.id = options.id;
+			}
+			this.getGoodsCouponFun();
+			this.getCartNum();
+		},
+		onShow() {
 			this.getGoodsDetailFun();
-			///////////////////////
-		// 	if (options && options.scene) {
-		// 		let scene = strToParams(decodeURIComponent(options.scene));
-		// 		console.log(scene, decodeURIComponent(options.scene))
-		// 		options.id = scene.id;
-		// 	}
-		// 	// #ifdef H5
-		// 	if (options && options.isapp == 1) {
-		// 		this.showDownload = true;
-		// 	}
-		// 	// #endif
-		// 	if (!options.id) {
-		// 		return this.$toast({
-		// 			title: '缺少参数，无法查看商品'
-		// 		}, {
-		// 			tab: 3
-		// 		});
-		// 	} else {
-		// 		this.id = options.id;
-		// 	}
-		// 	this.getGoodsCouponFun();
-		// 	this.getCartNum();
-		// },
-		// onShow() {
-		// 	this.getGoodsDetailFun();
-		// },
-		// onPageScroll(e) {
-		// 	const top = uni.upx2px(100)
-		// 	const {
-		// 		scrollTop
-		// 	} = e
-		// 	this.percent = scrollTop / top > 1 ? 1 : scrollTop / top
-		// 	this.scrollTop = scrollTop
+		},
+		onPageScroll(e) {
+			const top = uni.upx2px(100)
+			const {
+				scrollTop
+			} = e
+			this.percent = scrollTop / top > 1 ? 1 : scrollTop / top
+			this.scrollTop = scrollTop
 		},
 		methods: {
 			...mapActions(['getCartNum']),
 			async getGoodsDetailFun() {
-				//const response = await getGoodsDetail({ activityId: this.id });
 				const {
 					data,
 					code
-				} = await getGoodsDetail({ activityId: this.id });
-				if (code === 0) {
-					let time = new Date(data.endTime).getTime() / 1000 - Date.now() / 1000;
-					// 更新页面数据
-					this.goodsDetail = data;  // 更新商品详情数据
-					this.goodsName = data.activityName; // 商品名称
-					this.currentPrice = data.currentPrice;  // 当前价格
-					this.originalPrice = data.originalPrice; // 原价
-					this.remainingQuota = data.remainingQuota; // 剩余库存
-					this.totalQuota = data.totalQuota;  // 总库存
-					this.goodsDescription = data.activityDescription; // 商品详情内容
-					this.goodsLocation = data.activityLocation;  // 商品活动地点
-					this.imageList = data.imageUrlList.split(','); // 商品图片列表
-					this.activityLink = data.detailIntroductionUrl;  // 商品详细介绍链接
-					this.optionalActivityInfo = data.optionalActivityInformation; // 可选活动信息
-					this.countTime = time;  // 活动结束时间剩余秒数
+				} = await getGoodsDetail({
+					id: this.id
+				});
+				if (code == 1) {
+					let {
+						goods_image,
+						content,
+						comment,
+						like,
+						activity,
+						distribution
+					} = data;
+					let {
+						info,
+						team,
+						team_found
+					} = activity; //秒杀时间
+					let time = info ?
+						info.end_time - Date.now() / 1000 //拼团时间
+						:
+						team ?
+						team.end_time - Date.now() / 1000 :
+						0;
 
-					// 处理分享信息
+					if (team_found) {
+						team_found = arraySlice(team_found, [], 2);
+					}
+					this.distribution = distribution || {}
+					this.goodsDetail = data;
+					this.swiperList = goods_image;
+					this.comment = comment;
+					this.goodsLike = like;
+					this.countTime = time;
+					this.goodsType = activity.type || 0;
+					this.team = team ? team : {};
+					this.teamFound = team_found ? team_found : [];
+
 					this.$nextTick(() => {
 						this.isFirstLoading = false;
 					});
-
 					// #ifdef H5
 					let options = {
-						shareTitle: data.activityName,  // 分享标题
-						shareLink: location.href + '&invite_code=' + this.userInfo.distribution_code, // 分享链接
-						shareImage: data.imageUrlList.split(',')[0], // 分享图片，取第一张
-						shareDesc: data.activityDescription // 分享描述
+						shareTitle: data.name,
+						shareLink: location.href + '&invite_code=' + this.userInfo.distribution_code,
+						shareImage: data.image,
+						shareDesc: data.remark
 					};
-					this.wxShare(options);  // 分享设置
+					this.wxShare(options);
 					// #endif
-
 				} else {
-					this.isNull = true;
+					this.isNull = true
 					this.isFirstLoading = false;
 				}
-			},	
-			
-		// 	async getGoodsCouponFun() {
-		// 		const {
-		// 			data,
-		// 			code
-		// 		} = await getGoodsCoupon({
-		// 			id: this.id
-		// 		});
-		// 		if (code == 1) {
-		// 			this.couponList = data;
-		// 		}
-		// 	},
-		// 	async collectGoodsFun() {
-		// 		if (!this.isLogin) return toLogin();
-		// 		const {
-		// 			goodsDetail: {
-		// 				is_collect
-		// 			}
-		// 		} = this;
-		// 		const {
-		// 			data,
-		// 			code
-		// 		} = await collectGoods({
-		// 			is_collect: is_collect == 0 ? 1 : 0,
-		// 			goods_id: this.id
-		// 		});
-		// 		if (code == 1) {
-		// 			if (is_collect == 0) {
-		// 				this.$toast({
-		// 					title: '收藏成功'
-		// 				});
-		// 			} else {
-		// 				this.$toast({
-		// 					title: '取消收藏'
-		// 				});
-		// 			}
-		// 			this.getGoodsDetailFun();
-		// 		}
-		// 	},
-		// 	showCouponFun() {
-		// 		if (!this.isLogin) return toLogin();
-		// 		this.showCoupon = true;
-		// 	},
-		// 	onChangeGoods(e) {
-		// 		console.log(e);
-		// 		this.checkedGoods = e.detail;
-		// 	},
-		// 	showSpecFun(type, id) {
-		// 		if (!this.isLogin) return toLogin();
-		// 		if (this.goodsType == 2 && [2, 3].includes(type)) {
-		// 			this.isGroup = 1;
-		// 			this.foundId = id;
-		// 		} else {
-		// 			this.isGroup = 0;
-		// 			this.foundId = '';
-		// 		}
-		// 		this.popupType = type;
-		// 		this.showSpec = true;
-		// 	},
-		// 	onBuy(e) {
-		// 		let {
-		// 			id,
-		// 			goodsNum
-		// 		} = e.detail;
-		// 		const {
-		// 			goodsType,
-		// 			team
-		// 		} = this;
-		// 		let goods = [{
-		// 			item_id: id,
-		// 			num: goodsNum
-		// 		}];
-		// 		const params = {
-		// 			goods,
-		// 		};
-		// 		this.showSpec = false;
-		// 		goodsType == 2 ? (params.teamId = team.team_id) : '';
-		// 		this.foundId ? (params.foundId = this.foundId) : '';
-		// 		uni.navigateTo({
-		// 			url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify(params)))
-		// 		})
-		// 		console.log(1111)
-		// 	},
-		// 	onConfirm(e) {
-		// 		const {
-		// 			team: {
-		// 				team_id
-		// 			}
-		// 		} = this;
-		// 		teamCheck({
-		// 			team_id,
-		// 			found_id: this.foundId
-		// 		}).then(res => {
-		// 			if (res.code == 1) {
-		// 				this.onBuy(e);
-		// 			}
-		// 		});
-		// 	},
-		// 	async onAddCart(e) {
-		// 		let {
-		// 			id,
-		// 			goodsNum
-		// 		} = e.detail;
+			},
+			async getGoodsCouponFun() {
+				const {
+					data,
+					code
+				} = await getGoodsCoupon({
+					id: this.id
+				});
+				if (code == 1) {
+					this.couponList = data;
+				}
+			},
+			async collectGoodsFun() {
+				if (!this.isLogin) return toLogin();
+				const {
+					goodsDetail: {
+						is_collect
+					}
+				} = this;
+				const {
+					data,
+					code
+				} = await collectGoods({
+					is_collect: is_collect == 0 ? 1 : 0,
+					goods_id: this.id
+				});
+				if (code == 1) {
+					if (is_collect == 0) {
+						this.$toast({
+							title: '收藏成功'
+						});
+					} else {
+						this.$toast({
+							title: '取消收藏'
+						});
+					}
+					this.getGoodsDetailFun();
+				}
+			},
+			showCouponFun() {
+				if (!this.isLogin) return toLogin();
+				this.showCoupon = true;
+			},
+			onChangeGoods(e) {
+				console.log(e);
+				this.checkedGoods = e.detail;
+			},
+			showSpecFun(type, id) {
+				if (!this.isLogin) return toLogin();
+				if (this.goodsType == 2 && [2, 3].includes(type)) {
+					this.isGroup = 1;
+					this.foundId = id;
+				} else {
+					this.isGroup = 0;
+					this.foundId = '';
+				}
+				this.popupType = type;
+				this.showSpec = true;
+			},
+			onBuy(e) {
+				let {
+					id,
+					goodsNum
+				} = e.detail;
+				const {
+					goodsType,
+					team
+				} = this;
+				let goods = [{
+					item_id: id,
+					num: goodsNum
+				}];
+				const params = {
+					goods,
+				};
+				this.showSpec = false;
+				goodsType == 2 ? (params.teamId = team.team_id) : '';
+				this.foundId ? (params.foundId = this.foundId) : '';
+				uni.navigateTo({
+					url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify(params)))
+				})
+				console.log(1111)
+			},
+			onConfirm(e) {
+				const {
+					team: {
+						team_id
+					}
+				} = this;
+				teamCheck({
+					team_id,
+					found_id: this.foundId
+				}).then(res => {
+					if (res.code == 1) {
+						this.onBuy(e);
+					}
+				});
+			},
+			async onAddCart(e) {
+				let {
+					id,
+					goodsNum
+				} = e.detail;
 
-		// 		if (this.goodsType == 2) {
-		// 			// 拼团单独购买
-		// 			let goods = [{
-		// 				item_id: id,
-		// 				num: goodsNum
-		// 			}];
-		// 			uni.navigateTo({
-		// 				url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify({
-		// 					goods
-		// 				})))
-		// 			})
-		// 			return
-		// 		}
-		// 		const {
-		// 			code,
-		// 			data,
-		// 			msg
-		// 		} = await addCart({
-		// 			item_id: id,
-		// 			goods_num: goodsNum
-		// 		});
-		// 		if (code == 1) {
-		// 			this.getCartNum();
-		// 			this.$toast({
-		// 				title: msg,
-		// 				icon: 'success'
-		// 			});
-		// 			this.showSpec = false;
-		// 		}
-		// 	}
-		
-		
+				if (this.goodsType == 2) {
+					// 拼团单独购买
+					let goods = [{
+						item_id: id,
+						num: goodsNum
+					}];
+					uni.navigateTo({
+						url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify({
+							goods
+						})))
+					})
+					return
+				}
+				const {
+					code,
+					data,
+					msg
+				} = await addCart({
+					item_id: id,
+					goods_num: goodsNum
+				});
+				if (code == 1) {
+					this.getCartNum();
+					this.$toast({
+						title: msg,
+						icon: 'success'
+					});
+					this.showSpec = false;
+				}
+			}
 		},
 		async onShareAppMessage() {
 			const {

@@ -15,8 +15,8 @@ const IS_H5 = false
 const baseURLMap = {
     // 开发环境
     //development: 'https://likeshop-open.yixiangonline.com',
-    // development: 'http://127.0.0.1:4523/m1/6057514-5747647-default',
-	development: 'http://127.0.0.1:20208',
+    development: 'http://127.0.0.1:4523/m1/6057514-5747647-default',
+	// development: 'http://127.0.0.1:20208',
     // 生产环境https://php-b2c.likeshop.cn
     production: IS_H5 ? location.origin : ''
 }
@@ -28,10 +28,10 @@ const baseURL = SWITCH_DEVELOPMENT ? baseURLMap['development'] : baseURLMap[proc
 wx.addInterceptor('request', {
   invoke(args) {
     // 添加全局头
-    args.header = {
+    args.headers = {
       'Content-Type': 'application/json',
       'X-Request-From': 'WeChat-MiniProgram',
-      ...args.header
+      ...args.headers
     };
     console.log('拦截器 - 请求发出:', args);
     return args;
