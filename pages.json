@@ -296,6 +296,12 @@
 				}
 			},
 			{
+				"path": "pages/vip_qrcode/vip_qrcode",
+				"style": {
+					"navigationBarTitleText": "会员二维码"
+				}
+			},	
+			{
 				"path": "pages/user_wallet/user_wallet",
 				"style": {
 					"navigationBarTitleText": "我的钱包"

@@ -20,7 +20,7 @@
         
         <!-- 箭头图标 -->
         <view class="arrow-icon" :style="{ transform: arrowRotation }">
-          <image src="/static/images/icons/arrow-right.png" mode="widthFix"></image>
+          <image src="/static/images/icons/arrow_right.png" mode="widthFix"></image>
         </view>
       </view>
     </view>

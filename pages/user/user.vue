@@ -22,12 +22,17 @@
                         :src="isLogin ? userInfo.avatar : '/static/images/my_portrait_empty.png'"
                     ></image>
                     <view class="white" v-if="isLogin">
-                        <view class="name xxl line1">{{ userInfo.nickname }}</view>
-                        <view class="user-id row-between" v-if="userInfo.sn">
+                        <view class="name xxl line1">{{ userInfo.nickname }}
+						</view>
+						<view class="user-id row-between" v-if="userInfo.sn">
                             <view class="xs white ml20 mr20">会员ID: {{ userInfo.sn || '' }}</view>
-                            <view class="xs normal copy-btn row-center ml5" @tap.stop="onCopy"
-                                >复制</view
-                            >
+                            <image 
+								class="scan-btn xs normal row-center" 
+								src="/static/images/icons/vip_qr.png" 
+								@click="goToQRCodePage"
+							></image>
+							<!-- <view class="xs normal copy-btn row-center ml5" @tap.stop="onCopy"
+                                >复制</view> -->
                         </view>
                     </view>
                     <view class="white" v-else @tap="goLogin">
@@ -55,7 +60,8 @@
                     </view>
                 </view>
             </view>
-            <view class="member column-end" @tap="goPage('/pages/user_vip/user_vip')">
+            
+			<view class="member column-end" @tap="goPage('/pages/user_vip/user_vip')">
                 <view class="member-entery row-between">
                     <view class="row">
                         <image class="icon-md" src="/static/images/icon_member.png"></image>
@@ -191,10 +197,13 @@
         <recommend />
 		<view class="xs muted" style="margin: 50rpx 0;">
 			<view class="row-center">
-				由 likeshop 提供免费开源商城系统
+				<!-- 此处嵌入产品logo -->
 			</view>
 			<view class="row-center">
-				© likeshop.cn
+				由 xxx 提供技术支持
+			</view>
+			<view class="row-center">
+				© xxx
 			</view>
 		</view>
     </view>
@@ -277,6 +286,11 @@ export default {
             console.log(item)
             menuJump(item)
         },
+		goToQRCodePage() {
+			uni.navigateTo({
+				url: '/bundle/pages/vip_qrcode/vip_qrcode'
+			});
+		},
         async getMenuFun() {
             const { data, code } = await getMenu({
                 type: 2
@@ -286,9 +300,9 @@ export default {
             }
         },
 
-        onCopy(e) {
-            copy(this.userInfo.sn)
-        }
+        // onCopy(e) {
+        //     copy(this.userInfo.sn)
+        // }
     },
     computed: {
         ...mapGetters(['cartNum', 'userInfo', 'inviteCode', 'appConfig']),
@@ -311,11 +325,11 @@ export default {
     .header {
         display: flex;
         flex-direction: column;
-        height: 420rpx;
+        height: 350rpx;
         .user-info {
             padding: 10rpx 30rpx;
             //#ifdef  H5
-            padding-top: 90rpx;
+            padding-top: 80rpx;
             //#endif
             .avatar {
                 height: 110rpx;
@@ -331,14 +345,20 @@ export default {
 
             .user-id {
                 border: 1px solid white;
-                border-radius: 100rpx;
-
-                .copy-btn {
-                    background-color: #ffdfda;
-                    height: 40rpx;
-                    width: 90rpx;
-                    border-radius: 100rpx;
-                }
+                border-radius: 80rpx;
+				
+				.scan-btn {
+				    background-color: #ffdfda;
+				    height: 45rpx;
+				    width: 50rpx;
+				    border-radius: 20rpx;
+				}
+                // .copy-btn {
+                //     background-color: #ffdfda;
+                //     height: 40rpx;
+                //     width: 90rpx;
+                //     border-radius: 100rpx;
+                // }
             }
 
             .user-opt {
@@ -431,5 +451,6 @@ export default {
             height: 52rpx;
         }
     }
+
 }
 </style>
