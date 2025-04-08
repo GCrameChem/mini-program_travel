@@ -95,7 +95,7 @@
 // +----------------------------------------------------------------------
 import { loadingType, SortType, FansType } from '@/utils/type';
 import { getUserFans } from '@/api/user';
-import {loadingFun} from '@/utils/tools'
+import {page} from '@/utils/tools'
 
 export default {
   data() {
@@ -163,7 +163,7 @@ export default {
         order: orderSort
       };
       
-      loadingFun(getUserFans, page, fansObject, loadingStatus, inputData).then(res => {
+      page(getUserFans, page, fansObject, loadingStatus, inputData).then(res => {
           if(res) {
               this.page = res.page;
               this.fansObject = res.dataList

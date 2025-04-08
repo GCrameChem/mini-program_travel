@@ -142,7 +142,7 @@ export default {
 
         getAddressListsFun() {
             getAddressLists().then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     if (res.data.length) {
                         this.addressList = res.data
                         this.hasAddress = true
@@ -159,7 +159,7 @@ export default {
             let id = e.detail.value
             console.log(e)
             setDefaultAddress(id).then((res) => {
-                if (res.code == 1) this.getAddressListsFun()
+                if (res.code == 0) this.getAddressListsFun()
             })
         },
 
@@ -170,7 +170,7 @@ export default {
         delAddressFun(e) {
             let id = this.currentId
             delAddress(id).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.$toast({
                         title: res.msg
                     })

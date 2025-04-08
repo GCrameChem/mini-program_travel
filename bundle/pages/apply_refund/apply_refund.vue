@@ -228,7 +228,7 @@ export default {
         img: fileList.length <= 0 ? "" : fileList[0].base_url,
       };
       applyAgain(data).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           uni.$emit("refreshsale");
           this.$toast(
             {
@@ -270,7 +270,7 @@ export default {
         img: fileList.length <= 0 ? "" : fileList[0].url,
       };
       applyAfterSale(data).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           uni.$emit("refreshsale");
           this.$toast({
             title: "提交成功",
@@ -310,7 +310,7 @@ export default {
         order_id: orderId,
         item_id: itemId,
       }).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.goods = res.data.goods;
           this.reason = res.data.reason;
         }

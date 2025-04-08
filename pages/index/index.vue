@@ -107,260 +107,260 @@
                     </view>
                 </view>
                 <!-- 资讯 -->
-<!--                <navigator
-                    v-if="news.length"
-                    class="information bg-white row mt20"
-                    hover-class="none"
-                    open-type="navigate"
-                    url="/pages/news_list/news_list"
+<!--            <navigator
+				v-if="news.length"
+				class="information bg-white row mt20"
+				hover-class="none"
+				open-type="navigate"
+				url="/pages/news_list/news_list"
                 >
-                    <image class="icon-toutiao" src="/static/images/icon_toutiao.png"></image>
-                    <text class="gap-line"></text>
-                    <view class="news flex1">
-                        <view class="shade"></view>
-                        <swiper
-                            autoplay="true"
-                            style="height: 76rpx; flex: 1"
-                            vertical="true"
-                            circular="true"
-                            :interval="3000"
-                        >
-                            <swiper-item v-for="(item, index) in news" :key="index" class="row">
-                                <view class="flexnone">
-                                    <u-tag
-                                        v-if="item.is_new"
-                                        shape="circle"
-                                        text="最新"
-                                        size="mini"
-                                        type="primary"
-                                        mode="plain"
-                                    />
-                                </view>
-                                <view class="text-swiper ml10 line1">{{ item.title }}</view>
-                            </swiper-item>
-                        </swiper>
-                    </view>
-                    <image class="icon-sm ml20" src="/static/images/arrow_right.png" />
-                </navigator>
-                -->
-				<!-- 领卷 -->
-                <swipers :is-swiper="false" :pid="23" height="170rpx" padding="20rpx 0 0"></swipers>
-				<!-- 当季精选 -->
-				<view class="special-area mt20" v-if="goodsList.length">
-					<view class="title-container column-center">
-						<view class="title-text">当季精选</view>
-						<view class="desc-text">探索当季精彩活动，发现更多惊喜！</view>
-					</view>
-					<goods-list type="triple" :list="goodsList"></goods-list>
+				<image class="icon-toutiao" src="/static/images/icon_toutiao.png"></image>
+				<text class="gap-line"></text>
+				<view class="news flex1">
+					<view class="shade"></view>
+					<swiper
+						autoplay="true"
+						style="height: 76rpx; flex: 1"
+						vertical="true"
+						circular="true"
+						:interval="3000"
+					>
+						<swiper-item v-for="(item, index) in news" :key="index" class="row">
+							<view class="flexnone">
+								<u-tag
+									v-if="item.is_new"
+									shape="circle"
+									text="最新"
+									size="mini"
+									type="primary"
+									mode="plain"
+								/>
+							</view>
+							<view class="text-swiper ml10 line1">{{ item.title }}</view>
+						</swiper-item>
+					</swiper>
 				</view>
-				<!-- 每周活动 -->
-				<view class="special-area mt20" v-if="seckillGoods.length">
-					<!-- 标题块 -->
-					<view class="title-container column-center">
-						<view class="title-text">每周活动</view>
-						<view class="desc-text">探索最新的精彩活动，发现更多惊喜！</view>
-					</view>
-					<!-- 一日游 -->
-					<view class="goods-section">
-						<!-- 竖向标题栏 -->
-						<view class="vertical-title">一日游</view>
-						<!-- 活动区域 -->
-						<view class="activity-container">
-							<view v-if="newGoods.length && seting.news" class="new-goods">
-								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
-									<navigator
-										slot="header"
-										hover-class="none"
-										open-type="navigate"
-										url=""
-									></navigator>
-								</active-area>
-							</view>
-						</view>
-					</view>
-					<!-- 多日游 -->
-					<view class="goods-section">
-						<!-- 竖向标题栏 -->
-						<view class="vertical-title">多日游</view>
-						<!-- 活动区域 -->
-						<view class="activity-container">
-							<view v-if="newGoods.length && seting.news" class="new-goods">
-								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
-									<navigator
-										slot="header"
-										hover-class="none"
-										open-type="navigate"
-										url=""
-									></navigator>
-								</active-area>
-							</view>
+				<image class="icon-sm ml20" src="/static/images/arrow_right.png" />
+			</navigator>
+			-->
+			<!-- 领卷 -->
+			<swipers :is-swiper="false" :pid="23" height="170rpx" padding="20rpx 0 0"></swipers>
+			<!-- 当季精选 -->
+			<view class="special-area mt20" v-if="goodsList.length">
+				<view class="title-container column-center">
+					<view class="title-text">当季精选</view>
+					<view class="desc-text">探索当季精彩活动，发现更多惊喜！</view>
+				</view>
+				<goods-list type="triple" :list="goodsList"></goods-list>
+			</view>
+			<!-- 每周活动 -->
+			<view class="special-area mt20" v-if="seckillGoods.length">
+				<!-- 标题块 -->
+				<view class="title-container column-center">
+					<view class="title-text">每周活动</view>
+					<view class="desc-text">探索最新的精彩活动，发现更多惊喜！</view>
+				</view>
+				<!-- 一日游 -->
+				<view class="goods-section">
+					<!-- 竖向标题栏 -->
+					<view class="vertical-title">一日游</view>
+					<!-- 活动区域 -->
+					<view class="activity-container">
+						<view v-if="newGoods.length && seting.news" class="new-goods">
+							<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+								<navigator
+									slot="header"
+									hover-class="none"
+									open-type="navigate"
+									url=""
+								></navigator>
+							</active-area>
 						</view>
 					</view>
 				</view>
-				<!-- 地区小团 -->
-				<view class="goods mt20" v-if="goodsList.length">
-				    <view class="title-container row-center">
-				        <text class="line"></text>
-							<view class="row">
-								<view class="title-text">地区小团</view>
-							</view>
-						<text class="line"></text>
-						<view class="desc-text">拼包车小团出行，行程自由，随走随停，下方为已经发起的活动，加入即成行，任何人均可发起小团活动，2人成行最多8人</view>
+				<!-- 多日游 -->
+				<view class="goods-section">
+					<!-- 竖向标题栏 -->
+					<view class="vertical-title">多日游</view>
+					<!-- 活动区域 -->
+					<view class="activity-container">
+						<view v-if="newGoods.length && seting.news" class="new-goods">
+							<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+								<navigator
+									slot="header"
+									hover-class="none"
+									open-type="navigate"
+									url=""
+								></navigator>
+							</active-area>
+						</view>
 					</view>
-					<!-- 宣传 -->
-					<view class="guide-container">
-					    <view class="guide-item" v-for="(item, index) in guideItems" :key="index">
-					      <view class="image-container">
-					        <image :src="item.image" class="guide-image" />
-					      </view>
-					      <view class="text-container">
-					        <text class="guide-text">{{ item.text }}</text>
-					      </view>
-					    </view>
+				</view>
+			</view>
+			<!-- 地区小团 -->
+			<view class="goods mt20" v-if="goodsList.length">
+				<view class="title-container row-center">
+					<text class="line"></text>
+						<view class="row">
+							<view class="title-text">地区小团</view>
+						</view>
+					<text class="line"></text>
+					<view class="desc-text">拼包车小团出行，行程自由，随走随停，下方为已经发起的活动，加入即成行，任何人均可发起小团活动，2人成行最多8人</view>
+				</view>
+				<!-- 宣传 -->
+				<view class="guide-container">
+					<view class="guide-item" v-for="(item, index) in guideItems" :key="index">
+					  <view class="image-container">
+						<image :src="item.image" class="guide-image" />
 					  </view>
-					<!-- 可折叠卡片组件-->
-					<view>
-					    <expandable-card 
-					      v-for="(card, index) in tourCards"
-					      :key="card.id"
-					      :title="card.title"
-					      :desc="card.desc"
-					      :bgImage="card.bgImage"
-					      :initiallyExpanded="card.expanded"
-					      @toggle="handleCardToggle(index)"
-					    >
-						<!-- 使用插槽传递详细内容 -->
-						<template #content>
-						  <view class="card-detail" v-if="card.expanded">
-							<view v-if="newGoods.length && seting.news" class="new-goods">
-								<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
-									<navigator
-									  slot="header"
-									  hover-class="none"
-									  open-type="navigate"
-									  url=""
-									>
-									</navigator>
-								</active-area>
-							</view>
-						  </view>
-						</template>	
-					    </expandable-card>
+					  <view class="text-container">
+						<text class="guide-text">{{ item.text }}</text>
+					  </view>
 					</view>
+				  </view>
+				<!-- 可折叠卡片组件-->
+				<view>
+					<expandable-card 
+					  v-for="(card, index) in tourCards"
+					  :key="card.id"
+					  :title="card.title"
+					  :desc="card.desc"
+					  :bgImage="card.bgImage"
+					  :initiallyExpanded="card.expanded"
+					  @toggle="handleCardToggle(index)"
+					>
+					<!-- 详细内容 -->
+					<template #content>
+					  <view class="card-detail" v-if="card.expanded">
+						<view v-if="newGoods.length && seting.news" class="new-goods">
+							<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+								<navigator
+								  slot="header"
+								  hover-class="none"
+								  open-type="navigate"
+								  url=""
+								>
+								</navigator>
+							</active-area>
+						</view>
+					  </view>
+					</template>	
+					</expandable-card>
 				</view>
-				
-				<!-- 其他线路 -->
-				<view class="special-area mt20">
-				    <view class="title-container column-center">
-				        <view class="title-text">国内其他线路</view>
-				        <view class="desc-text">目前覆盖四川、重庆、湖北等地高校，在这些城市有一些经典的目的地线路，大家可以走出去看世界呀～</view>
-				    </view>
-				    <view>
-				        <scroll-view style="white-space: nowrap" :scroll-x="true">
-				            <navigator
-				                class="item bg-white"
-				                v-for="(item, index) in activityArea"
-				                :key="index"
-				                hover-class="none"
-				                :url="`/bundle/pages/activity_detail/activity_detail?id=${item.id}&name=${item.title}&title=${item.name}`"
-				            >
-				                <view class="column-center">
-				                    <custom-image
-				                        width="300rpx"
-				                        height="436rpx"
-				                        :src="item.image"
-				                    ></custom-image>
-				                </view>
-				            </navigator>
-				        </scroll-view>
-				    </view>
+			</view>
+			
+			<!-- 其他线路 -->
+			<view class="special-area mt20">
+				<view class="title-container column-center">
+					<view class="title-text">国内其他线路</view>
+					<view class="desc-text">目前覆盖四川、重庆、湖北等地高校，在这些城市有一些经典的目的地线路，大家可以走出去看世界呀～</view>
 				</view>
-                <!-- 更多出行 -->
-				<view class="special-area mt20">
-                    <view class="title-container column-center">
-                        <view class="title-text">更多出行</view>
-                        <view class="desc-text">如果上面线路没有你合适的，或者想做大型团建活动/班级活动/三下乡等等 ……可以联系我们的客服，行程更加自由，更能满足你的个性化需求～</view>
-                    </view>
-                </view>
-                
-				
-				<!-- 秒杀 -->
-                <!-- <view class="seckill mt20" v-if="seckillGoods.length">
-                    <active-area type="seckill" progressBarColor="#FF2C3C" :lists="seckillGoods">
-                        <navigator
-                            slot="header"
-                            hover-class="none"
-                            class="row activity-header white"
-                            open-type="navigate"
-                            url="/bundle/pages/goods_seckill/goods_seckill"
-                        >
-                            <view class="title xxl bold">超值秒杀</view>
-                            <view class="row flex1">
-                                <text class="white xs ml10 line1"
-                                    >{{ seckill.start_time }}点场</text
-                                >
-                                <view class="dec ml20 row-center mr20 br60">
-                                    <u-count-down
-                                        :timestamp="remainTime"
-                                        separator-color="#FF2C3C"
-                                        color="#FF2C3C"
-                                        :separator-size="24"
-                                        :font-size="24"
-                                        bg-color="transparent"
-                                    ></u-count-down>
-                                </view>
-                            </view>
-                            <view class="row xs">
-                                更多
-                                <u-icon name="arrow-right" size="28"></u-icon>
-                            </view>
-                        </navigator>
-                    </active-area>
-                </view> -->
-                <!-- 热销,竖向选择-->
-<!--                <view class="hot mt20" v-if="hotGoods.length && seting.hots">
-                    <active-area type="hot" progressBarColor="#9912FE" :lists="hotGoods">
-                        <navigator
-                            slot="header"
-                            hover-class="none"
-                            class="row activity-header"
-                            open-type="navigate"
-                            url="/bundle/pages/hot_list/hot_list"
-                        >
-                            <view class="title flex1">
-                                <image
-                                    class="title-image"
-                                    src="/static/images/hot_title.png"
-                                ></image>
-                            </view>
-                            <view class="row xs">
-                                更多
-                                <u-icon name="arrow-right" size="28"></u-icon>
-                            </view>
-                        </navigator>
-                    </active-area>
-                </view>
- -->               
+				<view>
+					<scroll-view style="white-space: nowrap" :scroll-x="true">
+						<navigator
+							class="item bg-white"
+							v-for="(item, index) in activityArea"
+							:key="index"
+							hover-class="none"
+							:url="`/bundle/pages/activity_detail/activity_detail?id=${item.id}&name=${item.title}&title=${item.name}`"
+						>
+							<view class="column-center">
+								<custom-image
+									width="300rpx"
+									height="436rpx"
+									:src="item.image"
+								></custom-image>
+							</view>
+						</navigator>
+					</scroll-view>
+				</view>
+			</view>
+			<!-- 更多出行 -->
+			<view class="special-area mt20">
+				<view class="title-container column-center">
+					<view class="title-text">更多出行</view>
+					<view class="desc-text">如果上面线路没有你合适的，或者想做大型团建活动/班级活动/三下乡等等 ……可以联系我们的客服，行程更加自由，更能满足你的个性化需求～</view>
+				</view>
+			</view>
+			
+			
+			<!-- 秒杀 -->
+			<!-- <view class="seckill mt20" v-if="seckillGoods.length">
+				<active-area type="seckill" progressBarColor="#FF2C3C" :lists="seckillGoods">
+					<navigator
+						slot="header"
+						hover-class="none"
+						class="row activity-header white"
+						open-type="navigate"
+						url="/bundle/pages/goods_seckill/goods_seckill"
+					>
+						<view class="title xxl bold">超值秒杀</view>
+						<view class="row flex1">
+							<text class="white xs ml10 line1"
+								>{{ seckill.start_time }}点场</text
+							>
+							<view class="dec ml20 row-center mr20 br60">
+								<u-count-down
+									:timestamp="remainTime"
+									separator-color="#FF2C3C"
+									color="#FF2C3C"
+									:separator-size="24"
+									:font-size="24"
+									bg-color="transparent"
+								></u-count-down>
+							</view>
+						</view>
+						<view class="row xs">
+							更多
+							<u-icon name="arrow-right" size="28"></u-icon>
+						</view>
+					</navigator>
+				</active-area>
+			</view> -->
+			<!-- 热销,竖向选择-->
+<!--			<view class="hot mt20" v-if="hotGoods.length && seting.hots">
+			<active-area type="hot" progressBarColor="#9912FE" :lists="hotGoods">
+				<navigator
+					slot="header"
+					hover-class="none"
+					class="row activity-header"
+					open-type="navigate"
+					url="/bundle/pages/hot_list/hot_list"
+				>
+					<view class="title flex1">
+						<image
+							class="title-image"
+							src="/static/images/hot_title.png"
+						></image>
+					</view>
+					<view class="row xs">
+						更多
+						<u-icon name="arrow-right" size="28"></u-icon>
+					</view>
+				</navigator>
+			</active-area>
+		</view>
+-->               
 				<!-- 新品推荐 -->
-<!--                <view v-if="newGoods.length && seting.news" class="new-goods">
-                    <active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
-                        <navigator
-                            slot="header"
-                            hover-class="none"
-                            class="row activity-header"
-                            open-type="navigate"
-                            url=""
-                        >
-                            <view class="title flex1">
-                                <image
-                                    class="title-image"
-                                    src="/static/images/new_title.png"
-                                ></image>
-                            </view>
-                        </navigator>
-                    </active-area>
-                </view>
-            -->
+<!--         	<view v-if="newGoods.length && seting.news" class="new-goods">
+			<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
+				<navigator
+					slot="header"
+					hover-class="none"
+					class="row activity-header"
+					open-type="navigate"
+					url=""
+				>
+					<view class="title flex1">
+						<image
+							class="title-image"
+							src="/static/images/new_title.png"
+						></image>
+					</view>
+				</navigator>
+			</active-area>
+		</view>
+	-->
 			</view>
 			
 			<!-- 末尾宣传 -->
@@ -467,7 +467,7 @@
 import { mapMutations, mapGetters, mapActions } from 'vuex'
 import { getHome, getMenu, getBestList } from '@/api/store'
 import { loadingType } from '@/utils/type'
-import { loadingFun, menuJump, arraySlice, setTabbar, getRect, trottle } from '@/utils/tools'
+import { page, menuJump, arraySlice, setTabbar, getRect, trottle } from '@/utils/tools'
 import { toLogin } from '@/utils/login'
 import Cache from '@/utils/cache'
 import { getConfig, userShare, getRegisterCoupon } from '@/api/app'
@@ -736,13 +736,14 @@ export default {
         },
         async getBestListFun() {
             let { page, goodsList, status } = this
-            const data = await loadingFun(getBestList, page, goodsList, status)
+            const data = await page(getBestList, page, goodsList, status)
             if (!data) return
             this.page = data.page
             this.goodsList = data.dataList
             this.status = data.status
         },
-		// 轮换图，留接口待开发
+		
+		// 轮换图，留接口
 		handlePromoClick(link) {
 		      uni.navigateTo({ url: link });
 		},

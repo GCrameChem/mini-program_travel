@@ -14,7 +14,7 @@
 <script>
     import {getBargainList} from '@/api/activity'
     import {loadingType} from '@/utils/type'
-    import {loadingFun} from '@/utils/tools'
+    import {page} from '@/utils/tools'
     export default {
         data() {
             return {
@@ -29,7 +29,7 @@
         methods: {
             $getBargainList() {
                 let {page, loadingStatus, lists} = this;
-                loadingFun(getBargainList, page, lists, loadingStatus).then(res => {
+                page(getBargainList, page, lists, loadingStatus).then(res => {
                     if(res) {
                         this.page = res.page;
                         this.lists = res.dataList;

@@ -266,7 +266,7 @@ import {
   afterSaleDetail,
   applyAgain,
 } from "@/api/user";
-import { loadingFun } from "@/utils/tools";
+import { page } from "@/utils/tools";
 
 export default {
   data() {
@@ -305,7 +305,7 @@ export default {
       cancelApply({
         id: this.id,
       }).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.$toast({
             title: res.msg,
           });
@@ -316,7 +316,7 @@ export default {
 
     getAfterSaleListFun() {
       let { lists, loadingStatus, page } = this;
-      loadingFun(getAfterSaleList, page, lists, loadingStatus, {
+      page(getAfterSaleList, page, lists, loadingStatus, {
         type: this.type,
       }).then((res) => {
         console.log(res, "res");

@@ -28,7 +28,7 @@
 		loadingType
 	} from '@/utils/type';
 	import {
-		loadingFun
+		page
 	} from "@/utils/tools"
 	import {
 		luckyDrawWinningList
@@ -50,7 +50,7 @@
 					page
 				} = this;
 
-				loadingFun(luckyDrawWinningList, page, bargainGoods, loadingStatus).then(res => {
+				page(luckyDrawWinningList, page, bargainGoods, loadingStatus).then(res => {
 					if (res) {
 						this.page = res.page;
 						this.bargainGoods = res.dataList

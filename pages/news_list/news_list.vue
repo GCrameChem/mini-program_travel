@@ -65,7 +65,7 @@
 // +----------------------------------------------------------------------
 import { getCategoryList, getArticleList } from '@/api/new';
 import { loadingType } from '@/utils/type';
-import {loadingFun} from '@/utils/tools'
+import {page} from '@/utils/tools'
 
 export default {
   data() {
@@ -124,7 +124,7 @@ export default {
       getCategoryList({
         type: this.type
       }).then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
             this.categoryList = res.data
             console.log(this.categoryList)
             this.getArticleListFun();
@@ -143,7 +143,7 @@ export default {
 	  // active是选中的分类索引，索引0是全部，索引1开始才是的分类列表的数据
 	  let id = active ? this.categoryList[active - 1].id : '';
 	  
-      loadingFun(getArticleList, page, newsList, status, {
+      page(getArticleList, page, newsList, status, {
         type: this.type,
 		id,
         page_no: page}).then(res => {

@@ -93,7 +93,7 @@
 		methods: {
 			getOrderResultFun() {
 				getOrderDetail(this.id).then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.payInfo = res.data
 					}
 				});

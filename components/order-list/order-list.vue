@@ -204,7 +204,7 @@ import { prepay } from "@/api/app";
 import { loadingType } from "@/utils/type";
 
 import { wxpay, alipay } from "@/utils/pay";
-import { loadingFun } from "@/utils/tools";
+import { page } from "@/utils/tools";
 export default {
   data() {
     return {
@@ -365,7 +365,7 @@ export default {
       // }).then(res => {
       // 	let args = res.data;
       // 	this.showLoading = false
-      // 	if (res.code == 1) {
+      // 	if (res.code == 0) {
       // 		wxpay(args).then((resPay) => {
       // 			if(resPay == 'success') {
       // 				this.$toast({
@@ -389,7 +389,7 @@ export default {
 
     async getOrderListFun() {
       let { page, orderType, orderList, status } = this;
-      const data = await loadingFun(getOrderList, page, orderList, status, {
+      const data = await page(getOrderList, page, orderList, status, {
         type: orderType,
       });
       if (!data) return;

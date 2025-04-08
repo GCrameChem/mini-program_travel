@@ -62,7 +62,7 @@
 import { userOrderPromoteOrder } from "@/utils/type";
 import { loadingType } from "@/utils/type";
 import { getPromoteOrder } from "@/api/user";
-import {loadingFun} from '@/utils/tools'
+import {page} from '@/utils/tools'
 
 export default {
   data() {
@@ -104,7 +104,7 @@ export default {
         lists,
         page
       } = this;
-      loadingFun(getPromoteOrder, page, lists, loadingStatus, {status: this.type}).then(res => {
+      page(getPromoteOrder, page, lists, loadingStatus, {status: this.type}).then(res => {
           if(res) {
               this.page = res.page;
               this.lists = res.dataList

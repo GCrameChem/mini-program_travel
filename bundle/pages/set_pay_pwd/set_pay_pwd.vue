@@ -106,7 +106,7 @@ export default {
                       new_pay_password: setPwd
                   })
                 : await setPassword(data)
-            if (code == 1) {
+            if (code == 0) {
                 this.$toast(
                     {
                         title: msg
@@ -117,7 +117,7 @@ export default {
         },
         hasPayWord() {
             hasPayPassword().then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.hasPayPwd = true
                 }
             })

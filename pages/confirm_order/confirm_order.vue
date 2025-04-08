@@ -509,7 +509,7 @@ export default {
             try {
                 const { code, data, msg } = this.teamId ? await teamBuy(from) : await orderBuy(from)
 
-                if (code == 1) {
+                if (code == 0) {
                     this.address = data.address
                     this.goodsLists = data.goods_lists
                     //TODO
@@ -547,7 +547,7 @@ export default {
             try {
                 const { code, data, msg } = this.teamId ? await teamBuy(from) : await orderBuy(from)
 
-                if (code == 1) {
+                if (code == 0) {
                     uni.redirectTo({
                         url: `/pages/payment/payment?from=${data.type}&order_id=${data.order_id}`
                     })

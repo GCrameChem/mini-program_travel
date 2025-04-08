@@ -252,7 +252,7 @@ export default {
     // 申请成功数据
     getPromoteHomeFun() {
       getPromoteHome().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           if (res.data.leader.length <= 0) {
             this.inviteStatus = false;
           } else {
@@ -270,7 +270,7 @@ export default {
 
     veryfiyDistributeFun() {
         veryfiyDistribute().then(res => {
-            if(res.code == 10001) {
+            if(res.code == 1) {
                 this.vipState = 2
                 // 获取详情
                 this.getInviteInfoFun();
@@ -298,7 +298,7 @@ export default {
     // 最新分销会员申请详情
     applyVipDetailFun() {
       applyVipDetail().then(res => {
-        if(res.code == 1) {
+        if(res.code == 0) {
             switch(res.data.status) {
                 case 0:
                     // 待审核
@@ -365,7 +365,7 @@ export default {
     // 分销会员申请
     applyVipFun(data) {
       applyVip(data).then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.$toast({
             title: res.msg
           });
@@ -382,7 +382,7 @@ export default {
 		  this.$toast({
 			  title: res.msg
 		  })
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.showPop = false
           this.getInviteInfoFun();
         }
@@ -396,7 +396,7 @@ export default {
     // 获取邀请人信息
     getInviteInfoFun() {
       getInviteInfo().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           if (res.data.leader.length <= 0) {
             this.userInfo = res.data;
             this.inviteStatus = false

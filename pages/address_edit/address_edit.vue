@@ -198,7 +198,7 @@ export default {
             if (addressId) {
                 editAddress(value)
                     .then((res) => {
-                        if (res.code == 1) {
+                        if (res.code == 0) {
                             this.$toast(
                                 {
                                     title: res.msg
@@ -218,7 +218,7 @@ export default {
             } else {
                 addAddress(value)
                     .then((res) => {
-                        if (res.code == 1) {
+                        if (res.code == 0) {
                             this.$toast(
                                 {
                                     title: res.msg
@@ -246,7 +246,7 @@ export default {
 				id: this.addressId, // 传当前地址的 ID
 				tag: this.addressTag
 			}).then((res) => {
-				if (res.code == 1) {
+				if (res.code == 0) {
 					this.$toast({ title: '标签更新成功' });
 				} else {
 					this.$toast({ title: '标签更新失败，请重试' });
@@ -276,7 +276,7 @@ export default {
 
         getOneAddressFun() {
             getOneAddress(this.addressId).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     let { city, province, district } = res.data
                     this.addressObj = res.data
                     this.region = `${province} ${city} ${district}`
@@ -301,7 +301,7 @@ export default {
                 city,
                 district
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     if (res.data.province && res.data.city && res.data.district) {
                         this.addressObj.province_id = res.data.province
                         this.addressObj.city_id = res.data.city
@@ -320,7 +320,7 @@ export default {
         }
         delAddress(this.addressId)
             .then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.$toast({
                         title: res.msg
                     });

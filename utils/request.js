@@ -35,6 +35,9 @@ service.interceptors.request.use(
     if (config.method == "GET") {
       config.url += paramsToStr(config.params);
     }
+	const token = Cache.get(TOKEN);
+	//console.log("拦截器获取 token：", token);
+
     config.header.token = config.header.token || Cache.get(TOKEN);
     return config;
   },
@@ -49,14 +52,19 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   async (response) => {
     if (response.data) {
-      const { code, show, msg } = response.data;
+      // 1. 保护性拷贝数据（仅新增此行）
+      const responseData = JSON.parse(JSON.stringify(response.data));
+      //console.log("request.js",responseData);
+      const { code, show, msg } = responseData;  // 改为使用拷贝后的数据
       const { route, options } = currentPage();
+      
       if (code == 0 && show && msg) {
         uni.showToast({
           title: msg,
           icon: "none",
         });
-      } else if (code == -1) {
+      } else if (code == -1) {  // 2. 修正条件：code == -1时触发登出
+		console.log("修正:");
         store.commit("LOGOUT");
         //#ifdef MP-WEIXIN
         wxMnpLogin();
@@ -73,15 +81,16 @@ service.interceptors.response.use(
         // #endif
       }
     }
-
-    return Promise.resolve(response.data);
+    // 3. 返回拷贝后的数据
+	//console.log("response.data:",response.data);
+    return Promise.resolve(JSON.parse(JSON.stringify(response.data || {})));
   },
   (error) => {
-    // tryHideFullScreenLoading()
     console.log(error);
-    console.log("err" + error); // for debug
+    console.log("err" + error);
     return Promise.reject(error);
   }
 );
+
 
 export default service;

@@ -51,7 +51,7 @@ export default {
   methods: {
     getMessageListsFun() {
       getMessageLists().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.list = res.data;
         }
       });

@@ -70,7 +70,7 @@
 <script>
 import { getStoreList } from "@/api/store";
 import { loadingType } from "@/utils/type";
-import { loadingFun } from "@/utils/tools";
+import { page } from "@/utils/tools";
 export default {
   data() {
     return {
@@ -149,7 +149,7 @@ export default {
     },
     getLists() {
       let { loadingStatus, page, lists } = this;
-      loadingFun(getStoreList, page, lists, loadingStatus, this.location).then(
+      page(getStoreList, page, lists, loadingStatus, this.location).then(
         (res) => {
           if (res) {
             this.page = res.page;

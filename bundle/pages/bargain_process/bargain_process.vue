@@ -354,7 +354,7 @@
             },
             $getBargainDetail(id) {
                 getBargainDetail({bargain_id: id}).then(res => {
-                    if(res.code == 1) {
+                    if(res.code == 0) {
                         this.activityObj = res.data;
                         this.status = res.data.status;
                         this.showLoadingView = false;
@@ -386,7 +386,7 @@
                     item_id: this.userSpec.id
                 }
                 launchBargain(data).then(res => {
-                    if(res.code == 1) {
+                    if(res.code == 0) {
                         this.$toast({title: res.msg});
                         this.knifePrice = res.data.knife_price;
                         this.diffPrice = res.data.diff_price;
@@ -408,7 +408,7 @@
                 getBargainActivityDetail({
                     id: id
                 }).then(res => {
-                    if(res.code == 1) {
+                    if(res.code == 0) {
                         uni.hideLoading()
                         this.status = res.data.status;
                         this.bargainObj = res.data;
@@ -451,7 +451,7 @@
                 helpBargain({
                     id: this.bargainId
                 }).then(res => {
-                    if(res.code == 1) {                        
+                    if(res.code == 0) {                        
                         this.knifePrice = res.data.knife_price;
                         this.precent = res.data.progress * 100;
                         if(this.precent > 100) {
@@ -473,7 +473,7 @@
                 closeBargainOrder({
                     id: this.bargainObj.id
                 }).then(res => {
-                    if(res.code == 1) {
+                    if(res.code == 0) {
                         this.$toast({
                             title: res.msg
                         })

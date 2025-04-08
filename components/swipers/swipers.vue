@@ -92,7 +92,7 @@
 					pid: this.pid,
 					client: 1
 				})
-				if (code == 1) {
+				if (code == 0) {
 					this.lists = data
 				}
 			},

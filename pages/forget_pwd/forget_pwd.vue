@@ -154,7 +154,7 @@ export default {
         // repassword: comfirmPwd,
       };
       forgetPwd(data).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.$toast({
             title: res.msg,
           });
@@ -185,7 +185,7 @@ export default {
         mobile: this.mobile,
         key: SMSType.FINDPWD,
       }).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.canSendSms = false;
           this.$toast({
             title: res.msg,

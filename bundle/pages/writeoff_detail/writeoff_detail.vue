@@ -56,7 +56,7 @@
 					pickup_code: this.code
 				}).then(res => {
 					this.isFirstLoading = false
-					if(res.code == 1) {
+					if(res.code == 0) {
 						this.detail = res.data
 					}
 				})
@@ -65,7 +65,7 @@
 				verificationConfirm({
 					id: this.detail.id
 				}).then(res => {
-					if(res.code == 1) {
+					if(res.code == 0) {
 						uni.$emit('refreshverify')
 						this.$toast({
 							title: res.msg

@@ -74,7 +74,7 @@ export default {
     // 服务协议
     getServerProtoFun() {
       getServerProto().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           //wxParse.wxParse('content', 'html', res.data, this, 15)
           setTimeout(() => {
             this.article_content = res.data;
@@ -86,7 +86,7 @@ export default {
     // 隐私协议
     getPrivatePolicyFun() {
       getPrivatePolicy().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           //wxParse.wxParse('content', 'html', res.data, this, 15)
           setTimeout(() => {
             this.article_content = res.data;
@@ -98,7 +98,7 @@ export default {
     // 售后保障
     getAfterSaleGuarFun() {
       getAfterSaleGuar().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           //wxParse.wxParse('content', 'html', res.data, this, 15)
           setTimeout(() => {
             this.article_content = res.data;

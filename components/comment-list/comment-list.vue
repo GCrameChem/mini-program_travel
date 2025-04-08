@@ -101,7 +101,7 @@
 // +----------------------------------------------------------------------
 import { loadingType } from '../../utils/type'
 import { getOrderCommentList } from '../../api/store'
-import { loadingFun } from '@/utils/tools'
+import { page } from '@/utils/tools'
 
 export default {
     data() {
@@ -128,7 +128,7 @@ export default {
         getOrderCommentListFun() {
             let { page, type, status, list } = this
 
-            loadingFun(getOrderCommentList, page, list, status, { type: type }).then((res) => {
+            page(getOrderCommentList, page, list, status, { type: type }).then((res) => {
                 if (res) {
                     this.page = res.page
                     this.list = res.dataList

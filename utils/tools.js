@@ -103,19 +103,19 @@ export function paramsToStr(params) {
 }
 
 //分页加载
-export async function loadingFun(fun, page, dataList = [], status, params) {
+export async function page(fun, page, dataList = [], status, params) {
   // 拷贝对象
   dataList = Object.assign([], dataList);
   if (status == loadingType.FINISHED) return false;
   const { code, data } = await fun({
-    page_no: page,
+    page: page,
     ...params,
   });
   uni.stopPullDownRefresh();
-  if (code == 1) {
+  if (code == 0) {
     if (page == 1) dataList = [];
-    let { list, more } = data;
-    dataList.push(...list);
+    let { record, more } = data;
+    dataList.push(...record);
     page = ++page;
     if (!more) {
       status = loadingType.FINISHED;
@@ -263,7 +263,7 @@ export function uploadFile(path) {
       success: (res) => {
         console.log("uploadFile res ==> ", res);
         let data = JSON.parse(res.data);
-        if (data.code == 1) {
+        if (data.code == 0) {
           resolve(data.data);
         } else {
           reject();

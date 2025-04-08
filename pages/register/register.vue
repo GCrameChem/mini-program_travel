@@ -288,7 +288,7 @@ export default {
       }
 
       sendSms({ mobile: this.mobile, key: SMSType.REGISTER }).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.canSendSms = false;
           this.$toast(res.msg);
           this.$refs.countDown.start();

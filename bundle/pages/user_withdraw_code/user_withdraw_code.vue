@@ -45,7 +45,7 @@
 // +----------------------------------------------------------------------
 import { getWithdrawRecords } from '@/api/user';
 import { loadingType } from '@/utils/type.js';
-import {loadingFun} from "@/utils/tools"
+import {page} from "@/utils/tools"
 export default {
   data() {
     return {
@@ -78,7 +78,7 @@ export default {
         page
       } = this;
       
-      loadingFun(getWithdrawRecords, page, withdrawRecords, loadingStatus).then(res => {
+      page(getWithdrawRecords, page, withdrawRecords, loadingStatus).then(res => {
           if(res) {
               this.page = res.page;
               this.withdrawRecords = res.dataList

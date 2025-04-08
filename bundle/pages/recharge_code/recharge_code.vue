@@ -26,7 +26,7 @@
 		loadingType
 	} from "@/utils/type";
 	import {
-		loadingFun
+		page
 	} from "@/utils/tools"
 	export default {
 		data() {
@@ -52,7 +52,7 @@
 					status,
 					page
 				} = this;
-				loadingFun(getRechargeRecord, page, lists, status).then(res => {
+				page(getRechargeRecord, page, lists, status).then(res => {
 					if (res) {
 						this.page = res.page;
 						this.lists = res.dataList

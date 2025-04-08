@@ -216,6 +216,7 @@ import { getMenu } from '@/api/store'
 import { toLogin, wxMnpLogin } from '@/utils/login'
 import { menuJump, copy, setTabbar } from '@/utils/tools'
 import Cache from '@/utils/cache'
+import '@/utils/request.js'
 const app = getApp()
 export default {
     data() {
@@ -291,11 +292,11 @@ export default {
 				url: '/bundle/pages/vip_qrcode/vip_qrcode'
 			});
 		},
-        async getMenuFun() {
+        async getMenuFun() {	  
             const { data, code } = await getMenu({
                 type: 2
             })
-            if (code == 1) {
+            if (code == 0) {
                 this.menuList = data
             }
         },

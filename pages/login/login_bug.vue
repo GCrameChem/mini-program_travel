@@ -366,7 +366,7 @@ export default {
                 nickname: nickName,
                 headimgurl: avatarUrl
             })
-            if (code == 1) {
+            if (code == 0) {
                 //
                 if (data.is_new_user) {
                     uni.hideLoading()
@@ -391,7 +391,7 @@ export default {
 					client: client
 				});
 	
-				if (code == 1) {
+				if (code == 0) {
 					this.loginHandle(data, queryParams);
 				} else {
 					this.$toast({ title: '自动登录失败' });
@@ -417,7 +417,7 @@ export default {
 					client: client
 				});
 	
-				if (code == 1) {
+				if (code == 0) {
 					this.loginHandle(data);
 				}
 			} else {
@@ -433,7 +433,7 @@ export default {
 					account: telephone,
 					code: smsCode
 				}).then((res) => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.loginHandle(res.data);
 					}
 				});
@@ -499,7 +499,7 @@ export default {
                 mobile: this.telephone,
                 key: SMSType.LOGIN
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.canSendSms = false
                     this.$refs.countDown.start()
                     this.$toast({
@@ -527,7 +527,7 @@ export default {
                         access_token
                     }).then((res) => {
                         uni.hideLoading()
-                        if (res.code == 1) {
+                        if (res.code == 0) {
                             this.loginHandle(res.data)
                         }
                     })
@@ -537,7 +537,7 @@ export default {
         async handleSubmitInfo(e) {
             const loginData = this.loginData || {}
             const res = await updateUser(e, loginData.token)
-            if (res.code == 1) {
+            if (res.code == 0) {
                 this.loginHandle(loginData)
             }
         },

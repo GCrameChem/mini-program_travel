@@ -136,7 +136,7 @@
 
 			getUserInfoFun() {
 				getUser().then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.userInfo = res.data
 					}
 				});
@@ -144,7 +144,7 @@
 
 			rechargeTemplateFun() {
 				rechargeTemplate().then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.rechargeObj = res.data
 					}
 				});

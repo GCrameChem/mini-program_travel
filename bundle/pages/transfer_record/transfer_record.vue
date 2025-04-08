@@ -83,7 +83,7 @@
 		loadingType
 	} from "@/utils/type";
 	import {
-		loadingFun
+		page
 	} from "@/utils/tools"
 	export default {
 		data() {
@@ -133,7 +133,7 @@
 					loadingStatus,
 					page
 				} = this;
-				loadingFun(transferRecord, page, lists, loadingStatus, {
+				page(transferRecord, page, lists, loadingStatus, {
 					type: changeType
 				}).then(res => {
 					if (res) {

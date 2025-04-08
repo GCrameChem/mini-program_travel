@@ -11,12 +11,10 @@ export function getCouponList(data) {
 }
 
 // 获取活动专区商品列表
-// export function getActivityGoodsLists(data) {
-//     return request.get("activity_area/activityGoodsList", {params: data})
-// }
 export function getActivityGoodsLists(data) {
-    return request.get("/activity/list", {params: data})
+    return request.get("activity_area/activityGoodsList", {params: data})
 }
+
 
 // 获取秒杀时间段
 export function getSeckillTime() {

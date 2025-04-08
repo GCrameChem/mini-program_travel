@@ -49,7 +49,7 @@
 // +----------------------------------------------------------------------
 import { getMonthBill } from "@/api/user";
 import { loadingType } from '@/utils/type';
-import {loadingFun} from "@/utils/tools"
+import {page} from "@/utils/tools"
 export default {
   data() {
     return {
@@ -82,7 +82,7 @@ export default {
         page,
         orderList
       } = this;
-      loadingFun(getMonthBill, page, orderList, loadingStatus).then(res => {
+      page(getMonthBill, page, orderList, loadingStatus).then(res => {
           if(res) {
               this.page = res.page;
               this.orderList = res.dataList

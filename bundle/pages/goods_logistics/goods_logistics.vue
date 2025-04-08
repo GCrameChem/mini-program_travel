@@ -159,7 +159,7 @@
 						take
 					}
 				} = await orderTraces(this.id)
-				if (code == 1) {
+				if (code == 0) {
 					this.shipment = shipment
 					this.buy = buy
 					this.delivery = delivery

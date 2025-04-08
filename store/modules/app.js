@@ -64,7 +64,7 @@ const actions = {
 				index: 2
 			})
 			getCartNum().then(res => {
-				if (res.code == 1) {
+				if (res.code == 0) {
 					commit('SETCARTNUM', res.data.num)
 					if (!res.data.num) return uni.removeTabBarBadge({
 						index: 2
@@ -86,7 +86,7 @@ const actions = {
 		return new Promise(resolve => {
 			
 			getUser().then(res => {
-				if (res.code == 1) {
+				if (res.code == 0) {
 					commit('SETUSERINFO', res.data)
 				}
 				resolve()

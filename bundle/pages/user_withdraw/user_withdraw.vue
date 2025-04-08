@@ -251,7 +251,7 @@
 
 			getWithdrawConfigFun() {
 				getWithdrawConfig().then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.widthDrawConfig = res.data
 						this.widthDrawWay = res.data.type
 					}
@@ -342,7 +342,7 @@
 					subbank
 				};
 				applyWithdraw(data).then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.$toast({
 							title: '提交成功'
 						}, {

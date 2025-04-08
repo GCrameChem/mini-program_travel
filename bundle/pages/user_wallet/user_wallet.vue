@@ -95,7 +95,7 @@ export default {
 
     getWalletFun() {
       getWallet().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.wallet = res.data
         }
       });

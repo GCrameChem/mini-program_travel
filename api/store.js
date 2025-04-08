@@ -26,11 +26,17 @@ export function getCartList() {
 
 
 //获取好物优选商品列表
+// export function getBestList(data) {
+// 	return request.get('goods/getBestList', {
+// 		params: data
+// 	});
+// }
 export function getBestList(data) {
-	return request.get('goods/getBestList', {
+	return request.get('activity/list', {
 		params: data
 	});
 }
+
 
 // 商品分类
 export function getCatrgory() {
@@ -45,39 +51,50 @@ export function getCatrgory() {
 // 	});
 // }
 export function getGoodsDetail(data) {
-    const { activityId, ...restParams } = data; // 解构出 activityId 和其他参数
+    const { activityId, ...restParams } = data;
     return request.get(`activity/${activityId}`, {
-        params: restParams // 只传递其他参数
+        params: restParams
     });
 }
-// 商品搜索
 
+// 商品搜索
+// export function getGoodsSearch(data) {
+// 	return request.get('goods/getGoodsList', {
+// 		params: data
+// 	});
+// }
 export function getGoodsSearch(data) {
-	return request.get('goods/getGoodsList', {
+	return request.get('activity/list', {
 		params: data
 	});
 }
-//搜索页,热门搜索列表,和历史搜索列表
 
+
+//搜索页,热门搜索列表,和历史搜索列表
 export function getSearchpage(data) {
 	return request.get('goods/getSearchPage', {
 		params: data
 	});
 }
-// 清空历史搜索
 
+// 清空历史搜索
 export function clearSearch() {
 	return request.get('goods/clearSearch');
 }
 
-//评价列表
+// 获取评价列表
+// export function getCommentList(data) {
+// 	return request.get("goods_comment/lists", {
+// 		params: data
+// 	})
+// }
 export function getCommentList(data) {
-	return request.get("goods_comment/lists", {
+	return request.get("reviews/list", {
 		params: data
 	})
 }
 
-// 获取评价列表
+// 获取订单商品列表(一个订单可能多个商品)
 export function getOrderCommentList(data) {
 	return request.get("goods_comment/getOrderGoods", {
 		params: data
@@ -104,23 +121,31 @@ export function changeCartSelect(data) {
 	return request.post('cart/selected', data)
 }
 
-//评价分类
-export function getCommentCategory(id) {
-	return request.get("/goods_comment/category", {
-		params: {
-			goods_id: id
-		}
-	})
+//评价属性分类
+// export function getCommentCategory(id) {
+// 	return request.get("/goods_comment/category", {
+// 		params: {
+// 			goods_id: id
+// 		}
+// 	})
+// }
+
+export function getCommentCategory(data) {
+    if (typeof data !== 'object' || data === null) {
+        console.error("传入参数不是对象：", data);
+        return;
+    }
+    const { activityId, ...restParams } = data;
+    return request.get(`activity/reviewAttributes/${activityId}`, { params: restParams });
 }
 
-//加入购物车
 
+//加入购物车
 export function addCart(data) {
   return request.post('cart/add', data);
 } 
 
  //购物车数量
-
 export function getCartNum(params) {
   return request.get("cart/num", {params});
 }
@@ -153,7 +178,6 @@ export function getNoticeLists(params) {
 
 
 //商品海报
-
 export function getPoster(data) {
 	return request.get("share/sharegoods", {
 		params: data
@@ -161,7 +185,6 @@ export function getPoster(data) {
 }
 
 // 门店自提列表
-
 export function getStoreList(data) {
 	return request.get("selffetch_shop/lists", {
 		params: data

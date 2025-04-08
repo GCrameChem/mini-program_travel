@@ -89,7 +89,7 @@
 	import {
 		arraySlice,
 		trottle,
-		loadingFun
+		page
 	} from '@/utils/tools'
 	import {
 		getGoodsSearch,
@@ -181,7 +181,7 @@
 					price: priceSort,
 					sales_sum: saleSort
 				}
-				const data = await loadingFun(getGoodsSearch, page, goodsList, status, params)
+				const data = await page(getGoodsSearch, page, goodsList, status, params)
 				if (!data) return
 				this.page = data.page
 				this.goodsList = data.dataList

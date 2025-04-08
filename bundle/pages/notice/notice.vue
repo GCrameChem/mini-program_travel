@@ -93,7 +93,7 @@ export default {
         type: this.type,
         page_no: page
       }).then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           let {
             list,
             more

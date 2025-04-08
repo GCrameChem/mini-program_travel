@@ -2,7 +2,7 @@
     <view class="goods-reviews">
         <order-goods :list="goods"></order-goods>
         <view class="goods-evaluate row">
-            <view class="lable">商品评价</view>
+            <view class="label">商品评价</view>
             <u-rate
                 name="goodsRate"
                 :count="5"
@@ -20,15 +20,15 @@
         </view>
         <view class="rate bg-white">
             <view class="item row mb20">
-                <view class="lable">描述相符</view>
+                <view class="label">描述相符</view>
                 <u-rate name="descRate" :size="42" active-color="#FF2C3C" v-model="descRate" />
             </view>
             <view class="item row mb20">
-                <view class="lable">服务态度</view>
+                <view class="label">服务态度</view>
                 <u-rate name="serverRate" :size="42" active-color="#FF2C3C" v-model="serverRate" />
             </view>
             <view class="item row">
-                <view class="lable">配送服务</view>
+                <view class="label">配送服务</view>
                 <u-rate
                     name="deliveryRate"
                     :size="42"
@@ -66,23 +66,6 @@
 </template>
 
 <script>
-// +----------------------------------------------------------------------
-// | likeshop开源商城系统
-// +----------------------------------------------------------------------
-// | 欢迎阅读学习系统程序代码，建议反馈是我们前进的动力
-// | gitee下载：https://gitee.com/likeshop_gitee
-// | github下载：https://github.com/likeshop-github
-// | 访问官网：https://www.likeshop.cn
-// | 访问社区：https://home.likeshop.cn
-// | 访问手册：http://doc.likeshop.cn
-// | 微信公众号：likeshop技术社区
-// | likeshop系列产品在gitee、github等公开渠道开源版本可免费商用，未经许可不能去除前后端官方版权标识
-// |  likeshop系列产品收费版本务必购买商业授权，购买去版权授权后，方可去除前后端官方版权标识
-// | 禁止对系统程序代码以任何目的，任何形式的再发布
-// | likeshop团队版权所有并拥有最终解释权
-// +----------------------------------------------------------------------
-// | author: likeshop.cn.team
-// +----------------------------------------------------------------------
 import { baseURL } from '@/config/app.js'
 import { goodsComment, getCommentInfo } from '@/api/user'
 import { uploadFile } from '@/utils/tools.js'
@@ -134,28 +117,38 @@ export default {
                 return this.$toast({
                     title: '请对商品进行评分'
                 })
-            if (!descRate)
-                return this.$toast({
-                    title: '请对描述相符进行评分'
-                })
-            if (!serverRate)
-                return this.$toast({
-                    title: '请对服务态度进行评分'
-                })
-            if (!deliveryRate)
-                return this.$toast({
-                    title: '请对配送服务进行评分'
-                })
+            // if (!descRate)
+            //     return this.$toast({
+            //         title: '请对描述相符进行评分'
+            //     })
+            // if (!serverRate)
+            //     return this.$toast({
+            //         title: '请对服务态度进行评分'
+            //     })
+            // if (!deliveryRate)
+            //     return this.$toast({
+            //         title: '请对配送服务进行评分'
+            //     })
+			
+			
+			
+			//activityId:parseInt(this.id),
+			
             goodsComment({
-                id: parseInt(this.id),
-                goods_comment: goodsRate,
-                service_comment: serverRate,
-                express_comment: deliveryRate,
-                description_comment: descRate,
-                comment,
-                image
+                userId: this.userId,
+				activityId:this.activity,
+                rating: goodsRate,
+				isSecondaryReview:true,
+				primaryReviewId:0,
+				location:"",
+                //service_comment: serverRate,
+                //express_comment: deliveryRate,
+                //description_comment: descRate,
+                commentContent:this.comment,
+				reviewAttributes:"默认",
+                imageUrlList:image
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.$toast(
                         {
                             title: '评价成功'
@@ -177,7 +170,7 @@ export default {
             getCommentInfo({
                 id: this.id
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.goods.push(res.data)
                 }
             })
@@ -209,6 +202,7 @@ export default {
         }
     }
 }
+
 </script>
 <style>
 .goods-reviews {
@@ -217,7 +211,7 @@ export default {
 .goods-reviews .rate {
     padding: 20rpx 30rpx;
 }
-.goods-reviews .rate .lable {
+.goods-reviews .rate .label {
     width: 170rpx;
 }
 .goods-reviews .goods-dec {
@@ -252,7 +246,7 @@ export default {
     margin-left: 30rpx;
 }
 
-.goods-reviews .goods-evaluate .lable {
+.goods-reviews .goods-evaluate .label {
     width: 170rpx;
 }
 </style>

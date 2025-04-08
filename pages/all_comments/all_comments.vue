@@ -80,23 +80,6 @@
 </template>
 
 <script>
-// +----------------------------------------------------------------------
-// | likeshop开源商城系统
-// +----------------------------------------------------------------------
-// | 欢迎阅读学习系统程序代码，建议反馈是我们前进的动力
-// | gitee下载：https://gitee.com/likeshop_gitee
-// | github下载：https://github.com/likeshop-github
-// | 访问官网：https://www.likeshop.cn
-// | 访问社区：https://home.likeshop.cn
-// | 访问手册：http://doc.likeshop.cn
-// | 微信公众号：likeshop技术社区
-// | likeshop系列产品在gitee、github等公开渠道开源版本可免费商用，未经许可不能去除前后端官方版权标识
-// |  likeshop系列产品收费版本务必购买商业授权，购买去版权授权后，方可去除前后端官方版权标识
-// | 禁止对系统程序代码以任何目的，任何形式的再发布
-// | likeshop团队版权所有并拥有最终解释权
-// +----------------------------------------------------------------------
-// | author: likeshop.cn.team
-// +----------------------------------------------------------------------
 import { getCommentList, getCommentCategory } from '../../api/store'
 import { loadingType } from '../../utils/type'
 
@@ -105,7 +88,8 @@ export default {
         return {
             status: loadingType.LOADING,
             page: 1,
-            type: '',
+			pageSize:'',
+            type: '0',
             commentList: [],
             categoryList: [],
             percent: '',
@@ -173,42 +157,45 @@ export default {
             this.$nextTick(() => this.getCommentListFun())
         },
 
-        getCommentCategoryFun() {
-            return new Promise((resolve) => {
-                getCommentCategory(this.id).then((res) => {
-                    let {
-                        code,
-                        data: { comment, percent }
-                    } = res
-                    if (code == 1) {
-                        this.categoryList = comment
-                        this.percent = percent
-                        this.type = comment[0].id
-                        this.$nextTick(() => resolve())
-                    }
-                })
-            })
-        },
+       getCommentCategoryFun() {
+           return new Promise((resolve) => {
+               const data = { activityId: this.id };
+               console.log("//// data before request:", data); // 应该显示 { activityId: 1 }
+               getCommentCategory(data).then((res) => {
+                   const {
+                       code,
+                       data: { records }
+                   } = res;
+                   if (code == 0) {
+                       this.categoryList = records;
+                       this.$nextTick(() => resolve());
+                   }
+               });
+           });
+       },
+
 
         getCommentListFun() {
             let { page, status, commentList, type } = this
             if (status == loadingType.FINISHED) return
             getCommentList({
-                id: type,
-                goods_id: this.id,
-                page_no: page
+				page: page,
+				pageSize: this.pageSize,
+                activityId: this.id,
+				//userId:,
+				//reviewID:,
             }).then((res) => {
-                if (res.code == 1) {
-                    let { list, more } = res.data
-                    commentList.push(...list)
-                    this.commentList = commentList
-                    this.page++
+                if (res.code == 0) {
+                    let { records, total } = res.data;
+                    commentList.push(...records);
+                    this.commentList = commentList;
+                    this.page++;
                     this.$nextTick(() => {
-                        if (!more) {
-                            this.status = loadingType.FINISHED
-                        }
+                        // if (!more) {
+                        //     this.status = loadingType.FINISHED
+                        // }
 
-                        if (commentList.length <= 0) {
+                        if (commentList.total <= 0) {
                             this.status = loadingType.EMPTY
                         } else {
                             console.log('commentList false')

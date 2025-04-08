@@ -138,7 +138,7 @@ export default {
             } = this;
             let data = JSON.parse(res.data);
 
-            if (data.code == 1) {
+            if (data.code == 0) {
               resolve(data.data);
             }
           },
@@ -151,7 +151,7 @@ export default {
 
     inputExpressInfoFun(data) {
       inputExpressInfo(data).then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.$toast({
             title: '提交成功'
           }, () => {

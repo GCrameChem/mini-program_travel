@@ -59,7 +59,7 @@
 // +----------------------------------------------------------------------
 import { getCollectGoods, collectGoods } from "@/api/user";
 import { CollectType, loadingType } from "@/utils/type";
-import {loadingFun} from "@/utils/tools"
+import {page} from "@/utils/tools"
 
 export default {
   data() {
@@ -105,7 +105,7 @@ export default {
           status
         } = this;
           
-        loadingFun(getCollectGoods, page, collectionList, status).then(res => {
+        page(getCollectGoods, page, collectionList, status).then(res => {
             if(res) {                  
                 this.page = res.page;
                 this.collectionList = res.dataList
@@ -126,7 +126,7 @@ export default {
         is_collect: CollectType.CANCEL_COLLECTION,
         goods_id: this.id
       }).then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.collectionList = [];
           this.page = 1;
           this.status = loadingType.LOADING;

@@ -48,7 +48,7 @@
 		getHotGoods
 	} from '@/api/store';
 
-	import {loadingFun} from '@/utils/tools'
+	import {page} from '@/utils/tools'
 	export default {
 		data() {
 			return {
@@ -79,7 +79,7 @@
 					status,
 					goodsList
 				} = this;
-				const data = await loadingFun(getHotGoods,page, goodsList,status)
+				const data = await page(getHotGoods,page, goodsList,status)
 				if (!data) return
 				this.page = data.page
 				this.goodsList = data.dataList

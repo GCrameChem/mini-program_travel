@@ -137,7 +137,7 @@ export default {
 
     getSignListFun() {
       getSignList().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           let {
             sign_list
           } = res.data;
@@ -157,7 +157,7 @@ export default {
       }
 
       userSign().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           let {
             days,
             growth,

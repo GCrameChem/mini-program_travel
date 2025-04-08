@@ -24,7 +24,7 @@ class Wechath5 {
 	config() {
 		return new Promise((resolve) => {
 			getJsconfig().then(res => {
-				if (res.code == 1) {
+				if (res.code == 0) {
 					let config = res.data.config
 					weixin.config({
 						debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -43,7 +43,7 @@ class Wechath5 {
 	//获取微信登录url
 	getWxUrl() {
 		getCodeUrl().then(res => {
-			if (res.code == 1) {
+			if (res.code == 0) {
 				location.href = res.data.url
 			}
 		})
@@ -56,7 +56,7 @@ class Wechath5 {
 					code
 				})
 				.then(res => {
-					if(res.code == 1) {
+					if(res.code == 0) {
 						store.commit("LOGIN", {
 							token: res.data.token
 						});

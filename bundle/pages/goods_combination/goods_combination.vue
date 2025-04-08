@@ -68,7 +68,7 @@
 	} from '@/api/activity';
 
 	import {
-		loadingFun
+		page
 	} from '@/utils/tools'
 	export default {
 		data() {
@@ -105,7 +105,7 @@
 						groupList,
 						status
 					} = this;
-					const data = await loadingFun(getGroupList, page, groupList, status)
+					const data = await page(getGroupList, page, groupList, status)
 					if (!data) return
 					this.page = data.page
 					this.groupList = data.dataList

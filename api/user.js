@@ -195,9 +195,12 @@ export function getPromoteOrder(data) {
     return request.get('distribution/order', { params: data })
 }
 
-//商品评价
+// 添加商品评价
+// export function goodsComment(data) {
+//     return request.post('goods_comment/addGoodsComment', data)
+// }
 export function goodsComment(data) {
-    return request.post('goods_comment/addGoodsComment', data)
+    return request.post('reviews', data)
 }
 
 // 获取个人详情

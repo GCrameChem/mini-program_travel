@@ -54,7 +54,7 @@ export default {
       getMyCoupon({
         type
       }).then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.$emit('getnum', {
             detail: res.data.length
           });

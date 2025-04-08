@@ -56,7 +56,7 @@ service.interceptors.response.use(
           title: msg,
           icon: "none",
         });
-      } else if (code == -1) {
+      } else if (code == 0) {
         store.commit("LOGOUT");
         //#ifdef MP-WEIXIN
         wxMnpLogin();

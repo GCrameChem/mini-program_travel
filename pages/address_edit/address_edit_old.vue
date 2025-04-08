@@ -181,7 +181,7 @@ export default {
             if (addressId) {
                 editAddress(value)
                     .then((res) => {
-                        if (res.code == 1) {
+                        if (res.code == 0) {
                             this.$toast(
                                 {
                                     title: res.msg
@@ -201,7 +201,7 @@ export default {
             } else {
                 addAddress(value)
                     .then((res) => {
-                        if (res.code == 1) {
+                        if (res.code == 0) {
                             this.$toast(
                                 {
                                     title: res.msg
@@ -245,7 +245,7 @@ export default {
 
         getOneAddressFun() {
             getOneAddress(this.addressId).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     let { city, province, district } = res.data
                     this.addressObj = res.data
                     this.region = `${province} ${city} ${district}`
@@ -270,7 +270,7 @@ export default {
                 city,
                 district
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     if (res.data.province && res.data.city && res.data.district) {
                         this.addressObj.province_id = res.data.province
                         this.addressObj.city_id = res.data.city

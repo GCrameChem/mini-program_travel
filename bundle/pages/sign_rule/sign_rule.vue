@@ -46,7 +46,7 @@ export default {
   methods: {
     getSignRuleFun() {
       getSignRule().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.rule = res.data
         }
       });

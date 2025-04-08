@@ -5,9 +5,10 @@
 		<download-nav v-if="showDownload" :top="44"></download-nav>
 		<!-- #endif -->
 		<loading-view v-if="isFirstLoading"></loading-view>
-		<view class="contain" v-if="!isNull">
+		<view class="contain" v-if="!isNull&&goodsDetail" >
 			<bubble-tips top="180rpx"></bubble-tips>
-			<product-swiper :imgUrls="swiperList" :video="goodsDetail.video"></product-swiper>
+			<!-- 组件还没研究 -->
+			<product-swiper :imgUrls="swiperList" :video="goodsDetail.detailIntroductionUrl"></product-swiper>
 			<!-- 秒杀 -->
 			<view class="seckill row-between" v-if="goodsType == 1">
 				<view class="price row">
@@ -15,15 +16,15 @@
 						<view style="align-items: baseline;" class="row ml20">
 							<view class="mr10">秒杀价</view>
 							<price-format :first-size="46" :second-size="32" :subscript-size="32"
-								:price="goodsDetail.min_price" :weight="500"></price-format>
-							<template v-if="goodsDetail.min_price != goodsDetail.max_price">
+								:price="goodsDetail.currentPrice" :weight="500"></price-format>
+							<template v-if="goodsDetail.currentPrice != goodsDetail.originalPrice">
 								<text style="font-size: 46rpx;">-</text>
 								<price-format :first-size="46" :second-size="32" :subscript-size="32"
-									:show-subscript="false" :price="goodsDetail.max_price" :weight="500"></price-format>
+									:show-subscript="false" :price="goodsDetail.originalPrice" :weight="500"></price-format>
 							</template>
 							<view class="ml10">
 								<price-format :subscript-size="30" :line-through="true" :first-size="30"
-									:second-size="30" :price="goodsDetail.market_price">
+									:second-size="30" :price="goodsDetail.originalPrice">
 								</price-format>
 							</view>
 						</view>
@@ -35,8 +36,9 @@
 						separator-color="#FF2C3C" font-size="24" height="36" separator-size="26"></u-count-down>
 				</view>
 			</view>
+			
 			<!-- 拼团 -->
-			<view class="group" v-show="goodsType == 2">
+			<!-- <view class="group" v-show="goodsType == 2">
 				<view class="row info" style="height: 100%">
 					<view class="row-between ml20 white" style="flex: 1;">
 						<view style="align-items: baseline;" class="row">
@@ -59,25 +61,30 @@
 					</view>
 				</view>
 			</view>
-			<view class="goods-info bg-white">
+			 -->
+			<!-- 标题 -->
+			<view class="goods-info bg-white" v-if="goodsDetail">
 				<view class="info-header row" v-if="goodsType != 1">
 					<view class="price row flex1">
 						<view class="primary mr10">
 							<price-format :first-size="46" :second-size="32" :subscript-size="32"
-								:price="goodsDetail.min_price" :weight="500"></price-format>
-							<template v-if="goodsDetail.min_price != goodsDetail.max_price">
+								:price="goodsDetail.currentPrice" :weight="500"></price-format>
+							<!-- 最大到最小价格，不过标签改乱了 -->
+							<!-- <template v-if="goodsDetail.currentPrice != goodsDetail.originalPrice">
 								<text style="font-size: 46rpx;">-</text>
 								<price-format :first-size="46" :second-size="32" :subscript-size="32"
-									:show-subscript="false" :price="goodsDetail.max_price" :weight="500"></price-format>
-							</template>
+									:show-subscript="false" :price="goodsDetail.originalPrice" :weight="500"></price-format>
+							</template> -->
 						</view>
 						<view class="line-through muted md">
-							<price-format :price="goodsDetail.market_price"></price-format>
+							<price-format :price="goodsDetail.originalPrice"></price-format>
 						</view>
 					</view>
 					<image class="icon-share" src="/static/images/icon_share.png" @tap="showShareBtn = true"></image>
 				</view>
-				<view class="row" v-if="!goodsType && (goodsDetail.member_price)">
+				
+				<!-- 会员价 -->
+				<!-- <view class="row" v-if="!goodsType && (goodsDetail.member_price)">
 					<view class="vip-price row">
 						<view class="price-name xxs">会员价</view>
 						<view style="padding: 0 11rpx">
@@ -88,18 +95,20 @@
 						</view>
 					</view>
 				</view>
+				 -->
 				<view class="row">
-					<view class="name lg bold">{{ goodsDetail.name }}</view>
+					<view class="name lg bold">{{ goodsDetail.activityName }}</view>
 					<image class="icon-share" src="/static/images/icon_share.png" @tap="showShareBtn = true"
 						v-if="goodsType == 1"></image>
 				</view>
 				<view class="row-between xs lighter" style="padding: 0 24rpx 20rpx">
-					<text v-if="goodsDetail.stock !== true">库存: {{ goodsDetail.stock }}件</text>
-					<text>销量: {{ goodsDetail.sales_sum }}件</text>
-					<text>浏览量: {{ goodsDetail.click_count }}次</text>
+					<text v-if="goodsDetail.totalQuota !== true">库存: {{ goodsDetail.totalQuota }}件</text>
+					<text>剩余: {{ goodsDetail.remainingQuota }}件</text>
+					<!-- <text>浏览量: {{ goodsDetail.click_count }}次</text> -->
 				</view>
 			</view>
-			<view class="group-play bg-white mt20" v-if="goodsType == 2">
+			
+			<!-- <view class="group-play bg-white mt20" v-if="goodsType == 2">
 				<view class="title">拼团玩法</view>
 				<view class="steps row">
 					<view class="row step">
@@ -118,7 +127,9 @@
 					</view>
 				</view>
 			</view>
-			<view class="discount mt20 bg-white" v-if="couponList.length || goodsDetail.order_give_integral">
+			 -->
+			 
+			<!-- <view class="discount mt20 bg-white" v-if="couponList.length || goodsDetail.order_give_integral">
 				<view class="row" style="align-items: flex-start;">
 					<view class="text muted">优惠</view>
 					<view style="flex: 1">
@@ -148,7 +159,8 @@
 					</view>
 				</view>
 			</view>
-			<swiper v-if="teamFound.length" class="mt20 bg-white" autoplay="true" style="height: 240rpx;"
+			 -->
+			<!-- <swiper v-if="teamFound.length" class="mt20 bg-white" autoplay="true" style="height: 240rpx;"
 				vertical="true" circular="true" :interval="5000">
 				<swiper-item v-for="(sitem, index) in teamFound" :key="index">
 					<view class="group-list">
@@ -178,6 +190,7 @@
 					</view>
 				</swiper-item>
 			</swiper>
+			 -->
 			<view v-if="!goodsType" class="spec row bg-white mt20" @tap="showSpecFun(0)">
 				<view class="text lighter">已选</view>
 				<view class="line1 mr20" style="flex: 1;">{{ checkedGoods.spec_value_str || '默认' }}</view>
@@ -189,27 +202,29 @@
 					<image class="icon-sm" src="/static/images/arrow_right.png"></image>
 				</view>
 			</navigator>
-			<view class="evaluation bg-white mt20">
-				<navigator hover-class="none" :url="'/pages/all_comments/all_comments?id=' + goodsDetail.id"
+
+			<view class="evaluation bg-white mt20" v-if="goodsDetail">
+				<navigator hover-class="none" :url="'/pages/all_comments/all_comments?id=' + goodsDetail.activityId"
 					class="title row-between">
 					<view>
 						<text class="balck md mr10">用户评价</text>
-						<text class="primary sm">好评率{{ comment.goods_rate || '0%' }}</text>
+						<text class="primary sm">好评率{{ comment.rating || '0%' }}</text>
 					</view>
 					<view class="row">
 						<text class="lighter">查看全部</text>
 						<image class="icon-sm" src="/static/images/arrow_right.png"></image>
 					</view>
 				</navigator>
-				<view class="con" v-if="comment.goods_rate">
+				<view class="con" v-if="comment.rating">
 					<view class="user-info row">
+						<!-- 此处修改所有有关user-info需要通过用户id查询头? -->
 						<image class="avatar mr20" :src="comment.avatar"></image>
 						<view class="user-name md mr10">{{ comment.nickname }}</view>
 					</view>
 					<view class="muted xs mt10">
 						<text class="mr20">{{ comment.create_time }}</text>
 					</view>
-					<view v-if="comment.comment" class="dec mt20">{{ comment.comment }}</view>
+					<view v-if="comment.commentContent" class="dec mt20">{{ comment.commentContent }}</view>
 				</view>
 				<view class="con row-center muted" v-else>暂无评价</view>
 			</view>
@@ -217,13 +232,14 @@
 			<view class="goods-like mt20 bg-white" v-if="goodsLike.length">
 				<goods-like :list="goodsLike"></goods-like>
 			</view>
-			<view class="details mt20 bg-white">
+			
+			<view class="details mt20 bg-white" v-if="goodsDetail">
 				<view class="title lg">商品详情</view>
 				<view class="content">
-					<u-parse :html="goodsDetail.content" :lazy-load="true" :show-with-animation="true"></u-parse>
+					<u-parse :html="goodsDetail.activityDescription" :lazy-load="true" :show-with-animation="true"></u-parse>
 				</view>
 			</view>
-			<view class="footer row bg-white fixed">
+			<!-- <view class="footer row bg-white fixed" v-if="goodsDetail">
 				<navigator class="btn column-center" hover-class="none"
 					url="/bundle/pages/contact_offical/contact_offical">
 					<image class="icon-md" src="/static/images/icon_contact.png"></image>
@@ -235,6 +251,7 @@
 					</image>
 					<text class="xxs lighter">收藏</text>
 				</button>
+				
 				<navigator class="btn cart column-center" hover-class="none" open-type="switchTab"
 					url="/pages/shop_cart/shop_cart">
 					<image class="icon-md" src="/static/images/icon_cart.png"></image>
@@ -246,7 +263,9 @@
 				</view>
 				<view class="right-buy br60 white mr20 ml10 md" @tap="showSpecFun(2)">{{ btnText.red }}</view>
 			</view>
+		 -->
 		</view>
+		
 		<view v-else>
 			<view class="details-null column-center">
 				<image class="img-null" src="/static/images/goods_null.png"></image>
@@ -254,39 +273,33 @@
 			</view>
 			<recommend></recommend>
 		</view>
-		<spec-popup :show="showSpec" :goods="goodsDetail" :is-seckill="goodsType == 1" @close="showSpec = false"
+		<!-- <spec-popup :show="showSpec" :goods="goodsDetail" :is-seckill="goodsType == 1" @close="showSpec = false"
 			:show-add="popupType == 1 || popupType == 0" :show-buy="popupType == 2 || popupType == 0"
 			:showConfirm="popupType == 3" @buynow="onBuy" @addcart="onAddCart" @change="onChangeGoods"
 			:group="Boolean(isGroup)" :red-btn-text="btnText.red" :yellow-btn-text="btnText.yellow"
-			@confirm="onConfirm"></spec-popup>
+			@confirm="onConfirm"></spec-popup> -->
 			
 		<share-popup v-model="showShareBtn" 
 			:share-id="id" 
 			pagePath="pages/goods_details/goods_details" 
 			:type="1" 
-			:config="{
-				avatar: userInfo.avatar,
-				nickname: userInfo.nickname,
-				image: goodsDetail.poster || goodsDetail.image,
-				price: goodsDetail.min_price,
-				marketPrice: goodsDetail.market_price,
-				name: goodsDetail.name
-		}">
+			:config="shareConfig"
+			/>
 		</share-popup>
 		<!-- 领券 -->
 		<u-popup v-model="showCoupon" mode="bottom" border-radius="14">
 			<view>
-				<view class="row-between" style="padding: 30rpx">
+				<!-- <view class="row-between" style="padding: 30rpx">
 					<view class="title md bold">领券</view>
 					<view class="close" @tap="showCoupon = false">
 						<image class="icon-lg" src="/static/images/icon_close.png"></image>
 					</view>
-				</view>
-				<view class="content bg-body">
+				</view> -->
+				<!-- <view class="content bg-body">
 					<scroll-view scroll-y="true" style="height: 700rpx">
 						<coupon-list :list="couponList" @reflash="getGoodsCouponFun" :btn-type="3"></coupon-list>
 					</scroll-view>
-				</view>
+				</view> -->
 			</view>
 		</u-popup>
 
@@ -362,6 +375,7 @@
 				goodsType: 0,
 				checkedGoods: {},
 				couponList: [],
+				imageList:[],
 				comment: {},
 				countTime: 0,
 				tagStyle: {
@@ -377,238 +391,289 @@
 		},
 		onLoad(options) {
 			this.onPageScroll = trottle(this.onPageScroll, 500, this)
+			
+			if (options && options.scene) {
+				let scene = strToParams(decodeURIComponent(options.scene));
+				console.log(scene, decodeURIComponent(options.scene))
+				options.id = scene.id;
+			}
+			// #ifdef H5
+			if (options && options.isapp == 1) {
+				this.showDownload = true;
+			}
+			// #endif
+			if (!options.id) {
+				return this.$toast({
+					title: '缺少参数，无法查看商品'
+				}, {
+					tab: 3
+				});
+			} else {
+				this.id = options.id;
+			}
+			// this.getGoodsCouponFun();
+			// this.getCartNum();
+			
+			
 			////////////////////////
-			this.id = 1;  // 模拟传递活动 ID 参数
-			this.getGoodsDetailFun();
-			///////////////////////
-		// 	if (options && options.scene) {
-		// 		let scene = strToParams(decodeURIComponent(options.scene));
-		// 		console.log(scene, decodeURIComponent(options.scene))
-		// 		options.id = scene.id;
-		// 	}
-		// 	// #ifdef H5
-		// 	if (options && options.isapp == 1) {
-		// 		this.showDownload = true;
-		// 	}
-		// 	// #endif
-		// 	if (!options.id) {
-		// 		return this.$toast({
-		// 			title: '缺少参数，无法查看商品'
-		// 		}, {
-		// 			tab: 3
-		// 		});
-		// 	} else {
-		// 		this.id = options.id;
-		// 	}
-		// 	this.getGoodsCouponFun();
-		// 	this.getCartNum();
-		// },
-		// onShow() {
-		// 	this.getGoodsDetailFun();
-		// },
-		// onPageScroll(e) {
-		// 	const top = uni.upx2px(100)
-		// 	const {
-		// 		scrollTop
-		// 	} = e
-		// 	this.percent = scrollTop / top > 1 ? 1 : scrollTop / top
-		// 	this.scrollTop = scrollTop
+			// this.id = 1;  // 模拟传递活动 ID 参数
+			// console.log("this.id",this.id);
+			// this.getGoodsDetailFun();
+			////////////////////////
+		},
+		async onShow() {
+			await this.getGoodsDetailFun(); // 等待异步完成
+			console.log('goodsDetail.activityId:', this.goodsDetail.activityId);
+
+			//console.log("页面展示时获取的商品详情：", this.goodsDetail);
+		},
+		onPageScroll(e) {
+			const top = uni.upx2px(100)
+			const {
+				scrollTop
+			} = e
+			this.percent = scrollTop / top > 1 ? 1 : scrollTop / top
+			this.scrollTop = scrollTop
 		},
 		methods: {
 			...mapActions(['getCartNum']),
 			async getGoodsDetailFun() {
-				//const response = await getGoodsDetail({ activityId: this.id });
+			    try {
+			        const { data: responseData, code } = await getGoodsDetail({ activityId: this.id });
+					//console.log("responseData:",responseData);
+					// console.log("code:",code);
+			        if (code === 0) {
+			            // 从 responseData 中解构需要的字段
+						
+			            let {
+			                activityName,
+			                currentPrice,
+			                originalPrice,
+			                remainingQuota,
+			                totalQuota,
+			                activityDescription,
+			                activityLocation,
+			                imageUrlList,
+			                detailIntroductionUrl,
+			                optionalActivityInformation,
+			                endTime,
+			            } = responseData;
+						
+			            // 计算活动结束时间剩余秒数
+			            const time = new Date(endTime).getTime() / 1000 - Date.now() / 1000;
+						
+						//this.team_found = [];
+						// if (team_found) {
+						// 	team_found = arraySlice(team_found, [], 2);
+						// }
+			            // 更新页面数据
+			            this.goodsDetail = responseData;  // 更新商品详情数据
+						this.content = activityDescription; // 商品详情内容
+			            this.goodsName = activityName;  // 商品名称
+			            //console.log("测试//////////goodsName://////////",this.goodsName);
+						this.currentPrice = currentPrice;  // 当前价格
+			            this.originalPrice = originalPrice; // 原价
+			            this.remainingQuota = remainingQuota; // 剩余库存
+			            this.totalQuota = totalQuota;  // 总库存
+			            
+			            this.goodsLocation = activityLocation;  // 商品活动地点
+			            this.imageList = imageUrlList.split(','); // 商品图片列表
+			            this.activityLink = detailIntroductionUrl;  // 商品详细介绍链接
+			            this.optionalActivityInfo = optionalActivityInformation; // 可选活动信息
+			            this.countTime = time;  // 活动结束时间剩余秒数
+						
+						//this.team = team ? team : {};
+						//this.teamFound = team_found ? team_found : [];
+			
+			            // 处理分享信息
+			            this.$nextTick(() => {
+			                this.isFirstLoading = false;
+			            });
+			
+			            // #ifdef H5
+			            let options = {
+			                shareTitle: activityName,  // 分享标题
+			                shareLink: location.href + '&invite_code=' + this.userInfo.distribution_code, // 分享链接
+			                shareImage: imageUrlList.split(',')[0], // 分享图片，取第一张
+			                shareDesc: activityDescription // 分享描述
+			            };
+			            this.wxShare(options);  // 分享设置
+			            // #endif
+			        } else {
+			            // 当返回 code 不是 0 时
+			            this.isNull = true;
+			            this.isFirstLoading = false;
+			        }
+			    } catch (error) {
+			        console.error("获取商品详情失败:", error);
+			        this.isNull = true;
+			        this.isFirstLoading = false;
+			    }
+			},
+
+			async getGoodsCouponFun() {
+				// const {
+				// 	data,
+				// 	code
+				// } = await getGoodsCoupon({
+				// 	id: this.id
+				// });
+				// if (code == 0) {
+				// 	this.couponList = data;
+				// }
+			},
+			async collectGoodsFun() {
+				if (!this.isLogin) return toLogin();
+				const {
+					goodsDetail: {
+						is_collect
+					}
+				} = this;
 				const {
 					data,
 					code
-				} = await getGoodsDetail({ activityId: this.id });
-				if (code === 0) {
-					let time = new Date(data.endTime).getTime() / 1000 - Date.now() / 1000;
-					// 更新页面数据
-					this.goodsDetail = data;  // 更新商品详情数据
-					this.goodsName = data.activityName; // 商品名称
-					this.currentPrice = data.currentPrice;  // 当前价格
-					this.originalPrice = data.originalPrice; // 原价
-					this.remainingQuota = data.remainingQuota; // 剩余库存
-					this.totalQuota = data.totalQuota;  // 总库存
-					this.goodsDescription = data.activityDescription; // 商品详情内容
-					this.goodsLocation = data.activityLocation;  // 商品活动地点
-					this.imageList = data.imageUrlList.split(','); // 商品图片列表
-					this.activityLink = data.detailIntroductionUrl;  // 商品详细介绍链接
-					this.optionalActivityInfo = data.optionalActivityInformation; // 可选活动信息
-					this.countTime = time;  // 活动结束时间剩余秒数
-
-					// 处理分享信息
-					this.$nextTick(() => {
-						this.isFirstLoading = false;
-					});
-
-					// #ifdef H5
-					let options = {
-						shareTitle: data.activityName,  // 分享标题
-						shareLink: location.href + '&invite_code=' + this.userInfo.distribution_code, // 分享链接
-						shareImage: data.imageUrlList.split(',')[0], // 分享图片，取第一张
-						shareDesc: data.activityDescription // 分享描述
-					};
-					this.wxShare(options);  // 分享设置
-					// #endif
-
-				} else {
-					this.isNull = true;
-					this.isFirstLoading = false;
+				} = await collectGoods({
+					is_collect: is_collect == 0 ? 1 : 0,
+					goods_id: this.id
+				});
+				if (code == 0) {
+					if (is_collect == 0) {
+						this.$toast({
+							title: '收藏成功'
+						});
+					} else {
+						this.$toast({
+							title: '取消收藏'
+						});
+					}
+					this.getGoodsDetailFun();
 				}
-			},	
-			
-		// 	async getGoodsCouponFun() {
-		// 		const {
-		// 			data,
-		// 			code
-		// 		} = await getGoodsCoupon({
-		// 			id: this.id
-		// 		});
-		// 		if (code == 1) {
-		// 			this.couponList = data;
-		// 		}
-		// 	},
-		// 	async collectGoodsFun() {
-		// 		if (!this.isLogin) return toLogin();
-		// 		const {
-		// 			goodsDetail: {
-		// 				is_collect
-		// 			}
-		// 		} = this;
-		// 		const {
-		// 			data,
-		// 			code
-		// 		} = await collectGoods({
-		// 			is_collect: is_collect == 0 ? 1 : 0,
-		// 			goods_id: this.id
-		// 		});
-		// 		if (code == 1) {
-		// 			if (is_collect == 0) {
-		// 				this.$toast({
-		// 					title: '收藏成功'
-		// 				});
-		// 			} else {
-		// 				this.$toast({
-		// 					title: '取消收藏'
-		// 				});
-		// 			}
-		// 			this.getGoodsDetailFun();
-		// 		}
-		// 	},
-		// 	showCouponFun() {
-		// 		if (!this.isLogin) return toLogin();
-		// 		this.showCoupon = true;
-		// 	},
-		// 	onChangeGoods(e) {
-		// 		console.log(e);
-		// 		this.checkedGoods = e.detail;
-		// 	},
-		// 	showSpecFun(type, id) {
-		// 		if (!this.isLogin) return toLogin();
-		// 		if (this.goodsType == 2 && [2, 3].includes(type)) {
-		// 			this.isGroup = 1;
-		// 			this.foundId = id;
-		// 		} else {
-		// 			this.isGroup = 0;
-		// 			this.foundId = '';
-		// 		}
-		// 		this.popupType = type;
-		// 		this.showSpec = true;
-		// 	},
-		// 	onBuy(e) {
-		// 		let {
-		// 			id,
-		// 			goodsNum
-		// 		} = e.detail;
-		// 		const {
-		// 			goodsType,
-		// 			team
-		// 		} = this;
-		// 		let goods = [{
-		// 			item_id: id,
-		// 			num: goodsNum
-		// 		}];
-		// 		const params = {
-		// 			goods,
-		// 		};
-		// 		this.showSpec = false;
-		// 		goodsType == 2 ? (params.teamId = team.team_id) : '';
-		// 		this.foundId ? (params.foundId = this.foundId) : '';
-		// 		uni.navigateTo({
-		// 			url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify(params)))
-		// 		})
-		// 		console.log(1111)
-		// 	},
-		// 	onConfirm(e) {
-		// 		const {
-		// 			team: {
-		// 				team_id
-		// 			}
-		// 		} = this;
-		// 		teamCheck({
-		// 			team_id,
-		// 			found_id: this.foundId
-		// 		}).then(res => {
-		// 			if (res.code == 1) {
-		// 				this.onBuy(e);
-		// 			}
-		// 		});
-		// 	},
-		// 	async onAddCart(e) {
-		// 		let {
-		// 			id,
-		// 			goodsNum
-		// 		} = e.detail;
+			},
+			showCouponFun() {
+				// if (!this.isLogin) return toLogin();
+				// this.showCoupon = true;
+			},
+			onChangeGoods(e) {
+				// console.log(e);
+				// this.checkedGoods = e.detail;
+			},
+			showSpecFun(type, id) {
+				// if (!this.isLogin) return toLogin();
+				// if (this.goodsType == 2 && [2, 3].includes(type)) {
+				// 	this.isGroup = 1;
+				// 	this.foundId = id;
+				// } else {
+				// 	this.isGroup = 0;
+				// 	this.foundId = '';
+				// }
+				// this.popupType = type;
+				// this.showSpec = true;
+			},
+			onBuy(e) {
+				// let {
+				// 	id,
+				// 	goodsNum
+				// } = e.detail;
+				// const {
+				// 	goodsType,
+				// 	team
+				// } = this;
+				// let goods = [{
+				// 	item_id: id,
+				// 	num: goodsNum
+				// }];
+				// const params = {
+				// 	goods,
+				// };
+				// this.showSpec = false;
+				// goodsType == 2 ? (params.teamId = team.team_id) : '';
+				// this.foundId ? (params.foundId = this.foundId) : '';
+				// uni.navigateTo({
+				// 	url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify(params)))
+				// })
+				// console.log(1111)
+			},
+			onConfirm(e) {
+				// const {
+				// 	team: {
+				// 		team_id
+				// 	}
+				// } = this;
+				// teamCheck({
+				// 	team_id,
+				// 	found_id: this.foundId
+				// }).then(res => {
+				// 	if (res.code == 0) {
+				// 		this.onBuy(e);
+				// 	}
+				// });
+			},
+			async onAddCart(e) {
+				// let {
+				// 	id,
+				// 	goodsNum
+				// } = e.detail;
 
-		// 		if (this.goodsType == 2) {
-		// 			// 拼团单独购买
-		// 			let goods = [{
-		// 				item_id: id,
-		// 				num: goodsNum
-		// 			}];
-		// 			uni.navigateTo({
-		// 				url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify({
-		// 					goods
-		// 				})))
-		// 			})
-		// 			return
-		// 		}
-		// 		const {
-		// 			code,
-		// 			data,
-		// 			msg
-		// 		} = await addCart({
-		// 			item_id: id,
-		// 			goods_num: goodsNum
-		// 		});
-		// 		if (code == 1) {
-		// 			this.getCartNum();
-		// 			this.$toast({
-		// 				title: msg,
-		// 				icon: 'success'
-		// 			});
-		// 			this.showSpec = false;
-		// 		}
-		// 	}
+				// if (this.goodsType == 2) {
+				// 	// 拼团单独购买
+				// 	let goods = [{
+				// 		item_id: id,
+				// 		num: goodsNum
+				// 	}];
+				// 	uni.navigateTo({
+				// 		url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify({
+				// 			goods
+				// 		})))
+				// 	})
+				// 	return
+				// }
+				// const {
+				// 	code,
+				// 	data,
+				// 	msg
+				// } = await addCart({
+				// 	item_id: id,
+				// 	goods_num: goodsNum
+				// });
+				// if (code == 0) {
+				// 	this.getCartNum();
+				// 	this.$toast({
+				// 		title: msg,
+				// 		icon: 'success'
+				// 	});
+				// 	this.showSpec = false;
+				// }
+			},
+			async onShareAppMessage() {
+				// const {
+				// 	goodsDetail,
+				// 	team,
+				// 	userInfo
+				// } = this;
+				// return {
+				// 	title: team.share_title || goodsDetail.activityName,
+				// 	imageUrl: goodsDetail.image,
+				// 	path: '/pages/goods_details/goods_details?id=' + this.id + "&invite_code=" + userInfo.distribution_code
+				// };
+			}
+		},
 		
 		
-		},
-		async onShareAppMessage() {
-			const {
-				goodsDetail,
-				team,
-				userInfo
-			} = this;
-			return {
-				title: team.share_title || goodsDetail.name,
-				imageUrl: goodsDetail.image,
-				path: '/pages/goods_details/goods_details?id=' + this.id + "&invite_code=" + userInfo.distribution_code
-			};
-		},
 		computed: {
 			...mapGetters(['cartNum', 'userInfo']),
+			shareConfig() {
+				if (!this.goodsDetail || !this.goodsDetail.currentPrice) {
+					return {};  // 或返回 null，根据组件兼容性决定
+				}
+				return {
+					avatar: this.userInfo?.avatar,
+					nickname: this.userInfo?.nickname,
+					image: this.imageList,
+					price: this.goodsDetail.currentPrice,
+					marketPrice: this.goodsDetail.originalPrice,
+					name: this.goodsDetail.activityName
+				};
+			},
 			btnText() {
 				const {
 					goodsType

@@ -113,7 +113,7 @@
 		methods: {
 			getPrizeFun() {
 				getPrize().then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						let {
 							config,
 							list,

@@ -90,7 +90,7 @@
 		methods: {
 			$getBubbleLists() {
 				getBubbleLists().then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.list = res.data.lists;
 						var requestTime = res.data.time * 1000;
 						Cache.set("bubbleList", JSON.stringify(this.list), 300);

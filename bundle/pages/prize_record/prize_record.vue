@@ -33,7 +33,7 @@
 		getUserRecord
 	} from '@/api/user';
 	import {
-		loadingFun
+		page
 	} from "@/utils/tools"
 	export default {
 		data() {
@@ -66,7 +66,7 @@
 					page
 				} = this;
 
-				loadingFun(getUserRecord, page, lists, loadingStatus).then(res => {
+				page(getUserRecord, page, lists, loadingStatus).then(res => {
 					if (res) {
 						this.page = res.page;
 						this.lists = res.dataList

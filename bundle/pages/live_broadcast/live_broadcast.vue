@@ -44,7 +44,7 @@
 		loadingType
 	} from "@/utils/type";
 	import {
-		loadingFun
+		page
 	} from "@/utils/tools"
 	import {
 		getLiveRoom
@@ -71,7 +71,7 @@
 					status,
 					page
 				} = this;
-				loadingFun(getLiveRoom, page, lists, status).then(res => {
+				page(getLiveRoom, page, lists, status).then(res => {
 					if (res) {
 						this.page = res.page;
 						this.lists = res.dataList

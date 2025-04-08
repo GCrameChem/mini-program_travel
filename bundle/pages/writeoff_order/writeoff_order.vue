@@ -39,7 +39,7 @@
 		loadingType
 	} from '@/utils/type';
 	import {
-		loadingFun,
+		page,
 		isWeixinClient
 	} from '@/utils/tools';
 	import wechath5 from '@/utils/wechath5'
@@ -102,7 +102,7 @@
 					order
 				} = this;
 				const type = order[current].type
-				const data = await loadingFun(getVerifyLists, page, orderList, status, {
+				const data = await page(getVerifyLists, page, orderList, status, {
 					type
 				})
 				if (!data) return

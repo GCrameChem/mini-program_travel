@@ -23,7 +23,7 @@
 							</template>
 							<view class="ml10">
 								<price-format :subscript-size="30" :line-through="true" :first-size="30"
-									:second-size="30" :price="goodsDetail.market_price">
+									:second-size="30" :price="goodsDetail.originalPrice">
 								</price-format>
 							</view>
 						</view>
@@ -72,7 +72,7 @@
 							</template>
 						</view>
 						<view class="line-through muted md">
-							<price-format :price="goodsDetail.market_price"></price-format>
+							<price-format :price="goodsDetail.originalPrice"></price-format>
 						</view>
 					</view>
 					<image class="icon-share" src="/static/images/icon_share.png" @tap="showShareBtn = true"></image>
@@ -89,13 +89,13 @@
 					</view>
 				</view>
 				<view class="row">
-					<view class="name lg bold">{{ goodsDetail.name }}</view>
+					<view class="name lg bold">{{ goodsDetail.activityName }}</view>
 					<image class="icon-share" src="/static/images/icon_share.png" @tap="showShareBtn = true"
 						v-if="goodsType == 1"></image>
 				</view>
 				<view class="row-between xs lighter" style="padding: 0 24rpx 20rpx">
-					<text v-if="goodsDetail.stock !== true">库存: {{ goodsDetail.stock }}件</text>
-					<text>销量: {{ goodsDetail.sales_sum }}件</text>
+					<text v-if="goodsDetail.totalQuota !== true">库存: {{ goodsDetail.totalQuota }}件</text>
+					<text>销量: {{ goodsDetail.remainingQuota }}件</text>
 					<text>浏览量: {{ goodsDetail.click_count }}次</text>
 				</view>
 			</view>
@@ -194,14 +194,14 @@
 					class="title row-between">
 					<view>
 						<text class="balck md mr10">用户评价</text>
-						<text class="primary sm">好评率{{ comment.goods_rate || '0%' }}</text>
+						<text class="primary sm">好评率{{ comment.rating || '0%' }}</text>
 					</view>
 					<view class="row">
 						<text class="lighter">查看全部</text>
 						<image class="icon-sm" src="/static/images/arrow_right.png"></image>
 					</view>
 				</navigator>
-				<view class="con" v-if="comment.goods_rate">
+				<view class="con" v-if="comment.rating">
 					<view class="user-info row">
 						<image class="avatar mr20" :src="comment.avatar"></image>
 						<view class="user-name md mr10">{{ comment.nickname }}</view>
@@ -209,7 +209,7 @@
 					<view class="muted xs mt10">
 						<text class="mr20">{{ comment.create_time }}</text>
 					</view>
-					<view v-if="comment.comment" class="dec mt20">{{ comment.comment }}</view>
+					<view v-if="comment.commentContent" class="dec mt20">{{ comment.commentContent }}</view>
 				</view>
 				<view class="con row-center muted" v-else>暂无评价</view>
 			</view>
@@ -269,8 +269,8 @@
 				nickname: userInfo.nickname,
 				image: goodsDetail.poster || goodsDetail.image,
 				price: goodsDetail.min_price,
-				marketPrice: goodsDetail.market_price,
-				name: goodsDetail.name
+				marketPrice: goodsDetail.originalPrice,
+				name: goodsDetail.activityName
 		}">
 		</share-popup>
 		<!-- 领券 -->
@@ -419,7 +419,7 @@
 				} = await getGoodsDetail({
 					id: this.id
 				});
-				if (code == 1) {
+				if (code == 0) {
 					let {
 						goods_image,
 						content,
@@ -443,7 +443,7 @@
 					if (team_found) {
 						team_found = arraySlice(team_found, [], 2);
 					}
-					this.distribution = distribution || {}
+					this.distribution = distribution || {};
 					this.goodsDetail = data;
 					this.swiperList = goods_image;
 					this.comment = comment;
@@ -477,7 +477,7 @@
 				} = await getGoodsCoupon({
 					id: this.id
 				});
-				if (code == 1) {
+				if (code == 0) {
 					this.couponList = data;
 				}
 			},
@@ -495,7 +495,7 @@
 					is_collect: is_collect == 0 ? 1 : 0,
 					goods_id: this.id
 				});
-				if (code == 1) {
+				if (code == 0) {
 					if (is_collect == 0) {
 						this.$toast({
 							title: '收藏成功'
@@ -562,7 +562,7 @@
 					team_id,
 					found_id: this.foundId
 				}).then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.onBuy(e);
 					}
 				});
@@ -594,7 +594,7 @@
 					item_id: id,
 					goods_num: goodsNum
 				});
-				if (code == 1) {
+				if (code == 0) {
 					this.getCartNum();
 					this.$toast({
 						title: msg,
@@ -611,7 +611,7 @@
 				userInfo
 			} = this;
 			return {
-				title: team.share_title || goodsDetail.name,
+				title: team.share_title || goodsDetail.activityName,
 				imageUrl: goodsDetail.image,
 				path: '/pages/goods_details/goods_details?id=' + this.id + "&invite_code=" + userInfo.distribution_code
 			};

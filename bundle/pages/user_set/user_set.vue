@@ -342,7 +342,7 @@ export default {
             userLogout({
                 token: this.token
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.$store.commit('LOGOUT')
                     this.$toast({
                         title: '退出成功'
@@ -382,7 +382,7 @@ export default {
                 mobile: this.userInfo.mobile || this.new_mobile,
                 key: this.smsType
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.$toast({
                         title: res.msg
                     })
@@ -392,7 +392,7 @@ export default {
         },
         $getUserInfo() {
             getUserInfo().then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.userInfo = res.data
                 }
             })
@@ -423,7 +423,7 @@ export default {
                 code: this.smsCode,
                 action: this.userInfo.mobile ? 'change' : ''
             }).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.showMobile = false
                     this.$toast({
                         title: res.msg
@@ -439,7 +439,7 @@ export default {
                 field: this.fieldType,
                 value: value
             })
-            if (res.code == 1) {
+            if (res.code == 0) {
                 this.$toast({
                     title: res.msg
                 })
@@ -572,7 +572,7 @@ export default {
                 repassword: comfirmPwd
             }
             forgetPwd(data).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.showPwd = false
                     this.$toast({
                         title: '设置密码成功'
@@ -611,7 +611,7 @@ export default {
         },
         $changeUserMobileMP(data) {
             changeUserMobile(data).then((res) => {
-                if (res.code == 1) {
+                if (res.code == 0) {
                     this.$toast({
                         title: res.msg
                     })

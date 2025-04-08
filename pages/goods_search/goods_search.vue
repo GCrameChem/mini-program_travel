@@ -74,7 +74,7 @@
 	} from '@/api/store';
 	import {
 		trottle,
-		loadingFun,
+		page,
 		getRect
 	} from '@/utils/tools';
 	import {
@@ -154,7 +154,7 @@
 
 			clearSearchFun() {
 				clearSearch().then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.getSearchpageFun();
 					}
 				});
@@ -207,7 +207,7 @@
 
 			getSearchpageFun() {
 				getSearchpage().then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						let {
 							history_lists,
 							hot_lists
@@ -260,7 +260,7 @@
 					price: priceSort,
 					sales_sum: saleSort
 				}
-				const data = await loadingFun(getGoodsSearch, page, goodsList, status, params)
+				const data = await page(getGoodsSearch, page, goodsList, status, params)
 				if (!data) return
 				this.page = data.page
 				this.goodsList = data.dataList

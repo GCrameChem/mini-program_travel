@@ -90,7 +90,7 @@
 // +----------------------------------------------------------------------
 import { getAccountLog } from "@/api/user";
 import { loadingType } from "@/utils/type";
-import {loadingFun} from "@/utils/tools"
+import {page} from "@/utils/tools"
 export default {
   data() {
     return {
@@ -142,7 +142,7 @@ export default {
         loadingStatus,
         page
       } = this;
-      loadingFun(getAccountLog, page, lists, loadingStatus, { source: 1, type: changeType}).then(res => {
+      page(getAccountLog, page, lists, loadingStatus, { source: 1, type: changeType}).then(res => {
           if(res) {
               this.page = res.page;
               this.lists = res.dataList

@@ -49,7 +49,7 @@ export default {
   methods: {
     getCouponListFun() {
       getCouponList().then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           if (res.data.length <= 0) {
             this.showNull = true;
             return;

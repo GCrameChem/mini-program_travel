@@ -52,14 +52,14 @@ export default {
     },
     async getShareInfo() {
       const { code, data } = await userShare();
-      if (code == 1) {
+      if (code == 0) {
         Cache.set("shareInfo", data);
       }
     },
     async getConfigFun() {
       try {
         const { code, data } = await getConfig();
-        if (code == 1) {
+        if (code == 0) {
           this.SETCONFIG(data);
           setTabbar();
         }
@@ -76,7 +76,7 @@ export default {
         inputInviteCode({
           code: invite_code,
         }).then((res) => {
-          if (res.code == -1) {
+          if (res.code == 0) {
             Cache.set("INVITE_CODE", invite_code);
           }
         });

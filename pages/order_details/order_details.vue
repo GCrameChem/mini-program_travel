@@ -544,7 +544,7 @@ export default {
     getOrderDetailFun() {
       getOrderDetail(this.id)
         .then((res) => {
-          if (res.code == 1) {
+          if (res.code == 0) {
             this.cancelTime = res.data.order_cancel_time - Date.now() / 1000;
             this.orderDetail = res.data;
             this.team = res.data.team || {};

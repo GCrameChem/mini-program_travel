@@ -137,7 +137,7 @@ export default {
         year: year,
         month: month
       }).then(res => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           let {
             more,
             list,

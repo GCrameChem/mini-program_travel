@@ -211,7 +211,7 @@ export default {
       deleteGoods({
         cart_id: this.cartId,
       }).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.getCartListFun();
         }
       });
@@ -230,7 +230,7 @@ export default {
           success: (res) => {},
         });
 
-        if (res.code == 1) {
+        if (res.code == 0) {
           let { lists, total_amount } = res.data;
           let cartType = 0;
 
@@ -268,7 +268,7 @@ export default {
         cart_id: cartId,
         selected: selected ? 1 : 0,
       }).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.getCartListFun();
         }
       });
@@ -280,7 +280,7 @@ export default {
         cart_id: cartId,
         goods_num: value,
       }).then((res) => {
-        if (res.code == 1) {
+        if (res.code == 0) {
           this.getCartListFun();
         } else {
           this.getCartListFun();

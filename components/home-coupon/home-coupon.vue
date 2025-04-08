@@ -109,7 +109,7 @@
 				}
 
 				getCoupon(id).then(res => {
-					if (res.code == 1) {
+					if (res.code == 0) {
 						this.$toast({
 							title: res.msg
 						})

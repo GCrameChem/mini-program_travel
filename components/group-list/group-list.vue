@@ -50,7 +50,7 @@
 		loadingType
 	} from '@/utils/type';
 	import {
-		loadingFun
+		page
 	} from '@/utils/tools';
 	import {
 		getUserGroup
@@ -97,7 +97,7 @@
 					groupList,
 					status
 				} = this;
-				const data = await loadingFun(getUserGroup, page, groupList, status, {
+				const data = await page(getUserGroup, page, groupList, status, {
 					status: groupType
 				})
 				if (!data) return
