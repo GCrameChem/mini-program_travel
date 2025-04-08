@@ -82,6 +82,19 @@ export function clearSearch() {
 	return request.get('goods/clearSearch');
 }
 
+//评价属性分类
+// export function getCommentCategory(id) {
+// 	return request.get("/goods_comment/category", {
+// 		params: {
+// 			goods_id: id
+// 		}
+// 	})
+// }
+export function getCommentCategory(data) {
+	const{activityId,...restParams} = data;
+	return request.get(`activity/reviewAttributes/${activityId}`, {params: restParams});
+}
+
 // 获取评价列表
 // export function getCommentList(data) {
 // 	return request.get("goods_comment/lists", {
@@ -92,6 +105,28 @@ export function getCommentList(data) {
 	return request.get("reviews/list", {
 		params: data
 	})
+}
+
+// 查询用户是否点赞
+export function getCommentLike(data) {
+	return request.get("review/isLike", {
+		params: data
+	})
+}
+// 用户点赞
+// export function addCommentLike(data) {
+// 	const{reviewId,...restParams} = data;
+// 	return request.post(`review/like/${reviewId}`, {
+// 		params: restParams
+// 	})
+// }
+// 用户点赞或取消点赞
+export function addCommentLike(data) {
+    const { reviewId, likeAction, ...restParams } = data;
+    let url = likeAction === 'add' ? `review/like/${reviewId}` : `review/unlike/${reviewId}`;  // 如果是取消点赞，使用unlike接口
+    return request.post(url, {
+        params: restParams
+    });
 }
 
 // 获取订单商品列表(一个订单可能多个商品)
@@ -119,24 +154,6 @@ export function deleteGoods(data) {
 //购物车选中状态
 export function changeCartSelect(data) {
 	return request.post('cart/selected', data)
-}
-
-//评价属性分类
-// export function getCommentCategory(id) {
-// 	return request.get("/goods_comment/category", {
-// 		params: {
-// 			goods_id: id
-// 		}
-// 	})
-// }
-
-export function getCommentCategory(data) {
-    if (typeof data !== 'object' || data === null) {
-        console.error("传入参数不是对象：", data);
-        return;
-    }
-    const { activityId, ...restParams } = data;
-    return request.get(`activity/reviewAttributes/${activityId}`, { params: restParams });
 }
 
 
