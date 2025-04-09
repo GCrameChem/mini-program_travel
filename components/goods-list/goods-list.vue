@@ -4,7 +4,7 @@
 			<navigator v-for="(records, index) in list" :key="index" class="records bg-white mt20" hover-class="none" open-type="navigate"
 			 :url="'/pages/goods_details/goods_details?id=' + (isBargain ? records.activityId : records.activityId)">
 				<view class="goods-img" style="width: 100%"> <!-- 原347rpx -->
-				      <custom-image 
+				      <custom-image
 				        :lazy-load="true" 
 				        radius="10rpx" 
 				        :src="records.imageUrlList && records.imageUrlList.length > 0 ? records.imageUrlList[0] : ''"

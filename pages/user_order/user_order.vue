@@ -12,10 +12,11 @@
 <script>
 
 import { orderType } from '@/utils/type';
-
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
+	  // isLogin: this.isLogin || true,
       active: orderType.ALL,
       order: [{
         name: '全部',
@@ -27,25 +28,31 @@ export default {
         isShow: false
       }, {
         name: '待收货',
-        type: orderType.DELIVERY,
+        type: orderType.DELIVER,
         isShow: false
       }, {
-        name: '已完成',
-        type: orderType.FINISH,
+        name: '待确认',
+        type: orderType.COMFIRM,
         isShow: false
       }, {
-        name: '已关闭',
-        type: orderType.CLOSE,
+        name: '待评价',
+        type: orderType.REVIEW,
         isShow: false
-      }]
+      },{
+        name: '退款/售后',
+        type: orderType.REFUND,
+        isShow: false
+      }
+	  ]
     };
   },
-
-  components: {
+  computed: {
+      ...mapGetters(['isLogin'])
   },
+  components: {},
   props: {},
   onLoad: function (options) {
-    const{order} = this
+    const{order} = this;
     let type = options.type || orderType.ALL;
 	let index = order.findIndex(item => item.type == type)
     this.changeShow(index);

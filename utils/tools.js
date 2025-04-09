@@ -115,7 +115,7 @@ export async function page(fun, page, dataList = [], status, params) {
   if (code == 0) {
     if (page == 1) dataList = [];
     let { record, more } = data;
-    dataList.push(...record);
+    dataList.push(...records);
     page = ++page;
     if (!more) {
       status = loadingType.FINISHED;

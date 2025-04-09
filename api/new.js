@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import {client} from '@/utils/tools'
-//文章分类
+// ?文章分类
 export function getCategoryList(data) {
     let {type} = data
     let url = type ? 'help/category' : 'article/category'
@@ -8,7 +8,7 @@ export function getCategoryList(data) {
     return request.get(url)
 }
 
-//文章列表
+// ?文章列表
 export function getArticleList(data) {
     let {type} = data
     let url = type ? 'help/lists' : 'article/lists'
@@ -18,7 +18,7 @@ export function getArticleList(data) {
     })
 }
 
-// 文章详情
+// ?文章详情
 export function getArticleDetail(data) {
     let {type} = data
     let url = type ? 'help/detail' : 'article/detail'

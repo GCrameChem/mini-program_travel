@@ -265,6 +265,7 @@ export default {
     },
     methods: {
         ...mapActions(['getCartNum', 'getUser']),
+		
         goLogin() {
             let { isLogin } = this
             if (isLogin) {
@@ -275,15 +276,17 @@ export default {
             }
             toLogin()
         },
-
+		
         goPage(url) {
-            if (!this.isLogin) return toLogin()
+			//SKIP:测试时不使用登录跳转逻辑，需要的参数在当页data中临时确定
+            // if (!this.isLogin) return toLogin()
             uni.navigateTo({
                 url
             })
         },
         tapMenu(item) {
-            if (!this.isLogin) return toLogin()
+            //SKIP:测试时不使用登录跳转逻辑，需要的参数在当页data中临时确定
+			//if (!this.isLogin) return toLogin()
             console.log(item)
             menuJump(item)
         },

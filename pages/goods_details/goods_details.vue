@@ -7,10 +7,11 @@
 		<loading-view v-if="isFirstLoading"></loading-view>
 		<view class="contain" v-if="!isNull&&goodsDetail" >
 			<bubble-tips top="180rpx"></bubble-tips>
-			<!-- 组件还没研究 -->
-			<product-swiper :imgUrls="swiperList" :video="goodsDetail.detailIntroductionUrl"></product-swiper>
+			<!-- 可插入图片列表 -->
+			<product-swiper :imgUrls="swiperList" :video="this.imageList"></product-swiper>
+			
 			<!-- 秒杀 -->
-			<view class="seckill row-between" v-if="goodsType == 1">
+			<!-- <view class="seckill row-between" v-if="goodsType == 1">
 				<view class="price row">
 					<view class="row white info">
 						<view style="align-items: baseline;" class="row ml20">
@@ -36,7 +37,7 @@
 						separator-color="#FF2C3C" font-size="24" height="36" separator-size="26"></u-count-down>
 				</view>
 			</view>
-			
+			 -->
 			<!-- 拼团 -->
 			<!-- <view class="group" v-show="goodsType == 2">
 				<view class="row info" style="height: 100%">
@@ -69,7 +70,7 @@
 						<view class="primary mr10">
 							<price-format :first-size="46" :second-size="32" :subscript-size="32"
 								:price="goodsDetail.currentPrice" :weight="500"></price-format>
-							<!-- 最大到最小价格，不过标签改乱了 -->
+							<!-- 最大到最小价格 -->
 							<!-- <template v-if="goodsDetail.currentPrice != goodsDetail.originalPrice">
 								<text style="font-size: 46rpx;">-</text>
 								<price-format :first-size="46" :second-size="32" :subscript-size="32"
@@ -239,7 +240,7 @@
 					<u-parse :html="goodsDetail.activityDescription" :lazy-load="true" :show-with-animation="true"></u-parse>
 				</view>
 			</view>
-			<!-- <view class="footer row bg-white fixed" v-if="goodsDetail">
+			<view class="footer row bg-white fixed" v-if="goodsDetail">
 				<navigator class="btn column-center" hover-class="none"
 					url="/bundle/pages/contact_offical/contact_offical">
 					<image class="icon-md" src="/static/images/icon_contact.png"></image>
@@ -263,7 +264,7 @@
 				</view>
 				<view class="right-buy br60 white mr20 ml10 md" @tap="showSpecFun(2)">{{ btnText.red }}</view>
 			</view>
-		 -->
+		
 		</view>
 		
 		<view v-else>
@@ -273,11 +274,11 @@
 			</view>
 			<recommend></recommend>
 		</view>
-		<!-- <spec-popup :show="showSpec" :goods="goodsDetail" :is-seckill="goodsType == 1" @close="showSpec = false"
+		<spec-popup :show="showSpec" :goods="goodsDetail" :is-seckill="goodsType == 1" @close="showSpec = false"
 			:show-add="popupType == 1 || popupType == 0" :show-buy="popupType == 2 || popupType == 0"
 			:showConfirm="popupType == 3" @buynow="onBuy" @addcart="onAddCart" @change="onChangeGoods"
 			:group="Boolean(isGroup)" :red-btn-text="btnText.red" :yellow-btn-text="btnText.yellow"
-			@confirm="onConfirm"></spec-popup> -->
+			@confirm="onConfirm"></spec-popup>
 			
 		<share-popup v-model="showShareBtn" 
 			:share-id="id" 
@@ -289,17 +290,17 @@
 		<!-- 领券 -->
 		<u-popup v-model="showCoupon" mode="bottom" border-radius="14">
 			<view>
-				<!-- <view class="row-between" style="padding: 30rpx">
+				<view class="row-between" style="padding: 30rpx">
 					<view class="title md bold">领券</view>
 					<view class="close" @tap="showCoupon = false">
 						<image class="icon-lg" src="/static/images/icon_close.png"></image>
 					</view>
 				</view> -->
-				<!-- <view class="content bg-body">
+				<view class="content bg-body">
 					<scroll-view scroll-y="true" style="height: 700rpx">
 						<coupon-list :list="couponList" @reflash="getGoodsCouponFun" :btn-type="3"></coupon-list>
 					</scroll-view>
-				</view> -->
+				</view>
 			</view>
 		</u-popup>
 
@@ -411,15 +412,8 @@
 			} else {
 				this.id = options.id;
 			}
-			// this.getGoodsCouponFun();
-			// this.getCartNum();
-			
-			
-			////////////////////////
-			// this.id = 1;  // 模拟传递活动 ID 参数
-			// console.log("this.id",this.id);
-			// this.getGoodsDetailFun();
-			////////////////////////
+			this.getGoodsCouponFun();
+			this.getCartNum();
 		},
 		async onShow() {
 			await this.getGoodsDetailFun(); // 等待异步完成

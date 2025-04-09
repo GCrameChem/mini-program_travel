@@ -1,20 +1,3 @@
-// +---------------------------------------------------------------------- // |
-likeshop开源商城系统 //
-+---------------------------------------------------------------------- // |
-欢迎阅读学习系统程序代码，建议反馈是我们前进的动力 // |
-gitee下载：https://gitee.com/likeshop_gitee // |
-github下载：https://github.com/likeshop-github // |
-访问官网：https://www.likeshop.cn // | 访问社区：https://home.likeshop.cn // |
-访问手册：http://doc.likeshop.cn // | 微信公众号：likeshop技术社区 // |
-likeshop系列产品在gitee、github等公开渠道开源版本可免费商用，未经许可不能去除前后端官方版权标识
-// |
-likeshop系列产品收费版本务必购买商业授权，购买去版权授权后，方可去除前后端官方版权标识
-// | 禁止对系统程序代码以任何目的，任何形式的再发布 // |
-likeshop团队版权所有并拥有最终解释权 //
-+---------------------------------------------------------------------- // |
-author: likeshop.cn.team //
-+----------------------------------------------------------------------
-
 <template>
   <view>
     <view class="order-list">
@@ -23,11 +6,11 @@ author: likeshop.cn.team //
         :key="index"
         hover-class="none"
         class="order-item bg-white mt20"
-        :url="'/pages/order_details/order_details?id=' + item.id"
+        :url="'/pages/order_details/order_details?id=' + item.orderId"
       >
         <view class="order-header row-between">
           <view class="row">
-            <view v-if="item.delivery_type == 2" class="mr10">
+            <!-- <view v-if="item.deliver_type == 2" class="mr10">
               <u-tag
                 text="自提"
                 size="mini"
@@ -44,27 +27,35 @@ author: likeshop.cn.team //
             </view>
             <view v-if="item.order_type == 3" class="mr10">
               <u-tag text="砍价" size="mini" type="primary" mode="plain" />
-            </view>
-            订单编号：{{ item.order_sn }}
+            </view> -->
+            订单编号（暂为orderId）：{{ item.orderId }}
           </view>
-          <view :class="item.order_status == 4 ? 'muted' : 'primary'">{{
+          <!-- <view :class="item.order_status == 5 ? 'muted' : 'primary'">{{
             item.order_status_desc
-          }}</view>
+          }}</view> -->
         </view>
         <view class="order-con">
-          <order-goods
+			<!-- 暂时没有开发一个订单多个商品的功能 -->
+          <!-- <order-goods
             :list="item.order_goods"
-            :order_type="item.order_type"
-          ></order-goods>
+            :order_type="item.orderStatus"
+          ></order-goods> -->
+		  <order-goods
+		    :list="item.activityId"
+		    :order_type="item.orderStatus"
+		  ></order-goods>
           <view class="all-price row-end">
-            <text class="muted xs"
+            <!-- <text class="muted xs"
               >共{{ goodCount(item.order_goods) }}件商品，总金额：</text
-            >
+            > -->
+			<text class="muted xs"
+			  >共1件商品，总金额：</text
+			>
             <price-format
               :subscript-size="30"
               :first-size="30"
               :second-size="30"
-              :price="item.order_amount"
+              :price="item.orderAmount"
             ></price-format>
           </view>
         </view>
@@ -80,6 +71,7 @@ author: likeshop.cn.team //
             item.comment_btn
           "
         >
+		  <!-- 取消订单相关 -->
           <view style="flex: 1">
             <view
               class="primary sm row"
@@ -95,8 +87,8 @@ author: likeshop.cn.team //
                 bg-color="transparent"
                 @end="reflesh"
               ></u-count-down
-            ></view>
-          </view>
+            ></view>      
+		  </view>
           <view v-if="item.cancel_btn">
             <button
               size="sm"
@@ -199,17 +191,22 @@ import {
   getwechatSyncCheck,
 } from "@/api/order";
 import { compareWeChatVersion } from "@/utils/tools";
-
 import { prepay } from "@/api/app";
 import { loadingType } from "@/utils/type";
-
+import { mapGetters } from 'vuex';
 import { wxpay, alipay } from "@/utils/pay";
 import { page } from "@/utils/tools";
 export default {
   data() {
     return {
       page: 1,
+	  pageSize:6,
+	  userInfo:this.userInfo,
+	  // 测试时使用
+	  //userId: userInfo.userId,
+	  userId: 1,
       orderList: [],
+	  order_goods:[],
       status: loadingType.LOADING,
       showCancel: false,
       type: 0,
@@ -225,6 +222,9 @@ export default {
       type: String,
     },
   },
+  computed: {
+        ...mapGetters(['userInfo']),
+  },
   created: function () {
     uni.$on("refreshorder", () => {
       this.reflesh();
@@ -238,6 +238,7 @@ export default {
     });
   },
   beforeMount: function () {
+	console.log("ready to run getOrderListFun()");
     this.getOrderListFun();
   },
   destroyed: function () {
@@ -388,14 +389,29 @@ export default {
     },
 
     async getOrderListFun() {
-      let { page, orderType, orderList, status } = this;
-      const data = await page(getOrderList, page, orderList, status, {
-        type: orderType,
-      });
-      if (!data) return;
-      this.page = data.page;
-      this.orderList = data.dataList;
-      this.status = data.status;
+        let { page, orderType, orderList, status } = this;
+		console.log("正在调用：getOrderListFun()");
+		// BUG: 分页调用函数无法正常加载
+		// const data = await page(getOrderList, page, orderList, status, {
+		// 	page: this.page,
+		// 	pageSize:this.pageSize,
+		// 	userId: this.userId,
+		// 	//orderStatus: all,
+		// });
+		// if (!data) return;
+		// this.page = data.page;
+		// this.orderList = data.dataList;
+		// this.status = data.status;
+		// HACK:直接请求
+		const data = await getOrderList({
+			page: this.page,
+			pageSize: this.pageSize,
+			userId: this.userId,
+		});
+		if (!data) return;
+		  this.orderList = data.data.records;
+		  // 此处直接定义为返回完全
+		  this.status = loadingType.FINISHED;
     },
     goPage(url) {
       uni.navigateTo({
@@ -417,19 +433,25 @@ export default {
         let text = "";
         switch (status) {
           case 0:
-            text = "待支付";
+            text = "待付款";
             break;
           case 1:
-            text = "待发货";
+            //text = "待发货";
+			text = "待收获";
             break;
           case 2:
-            text = "待收货";
+            //text = "待收货";
+			text = "待确认";
             break;
           case 3:
-            text = "已完成";
+            // text = "已完成";
+			text = "待评价";
             break;
           case 4:
-            text = "订单已关闭";
+			// text = "订单已关闭";
+            text = "退款/售后";
+		  case 5: 
+			text = "订单已关闭";
             break;
         }
         return text;

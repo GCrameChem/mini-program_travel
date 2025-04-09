@@ -21,16 +21,18 @@ export const payWay = {
 }
 
 export const orderType = {
- ALL: 'all',
-  //全部
- PAY: 'pay',
-  //待付款
- DELIVERY: 'delivery',
-  //待收货
- FINISH: 'finish',
-  //待收货
- CLOSE: 'close' //待收货
-
+	//  全部
+	ALL: 'all',
+	// 待付款
+	PAY: 'pay',
+	// 待发货
+	DELIVER: 'deliver',
+	// 待收货
+	COMFIRM: 'comfirm',
+	// 待评价
+	REVIEW: 'review',
+	// 售后/退款
+	REFUND: 'refund'
 };
 // 售后状态
 export const AfterSaleType = {

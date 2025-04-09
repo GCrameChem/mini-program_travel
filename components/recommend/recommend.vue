@@ -34,27 +34,19 @@ export default {
   beforeMount: function () {
     this.getBestListFun();
   },
-  destroyed: function () {// 在组件实例被从页面节点树移除时执行
+  destroyed: function () {
   },
   methods: {
     async getBestListFun() {
       try {
-        // const { data, code } = await getBestList({
-        //   page: 1,
-        //   pageSize: 6
-        // });
 		const res = await getBestList({
           page: 1,
           pageSize: 6
         });
-		//console.log(res);
 		
         if (res.code === 0) {
           //console.log(res.data);
           let { records } = res.data;  // 解构出records字段
-		  //console.log('返回的数据:', records);  // 打印返回的数据结构
-  
-          // 如果 records 不为空，才赋值给 goodsList
           if (records && records.length > 0) {
             this.goodsList = records;  // 将 records 赋值给 goodsList
           } else {
