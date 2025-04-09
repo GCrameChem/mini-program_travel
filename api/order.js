@@ -6,7 +6,7 @@ import { client } from "@/utils/tools";
 //   return request.post("order/buy", data);
 // }
 export function orderBuy(data) {
-  return request.post("order/buy", data);
+  return request.post("orders", data);
 }
 
 
@@ -27,18 +27,12 @@ export function getDelivery() {
   return request.get("order/getDeliveryType");
 }
 
-// TODO获取订单列表
-// export function getOrderList(data) {
-//   return request.get("order/lists", {
-//     params: data,
-//   });
-// }
+// 获取订单列表
 export function getOrderList(data) {
   return request.get("orders/list", {
     params: data,
   });
 }
-
 
 // TODO订单详情
 export function getOrderDetail(id) {

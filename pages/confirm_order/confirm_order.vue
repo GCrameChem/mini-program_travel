@@ -253,12 +253,18 @@ likeshop.cn.team // +-----------------------------------------------------------
 <script>
 import { orderBuy, getOrderCoupon, getDelivery } from '@/api/order'
 import { teamBuy } from '@/api/activity'
+import { mapGetters } from 'vuex'
 import { prepay, getMnpNotice, getPayway } from '@/api/app'
 import { wxpay, alipay } from '@/utils/pay'
 
 export default {
     data() {
         return {
+			userInfo: this.userInfo,
+			// userId: userInfo.userId,
+			// IMPORTANT: 暂用测试数据
+			userId: 1,
+			
             isFirstLoading: true, // 首次页面加载loading
             showLoading: false, // Loading: 显示 | 隐藏
             address: {}, // 收货地址信息
@@ -269,7 +275,6 @@ export default {
             userRemark: '', // 用户留言
             userConsignee: '', // 取货人
             userMobile: '', // 联系电话
-
             storeInfo: {}, // 门店信息
 
             couponId: '', // 优惠券ID
@@ -503,11 +508,11 @@ export default {
         },
 
         // 初始化页面数据
-        async initPageData(from) {
+        async initPageData(form) {
             this.showLoading = true
 
             try {
-                const { code, data, msg } = this.teamId ? await teamBuy(from) : await orderBuy(from)
+                const { code, data, msg } = this.teamId ? await teamBuy(form) : await orderBuy(form)
 
                 if (code == 0) {
                     this.address = data.address
@@ -538,25 +543,27 @@ export default {
         },
 
         // 订单提交
-        async handleOrderSubmit(from) {
+        async handleOrderSubmit(form) {
             this.showLoading = true
-
-            from.remark = this.userRemark
-            from.type = this.type
+			form.orderInformation = this.userRemark
+            // form.remark = this.userRemark
+            // form.type = this.type
 
             try {
-                const { code, data, msg } = this.teamId ? await teamBuy(from) : await orderBuy(from)
-
+                // const { code, data, msg } = this.teamId ? await teamBuy(form) : await orderBuy(form)
+				
+				const { code, data, msg } = await orderBuy(form)
+				
                 if (code == 0) {
                     uni.redirectTo({
-                        url: `/pages/payment/payment?from=${data.type}&order_id=${data.order_id}`
+                        url: `/pages/payment/payment?form=${data.type}&order_id=${data.order_id}`
                     })
                 } else {
                     throw new Error(msg)
                 }
             } catch (err) {
                 console.log(err)
-                // this.$toast({ title: '下单异常，请重新操作' })
+                this.$toast({ title: '下单异常，请重新操作' })
             } finally {
                 this.showLoading = false
             }
@@ -565,41 +572,45 @@ export default {
         // 订单处理
         handleOrderMethods(action) {
             // 订单提交数据
-            const orderFrom = {
-                action,
+            const orderForm = {
+				// action,
+				// goods: this.goods,
+				// delivery_type: this.delivery,
+				// use_integral: this.useIntegral,
+				// address_id: this.addressId,
+				// coupon_id: this.couponId,
+				// bargain_launch_id: this.bargainLaunchId == -1 ? '' : this.bargainLaunchId
+                
+				action,
                 goods: this.goods,
-                delivery_type: this.delivery,
-                use_integral: this.useIntegral,
-                address_id: this.addressId,
-                coupon_id: this.couponId,
-                bargain_launch_id: this.bargainLaunchId == -1 ? '' : this.bargainLaunchId
+				userId: this.userId,
+                // address_id: this.addressId,
+                //coupon_id: this.couponId,
             }
 
             // 门店自提
-            if (this.addressTabsList[this.addressTabsIndex]['sign'] === 'store') {
-                orderFrom.selffetch_shop_id = this.storeInfo.id
-                orderFrom.consignee = this.userConsignee
-                orderFrom.mobile = this.userMobile
-            }
+            // if (this.addressTabsList[this.addressTabsIndex]['sign'] === 'store') {
+            //     orderForm.selffetch_shop_id = this.storeInfo.id
+            //     orderForm.consignee = this.userConsignee
+            //     orderForm.mobile = this.userMobile
+            // }
 
             // 拼团
-            if (this.teamId) {
-                const goods = this.goods[0]
-
-                delete orderFrom.goods
-
-                orderFrom.item_id = goods.item_id
-                orderFrom.goods_num = goods.num
-                orderFrom.team_id = this.teamId
-                orderFrom.found_id = this.foundId
-            }
+            // if (this.teamId) {
+            //     const goods = this.goods[0]
+            //     delete orderForm.goods
+            //     orderForm.item_id = goods.item_id
+            //     orderForm.goods_num = goods.num
+            //     orderForm.team_id = this.teamId
+            //     orderForm.found_id = this.foundId
+            // }
 
             switch (action) {
                 case 'info':
-                    this.initPageData(orderFrom)
+                    this.initPageData(orderForm)
                     break
                 case 'submit':
-                    this.handleOrderSubmit(orderFrom)
+                    this.handleOrderSubmit(orderForm)
                     break
             }
         }

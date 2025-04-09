@@ -1,3 +1,5 @@
+<!-- FIXME:修改逻辑，通过状态直接控制显示哪种按钮（做个动态样式模板） -->
+
 <template>
   <view>
     <view class="order-list">
@@ -204,6 +206,7 @@ export default {
 	  userInfo:this.userInfo,
 	  // 测试时使用
 	  //userId: userInfo.userId,
+	  // IMPORTANT: 暂用测试数据
 	  userId: 1,
       orderList: [],
 	  order_goods:[],
