@@ -8,7 +8,7 @@
 		<view class="contain" v-if="!isNull&&goodsDetail" >
 			<bubble-tips top="180rpx"></bubble-tips>
 			<!-- 可插入图片列表 -->
-			<product-swiper :imgUrls="swiperList" :video="this.imageList"></product-swiper>
+			<product-swiper :imgUrls="swiperList" :video="this.imageUrlList"></product-swiper>
 			
 			<!-- 秒杀 -->
 			<!-- <view class="seckill row-between" v-if="goodsType == 1">
@@ -194,7 +194,9 @@
 			 -->
 			<view v-if="!goodsType" class="spec row bg-white mt20" @tap="showSpecFun(0)">
 				<view class="text lighter">已选</view>
-				<view class="line1 mr20" style="flex: 1;">{{ checkedGoods.spec_value_str || '默认' }}</view>
+				<!-- 可选择的类型 -->
+				<view class="line1 mr20" style="flex: 1;">{{ '默认' }}</view>
+				<!-- <view class="line1 mr20" style="flex: 1;">{{ checkedGoods.optionalActivityInformation || '默认' }}</view> -->
 				<image class="icon-sm" src="/static/images/arrow_right.png"></image>
 			</view>
 			<navigator class="mt20" hover-class="none" url="/bundle/pages/server_explan/server_explan?type=2">
@@ -218,9 +220,10 @@
 				</navigator>
 				<view class="con" v-if="comment.rating">
 					<view class="user-info row">
-						<!-- 此处修改所有有关user-info需要通过用户id查询头? -->
+						<!-- 此处修改所有有关user-info需要通过用户id查询头;评论预览功能尚未加入 -->
 						<image class="avatar mr20" :src="comment.avatar"></image>
-						<view class="user-name md mr10">{{ comment.nickname }}</view>
+						<!-- <view class="user-name md mr10">{{ comment.nickname }}</view> -->
+						<view class="user-name md mr10">{{ comment.activityId }}</view>
 					</view>
 					<view class="muted xs mt10">
 						<text class="mr20">{{ comment.create_time }}</text>
@@ -229,7 +232,8 @@
 				</view>
 				<view class="con row-center muted" v-else>暂无评价</view>
 			</view>
-
+			
+			<!---->
 			<view class="goods-like mt20 bg-white" v-if="goodsLike.length">
 				<goods-like :list="goodsLike"></goods-like>
 			</view>
@@ -430,12 +434,11 @@
 			this.scrollTop = scrollTop
 		},
 		methods: {
+			// IMPORTANT:函数内全部注释的就是还没修改但是取消注释可能报错的
 			...mapActions(['getCartNum']),
 			async getGoodsDetailFun() {
 			    try {
 			        const { data: responseData, code } = await getGoodsDetail({ activityId: this.id });
-					//console.log("responseData:",responseData);
-					// console.log("code:",code);
 			        if (code === 0) {
 			            // 从 responseData 中解构需要的字段
 						
@@ -464,7 +467,6 @@
 			            this.goodsDetail = responseData;  // 更新商品详情数据
 						this.content = activityDescription; // 商品详情内容
 			            this.goodsName = activityName;  // 商品名称
-			            //console.log("测试//////////goodsName://////////",this.goodsName);
 						this.currentPrice = currentPrice;  // 当前价格
 			            this.originalPrice = originalPrice; // 原价
 			            this.remainingQuota = remainingQuota; // 剩余库存
@@ -506,15 +508,15 @@
 			},
 
 			async getGoodsCouponFun() {
-				// const {
-				// 	data,
-				// 	code
-				// } = await getGoodsCoupon({
-				// 	id: this.id
-				// });
-				// if (code == 0) {
-				// 	this.couponList = data;
-				// }
+				const {
+					data,
+					code
+				} = await getGoodsCoupon({
+					id: this.id
+				});
+				if (code == 0) {
+					this.couponList = data;
+				}
 			},
 			async collectGoodsFun() {
 				if (!this.isLogin) return toLogin();
@@ -548,107 +550,112 @@
 				// this.showCoupon = true;
 			},
 			onChangeGoods(e) {
-				// console.log(e);
-				// this.checkedGoods = e.detail;
+				console.log(e);
+				this.checkedGoods = e.detail;
 			},
 			showSpecFun(type, id) {
+				// SKIP:跳过登录
 				// if (!this.isLogin) return toLogin();
-				// if (this.goodsType == 2 && [2, 3].includes(type)) {
-				// 	this.isGroup = 1;
-				// 	this.foundId = id;
-				// } else {
-				// 	this.isGroup = 0;
-				// 	this.foundId = '';
-				// }
-				// this.popupType = type;
-				// this.showSpec = true;
+				console.log("Goods Type:", this.goodsType);
+				console.log("Type:", type);
+				if (this.goodsType == 2 && [2, 3].includes(type)) {
+					this.isGroup = 1;
+					this.foundId = id;
+				} else {
+					this.isGroup = 0;
+					this.foundId = '';
+				}
+				this.popupType = type;
+				this.showSpec = true;
 			},
 			onBuy(e) {
-				// let {
-				// 	id,
-				// 	goodsNum
-				// } = e.detail;
-				// const {
-				// 	goodsType,
-				// 	team
-				// } = this;
-				// let goods = [{
-				// 	item_id: id,
-				// 	num: goodsNum
-				// }];
-				// const params = {
-				// 	goods,
-				// };
-				// this.showSpec = false;
-				// goodsType == 2 ? (params.teamId = team.team_id) : '';
-				// this.foundId ? (params.foundId = this.foundId) : '';
-				// uni.navigateTo({
-				// 	url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify(params)))
-				// })
-				// console.log(1111)
+				console.log("onBuy Test");
+				let {
+					id,
+					goodsNum // 目前仅1
+				} = e.detail;
+				const {
+					goodsType,
+					team
+				} = this;
+				let goods = [{
+					activityId: id,
+					num: goodsNum
+				}];
+				const params = {
+					goods,
+				};
+				this.showSpec = false;
+				goodsType == 2 ? (params.teamId = team.team_id) : '';
+				this.foundId ? (params.foundId = this.foundId) : '';
+				uni.navigateTo({
+					url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify(params)))
+				})
+				console.log(1111)
 			},
 			onConfirm(e) {
-				// const {
-				// 	team: {
-				// 		team_id
-				// 	}
-				// } = this;
-				// teamCheck({
-				// 	team_id,
-				// 	found_id: this.foundId
-				// }).then(res => {
-				// 	if (res.code == 0) {
-				// 		this.onBuy(e);
-				// 	}
-				// });
+				console.log("onConfirm Test");
+				const {
+					team: {
+						team_id
+					}
+				} = this;
+				teamCheck({
+					team_id,
+					found_id: this.foundId
+				}).then(res => {
+					if (res.code == 0) {
+						this.onBuy(e);
+					}
+				});
 			},
 			async onAddCart(e) {
-				// let {
-				// 	id,
-				// 	goodsNum
-				// } = e.detail;
+				let {
+					id,
+					goodsNum
+				} = e.detail;
 
-				// if (this.goodsType == 2) {
-				// 	// 拼团单独购买
-				// 	let goods = [{
-				// 		item_id: id,
-				// 		num: goodsNum
-				// 	}];
-				// 	uni.navigateTo({
-				// 		url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify({
-				// 			goods
-				// 		})))
-				// 	})
-				// 	return
-				// }
-				// const {
-				// 	code,
-				// 	data,
-				// 	msg
-				// } = await addCart({
-				// 	item_id: id,
-				// 	goods_num: goodsNum
-				// });
-				// if (code == 0) {
-				// 	this.getCartNum();
-				// 	this.$toast({
-				// 		title: msg,
-				// 		icon: 'success'
-				// 	});
-				// 	this.showSpec = false;
-				// }
+				if (this.goodsType == 2) {
+					// 拼团单独购买
+					let goods = [{
+						activityId: id,
+						num: goodsNum
+					}];
+					uni.navigateTo({
+						url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify({
+							goods
+						})))
+					})
+					return
+				}
+				const {
+					code,
+					data,
+					msg
+				} = await addCart({
+					activityId: id,
+					goods_num: goodsNum
+				});
+				if (code == 0) {
+					this.getCartNum();
+					this.$toast({
+						title: msg,
+						icon: 'success'
+					});
+					this.showSpec = false;
+				}
 			},
 			async onShareAppMessage() {
-				// const {
-				// 	goodsDetail,
-				// 	team,
-				// 	userInfo
-				// } = this;
-				// return {
-				// 	title: team.share_title || goodsDetail.activityName,
-				// 	imageUrl: goodsDetail.image,
-				// 	path: '/pages/goods_details/goods_details?id=' + this.id + "&invite_code=" + userInfo.distribution_code
-				// };
+				const {
+					goodsDetail,
+					team,
+					userInfo
+				} = this;
+				return {
+					title: team.share_title || goodsDetail.activityName,
+					imageUrl: goodsDetail.image,
+					path: '/pages/goods_details/goods_details?id=' + this.id + "&invite_code=" + userInfo.distribution_code
+				};
 			}
 		},
 		

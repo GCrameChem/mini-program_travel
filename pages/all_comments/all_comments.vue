@@ -27,10 +27,9 @@
             <view class="main bg-white">
                 <view class="evaluation-list">
                     <view v-for="(item, index) in commentList" :key="index" class="evaluation-item">
-                        <!-- 这里需要通过用户id查询用户头像和昵称数据 -->
                         <view class="user-info row">
                             <image class="avatar mr20" :src="item.avatar"></image>
-                            <view class="user-name md mr10">{{ item.userId }}</view>
+                            <view class="user-name md mr10">{{ item.nickname }}</view>
                             <u-rate disabled size="26rpx" color="#FF2C3C" v-model="item.rating"></u-rate>
                         </view>
                         <view class="muted xs mt10">

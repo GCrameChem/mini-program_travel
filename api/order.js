@@ -2,9 +2,6 @@ import request from "@/utils/request";
 import { client } from "@/utils/tools";
 
 // TODO下单
-// export function orderBuy(data) {
-//   return request.post("order/buy", data);
-// }
 export function orderBuy(data) {
   return request.post("orders", data);
 }

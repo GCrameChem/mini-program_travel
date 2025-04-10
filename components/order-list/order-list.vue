@@ -43,7 +43,7 @@
             :order_type="item.orderStatus"
           ></order-goods> -->
 		  <order-goods
-		    :list="item.activityId"
+		    :list="item.activityList"
 		    :order_type="item.orderStatus"
 		  ></order-goods>
           <view class="all-price row-end">

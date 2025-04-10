@@ -14,8 +14,8 @@ const IS_H5 = false
 /** S API BaseURL **/
 const baseURLMap = {
     // 开发环境
-    //development: 'https://likeshop-open.yixiangonline.com',
-    development: 'http://127.0.0.1:4523/m1/6057514-5747647-default',
+    //development: 'http://127.0.0.1:4523/m1/6057514-5747647-default',
+	development: 'http://127.0.0.1:4523/m1/6191757-5884297-default',
 	// development: 'http://127.0.0.1:20208',
     // 生产环境https://php-b2c.likeshop.cn
     production: IS_H5 ? location.origin : ''

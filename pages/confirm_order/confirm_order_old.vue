@@ -1,3 +1,15 @@
+// +---------------------------------------------------------------------- // | likeshop开源商城系统
+// +---------------------------------------------------------------------- // |
+欢迎阅读学习系统程序代码，建议反馈是我们前进的动力 // | gitee下载：https://gitee.com/likeshop_gitee
+// | github下载：https://github.com/likeshop-github // | 访问官网：https://www.likeshop.cn // |
+访问社区：https://home.likeshop.cn // | 访问手册：http://doc.likeshop.cn // |
+微信公众号：likeshop技术社区 // |
+likeshop系列产品在gitee、github等公开渠道开源版本可免费商用，未经许可不能去除前后端官方版权标识 // |
+likeshop系列产品收费版本务必购买商业授权，购买去版权授权后，方可去除前后端官方版权标识 // |
+禁止对系统程序代码以任何目的，任何形式的再发布 // | likeshop团队版权所有并拥有最终解释权 //
++---------------------------------------------------------------------- // | author:
+likeshop.cn.team // +----------------------------------------------------------------------
+
 <template>
     <view>
         <view class="confirm-order">
@@ -253,9 +265,6 @@ export default {
 			// IMPORTANT: 暂用测试数据
 			userId: 1,
 			
-			// 默认加入时待付款
-			orderStatus: 'pay',
-			
             isFirstLoading: true, // 首次页面加载loading
             showLoading: false, // Loading: 显示 | 隐藏
             address: {}, // 收货地址信息
@@ -312,7 +321,7 @@ export default {
         getDelivery()
             // 请求结果判断
             .then(({ code, data, msg }) => {
-                if (code != 0) throw new Error(msg)
+                if (code != 1) throw new Error(msg)
                 return data
             })
             // 配送方式Tabs处理
@@ -546,11 +555,9 @@ export default {
 				const { code, data, msg } = await orderBuy(form)
 				
                 if (code == 0) {
-					this.$toast({ title: '订单创建成功' })
-					// IMPORTANT:接口无返回数据，尚未实现自动跳转
-                    // uni.redirectTo({
-                    //     url: `/pages/payment/payment?form=${data.orderStatus}&order_id=${data.order_id}`
-                    // })
+                    uni.redirectTo({
+                        url: `/pages/payment/payment?form=${data.type}&order_id=${data.order_id}`
+                    })
                 } else {
                     throw new Error(msg)
                 }
@@ -578,10 +585,26 @@ export default {
 				action,
                 goods: this.goods,
 				userId: this.userId,
-				orderStatus: this.orderStatus,
                 // address_id: this.addressId,
                 //coupon_id: this.couponId,
             }
+
+            // 门店自提
+            // if (this.addressTabsList[this.addressTabsIndex]['sign'] === 'store') {
+            //     orderForm.selffetch_shop_id = this.storeInfo.id
+            //     orderForm.consignee = this.userConsignee
+            //     orderForm.mobile = this.userMobile
+            // }
+
+            // 拼团
+            // if (this.teamId) {
+            //     const goods = this.goods[0]
+            //     delete orderForm.goods
+            //     orderForm.item_id = goods.item_id
+            //     orderForm.goods_num = goods.num
+            //     orderForm.team_id = this.teamId
+            //     orderForm.found_id = this.foundId
+            // }
 
             switch (action) {
                 case 'info':
@@ -592,8 +615,7 @@ export default {
                     break
             }
         }
-    
-	}
+    }
 }
 </script>
 <style>

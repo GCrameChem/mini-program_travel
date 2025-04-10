@@ -1,14 +1,14 @@
 <template>
     <view class="order-goods bg-white">
         <view v-for="(item, index) in list" :key="index" class="item-wrap">
-            <view class="item row" @tap="toGoods(item.goods_id)">
+            <view class="item row" @tap="toGoods(item.activityId)">
                 <view class="goods-img">
                     <custom-image
                         width="180rpx"
                         radius="10rpx"
                         height="180rpx"
                         lazy-load
-                        :src="item.image_str || item.image"
+                        :src="item.imageUrlList[0]"
                     ></custom-image>
                 </view>
                 <view class="goods-info ml20 flex1">
@@ -21,14 +21,15 @@
                             type="primary"
                             mode="plain"
                         />
-                        {{ item.goods_name || item.name }}</view
+                        {{ item.activityName || item.name }}</view
                     >
-                    <view class="goods-spec xs muted mb20">{{
+                    
+<!-- 					<view class="goods-spec xs muted mb20">{{
                         item.spec_value_str || item.spec_value
-                    }}</view>
+                    }}</view> -->
                     <view class="row-between">
                         <view class="goods-price row">
-                            <view class="primary">
+<!--                            <view class="primary">
                                 <price-format
                                     v-if="!item.is_member && order_type === 0"
                                     :weight="500"
@@ -37,8 +38,9 @@
                                     :second-size="24"
                                     :price="item.original_price || item.goods_price"
                                 ></price-format>
-                            </view>
-                            <view class="vip-price row" v-if="item.is_member && order_type === 0">
+                            
+							</view> -->
+<!--                            <view class="vip-price row" v-if="item.is_member && order_type === 0">
                                 <view class="price-name xxs">会员价</view>
                                 <view style="padding: 0 10rpx">
                                     <price-format
@@ -50,8 +52,9 @@
                                         color="#7B3200"
                                     ></price-format>
                                 </view>
-                            </view>
-                            <view
+                            </view> -->
+                            
+<!-- 							<view
                                 class="vip-price row"
                                 v-if="order_type === 1 || order_type === 2 || order_type === 3"
                             >
@@ -71,7 +74,7 @@
                                         color="#7B3200"
                                     ></price-format>
                                 </view>
-                            </view>
+                            </view> -->
                         </view>
 						<!-- IMPORTANT:暂不支持多件商品同一清单 -->
 						<view class="goods-num sm">x1</view>

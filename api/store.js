@@ -74,7 +74,7 @@ export function getCommentCategory(data) {
 
 // 获取评价列表
 export function getCommentList(data) {
-	return request.get("reviews/list", {
+	return request.get("review/list", {
 		params: data
 	})
 }
