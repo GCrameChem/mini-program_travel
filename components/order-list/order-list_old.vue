@@ -61,50 +61,113 @@
             ></price-format>
           </view>
         </view>
-        <view class="order-footer row">
-			<view v-if="shouldShowCancelButton(item.orderStatus)">
-				<button size="sm" class="plain br60 lighter" @tap.stop="cancelOrder(item.orderId)">
-				  取消订单
-				</button>
-			</view>
-			<view v-if="shouldShowPayButton(item.orderStatus)">
-				<button size="sm" class="btn bg-primary br60 white" @tap.stop="payNow(item.orderId)">
-				  立即付款
-				</button>
-			</view>
-			<view v-if="shouldShowCommentButton(item.orderStatus)">
-				<button size="sm" hover-class="none" class="btn plain btn br60 primary red">
-				  去评价
-				</button>
-			</view>
-			<view v-if="shouldShowDeliveryButton(item.orderStatus)">
-				<button size="sm" class="btn plain br60 lighter" @tap.stop="goPage('/bundle/pages/goods_logistics/goods_logistics?id=' + item.orderId)">
-				  查看物流
-				</button>
-			</view>
-			<view v-if="shouldShowTakeButton(item.orderStatus)">
-				<button size="sm" class="btn plain br60 primary red" @tap.stop="comfirmOrder(item.orderId)">
-				  确认收货
-				</button>
-			</view>
-			<view v-if="shouldShowPickupButton(item.orderStatus)">
-				<button size="sm" class="btn plain btn br60 primary red">
-				  查看提货码
-				</button>
-			</view>
-			<view v-if="shouldShowDelButton(item.orderStatus)">
-				<button size="sm" class="btn plain br60 lighter" @tap.stop="delOrder(item.orderId)">
-				  删除订单
-				</button>
-			</view>
-		</view>
-		</navigator>
-        <loading-footer :status="status" :slot-empty="true" @refresh="reload">
-			<view slot="empty" class="column-center" style="padding-top: 200rpx">
-			  <image class="img-null" src="/static/images/goods_null.png"></image>
-			  <text class="lighter">暂无订单</text>
-			</view>
-        </loading-footer>
+        <view
+          class="order-footer row"
+          v-if="
+            item.pickup_btn ||
+            item.cancel_btn ||
+            item.delivery_btn ||
+            item.take_btn ||
+            item.del_btn ||
+            item.pay_btn ||
+            item.comment_btn
+          "
+        >
+		  <!-- 取消订单相关 -->
+          <view style="flex: 1">
+            <view
+              class="primary sm row"
+              style="line-height: 26rpx"
+              v-if="getCancelTime(item.order_cancel_time) > 0"
+              ><u-count-down
+                separator="zh"
+                :timestamp="getCancelTime(item.order_cancel_time)"
+                separator-color="#FF2C3C"
+                color="#FF2C3C"
+                :separator-size="26"
+                :font-size="26"
+                bg-color="transparent"
+                @end="reflesh"
+              ></u-count-down
+            ></view>      
+		  </view>
+          <view v-if="item.cancel_btn">
+            <button
+              size="sm"
+              class="plain br60 lighter"
+              hover-class="none"
+              @tap.stop="cancelOrder(item.id)"
+            >
+              取消订单
+            </button>
+          </view>
+          <view
+            v-if="item.delivery_btn"
+            @tap.stop="
+              goPage(
+                '/bundle/pages/goods_logistics/goods_logistics?id=' + item.id
+              )
+            "
+          >
+            <button size="sm" class="btn plain br60 lighter" hover-class="none">
+              查看物流
+            </button>
+          </view>
+          <view v-if="item.del_btn">
+            <button
+              size="sm"
+              class="btn plain br60 lighter"
+              hover-class="none"
+              @tap.stop="delOrder(item.id)"
+            >
+              删除订单
+            </button>
+          </view>
+          <view v-if="item.pay_btn" class="ml20">
+            <button
+              size="sm"
+              class="btn bg-primary br60 white"
+              @tap.stop="payNow(item.id)"
+            >
+              立即付款
+            </button>
+          </view>
+          <view v-if="item.comment_btn" class="ml20">
+            <button
+              size="sm"
+              hover-class="none"
+              class="btn plain btn br60 primary red"
+            >
+              去评价
+            </button>
+          </view>
+          <view v-if="item.pickup_btn" class="ml20">
+            <button
+              size="sm"
+              hover-class="none"
+              class="btn plain btn br60 primary red"
+            >
+              查看提货码
+            </button>
+          </view>
+          <view v-if="item.take_btn" class="ml20">
+            <button
+              size="sm"
+              class="btn plain br60 primary red"
+              hover-class="none"
+              @tap.stop="comfirmOrder(item.id, item.pay_way)"
+            >
+              确认收货
+            </button>
+          </view>
+        </view>
+      </navigator>
+      <loading-footer :status="status" :slot-empty="true" @refresh="reload">
+        <view slot="empty" class="column-center" style="padding-top: 200rpx">
+          <image class="img-null" src="/static/images/goods_null.png"></image>
+          <text class="lighter">暂无订单</text>
+        </view>
+      </loading-footer>
     </view>
     <order-dialog
       ref="orderDialog"
@@ -201,40 +264,6 @@ export default {
     orderDialog() {
       this.$refs.orderDialog.open();
     },
-	// 根据订单状态确定是否显示取消按钮
-	shouldShowCancelButton(orderStatus) {
-	  return orderStatus === 'pay' || orderStatus === 'deliver';
-	},
-
-	// 根据订单状态确定是否显示付款按钮
-	shouldShowPayButton(orderStatus) {
-	  return orderStatus === 'pay';
-	},
-
-	// 根据订单状态确定是否显示评论按钮
-	shouldShowCommentButton(orderStatus) {
-	  return orderStatus === 'review';
-	},
-
-	// 根据订单状态确定是否显示查看物流按钮
-	shouldShowDeliveryButton(orderStatus) {
-	  return orderStatus === 'confirm';
-	},
-
-	// 根据订单状态确定是否显示确认收货按钮
-	shouldShowTakeButton(orderStatus) {
-	  return orderStatus === 'comfirm';
-	},
-
-	// 根据订单状态确定是否显示提货码按钮
-	shouldShowPickupButton(orderStatus) {
-	  return orderStatus === 'deliver'||orderStatus === 'confirm';
-	},
-
-	// 根据订单状态确定是否显示删除按钮
-	shouldShowDelButton(orderStatus) {
-	  return orderStatus === 'all' || orderStatus === 'refund';
-	},
 
     delOrder(id) {
       this.orderId = id;
@@ -462,25 +491,15 @@ export default {
       height: 100rpx;
       border-top: $-solid-border;
       padding: 0 24rpx;
-      display: flex;            /* 使用flex布局 */
-      justify-content: flex-end; /* 将按钮靠右对齐 */
-      gap: 10rpx;               /* 设置按钮之间的间距 */
-    }
-    
-    .plain {
-      border: 1px solid #bbbbbb;
-    
-      &.red {
-        border-color: $-color-primary;
+
+      .plain {
+        border: 1px solid #bbbbbb;
+
+        &.red {
+          border-color: $-color-primary;
+        }
       }
     }
-    /* 可选：按钮的大小和样式可以进一步调整 */
-    button {
-      font-size: 28rpx;
-      border-radius: 30rpx;  /* 给按钮添加圆角 */
-    }
-    
-
   }
 }
 </style>

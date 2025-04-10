@@ -73,7 +73,9 @@
                                 </view>
                             </view>
                         </view>
-                        <view class="goods-num sm">x{{ item.goods_num }}</view>
+						<!-- IMPORTANT:暂不支持多件商品同一清单 -->
+						<view class="goods-num sm">x1</view>
+                        <!-- <view class="goods-num sm">x{{ item.goods_num }}</view> -->
                     </view>
                 </view>
             </view>
@@ -145,8 +147,9 @@ export default {
             type: String,
             default: 'order'
         },
+		// IMPORTANT: order_type原类型为Number
         order_type: {
-            type: Number,
+            type: String,
             default: 0
         }
     },
