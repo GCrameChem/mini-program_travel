@@ -7,8 +7,9 @@
 		<loading-view v-if="isFirstLoading"></loading-view>
 		<view class="contain" v-if="!isNull&&goodsDetail" >
 			<bubble-tips top="180rpx"></bubble-tips>
-			<!-- 可插入图片列表 -->
-			<product-swiper :imgUrls="swiperList" :video="this.imageUrlList"></product-swiper>
+			<!-- 目前暂无视频接口 -->
+			<product-swiper :imgUrls="goodsDetail.imageUrlList" />
+<!-- 			<product-swiper :imgUrls="goodsDetail.imageUrlList" :video="goodsDetail.videoUrl" /> -->
 			
 			<!-- 秒杀 -->
 			<!-- <view class="seckill row-between" v-if="goodsType == 1">
@@ -473,7 +474,7 @@
 			            this.totalQuota = totalQuota;  // 总库存
 			            
 			            this.goodsLocation = activityLocation;  // 商品活动地点
-			            this.imageList = imageUrlList.split(','); // 商品图片列表
+			            this.imageList = imageUrlList; // 商品图片列表
 			            this.activityLink = detailIntroductionUrl;  // 商品详细介绍链接
 			            this.optionalActivityInfo = optionalActivityInformation; // 可选活动信息
 			            this.countTime = time;  // 活动结束时间剩余秒数
@@ -490,7 +491,7 @@
 			            let options = {
 			                shareTitle: activityName,  // 分享标题
 			                shareLink: location.href + '&invite_code=' + this.userInfo.distribution_code, // 分享链接
-			                shareImage: imageUrlList.split(',')[0], // 分享图片，取第一张
+			                shareImage: imageUrlList[0], // 分享图片，取第一张
 			                shareDesc: activityDescription // 分享描述
 			            };
 			            this.wxShare(options);  // 分享设置

@@ -6,22 +6,12 @@ export function orderBuy(data) {
   return request.post("orders", data);
 }
 
-
-// TODO删除订单
-// export function delOrder(id) {
-//   return request.post("order/del", {
-//     id,
-//   });
-// }
-export function delOrder(id) {
-  return request.post("order/del", {
-    id,
+// 删除订单
+export function delOrder(data) {
+	const { orderId, ...restParams } = data;
+  return request.delete(`orders/${orderId}`, {
+    params: restParams
   });
-}
-
-// TODO获取配送方式
-export function getDelivery() {
-  return request.get("order/getDeliveryType");
 }
 
 // 获取订单列表
@@ -40,11 +30,33 @@ export function getOrderDetail(id) {
   });
 }
 
-// TODO取消订单
-export function cancelOrder(id) {
-  return request.post("order/cancel", {
-    id,
-  });
+// 取消订单
+// export function cancelOrder(id) {
+//   return request.post("order/cancel", {
+//     id,
+//   });
+// }
+export function cancelOrder(data) {
+    const { orderId, ...restParams } = data;
+    return request.put(`orders/${orderId}`, restParams);  // 把数据放在请求体中
+}
+
+
+// 确认收货
+// export function confirmOrder(id) {
+//   return request.post("order/confirm", {
+//     id,
+//   });
+// }
+export function confirmOrder(data) {
+	const { orderId, ...restParams } = data;
+	return request.put(`orders/${orderId}`, restParams);
+}
+
+
+// ？？获取配送方式
+export function getDelivery() {
+  return request.get("order/getDeliveryType");
 }
 
 // ？？物流
@@ -56,12 +68,6 @@ export function orderTraces(id) {
   });
 }
 
-// TODO确认收货
-export function confirmOrder(id) {
-  return request.post("order/confirm", {
-    id,
-  });
-}
 
 // ?下单获取优惠券
 export function getOrderCoupon(data) {

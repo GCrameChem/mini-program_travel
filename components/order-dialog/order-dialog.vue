@@ -34,15 +34,21 @@
 
 				switch (type) {
 					case 0:
-						res = await cancelOrder(orderId);
+						res = await cancelOrder({
+							orderId: this.orderId,
+							orderStatus: 'cancel',
+							});
 						break;
 
 					case 1:
-						res = await delOrder(orderId);
+						res = await delOrder({orderId: this.orderId});
 						break;
 
 					case 2:
-						res = await confirmOrder(orderId);
+						res = await confirmOrder({
+							orderId: this.orderId,
+							orderStatus: 'confirm',
+							});
 						break;
 				}
 

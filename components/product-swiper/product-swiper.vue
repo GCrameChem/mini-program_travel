@@ -9,10 +9,11 @@
       :duration="duration"
       @change="swiperChange"
     >
+      <!-- 循环遍历urls, 显示图片或视频 -->
       <block v-for="(item, index) in urls" :key="index">
         <swiper-item @tap="previewImage(index)">
-          <view v-if="item.type == 'video'" class="video-wrap">
-            <!-- #ifdef H5 || MP-WEIXIN -->
+          <view v-if="item.type === 'video'" class="video-wrap">
+            <!-- 如果是视频类型，展示视频 -->
             <video
               id="myVideo"
               class="my-video"
@@ -35,20 +36,7 @@
               @tap.stop="play"
               src="/static/images/icon_play.png"
               class="icon-play"
-            >
-            </image>
-
-            <!--  <image v-show="showPlay" style="right: 50rpx;bottom: 50rpx;" @tap.stop="play" src="/static/images/all.png" class="icon-play">
-                        </image> -->
-            <!-- #endif -->
-            <!-- #ifdef APP-PLUS -->
-            <j-video
-              :url="item.url"
-              height="750rpx"
-              width="750rpx"
-              :poster="urls[1].url"
-            ></j-video>
-            <!-- #endif -->
+            ></image>
           </view>
           <u-image
             v-else
@@ -60,9 +48,9 @@
         </swiper-item>
       </block>
     </swiper>
-    <view class="dots black sm bg-white br60" id="bottom"
-      >{{ currentSwiper + 1 }}/{{ urls.length }}</view
-    >
+    <view class="dots black sm bg-white br60" id="bottom">
+      {{ currentSwiper + 1 }}/{{ urls.length }}
+    </view>
   </view>
 </template>
 
@@ -72,15 +60,13 @@ export default {
   data() {
     return {
       currentSwiper: 0,
-      urls: [],
+      urls: [], // 用于存储图片或视频
       showPlay: true,
       showControls: false,
       autoplay: true,
       start: 0,
     };
   },
-
-  components: {},
   props: {
     imgUrls: {
       type: Array,
@@ -100,6 +86,7 @@ export default {
     },
     video: {
       type: String,
+      default: '', // 默认没有视频
     },
     isShow: {
       type: Boolean,
@@ -108,24 +95,25 @@ export default {
   },
 
   watch: {
+    // 监听图片数组和视频链接，更新 urls
     imgUrls: {
       handler(val) {
         this.urls = val.map((item) => {
           return {
             url: item.uri,
-            type: "image",
+            type: 'image', // 默认是图片
           };
         });
-        if (this.video) {
+        if (this.video && this.video !== '') {
+          // 如果存在视频链接，则将视频添加到图片数组前
           this.urls.unshift({
             url: this.video,
-            type: "video",
+            type: 'video',
           });
           this.autoplay = false;
-
           this.$nextTick(() => {
-            this.videoContext = uni.createVideoContext("myVideo", this);
-            this.videoContexts = uni.createVideoContext("videos", this);
+            this.videoContext = uni.createVideoContext('myVideo', this);
+            this.videoContexts = uni.createVideoContext('videos', this);
           });
         }
       },
@@ -145,13 +133,13 @@ export default {
   methods: {
     swiperChange(e) {
       this.currentSwiper = e.detail.current;
-      if (e.detail.current !== 0 && this.video != "") {
+      if (e.detail.current !== 0 && this.video !== "") {
         try {
           this.showPlay = true;
           this.videoContext.stop();
           this.videoContexts.stop();
         } catch (error) {
-          console.log("err==>", err);
+          console.log("err==>", error);
         }
       }
     },
@@ -177,7 +165,7 @@ export default {
       if (this.video) {
         index = current - 1;
       }
-      if (this.urls[current].type == "video") {
+      if (this.urls[current].type === "video") {
         this.videoContext.requestFullScreen();
       } else {
         uni.previewImage({
@@ -186,11 +174,10 @@ export default {
           urls: this.imgUrls.map((item) => item.uri),
         });
       }
-
       //#endif
     },
     play() {
-      if (this.start == 0) {
+      if (this.start === 0) {
         this.start = 1;
         this.showPlay = false;
         this.videoContext.play();
@@ -215,48 +202,18 @@ export default {
   },
 };
 </script>
+
 <style lang="scss">
 .swiper-wrap {
   width: 100%;
   height: 750rpx;
   position: relative;
-
-  .close {
-    width: 250rpx;
-    height: 250rpx;
-    top: 230rpx;
-    right: 50rpx;
-    z-index: 1000;
-    position: relative;
-    position: fixed;
-
-    .close-item {
-      top: 0rpx;
-      right: 0rpx;
-      position: absolute;
-      z-index: 1001;
-    }
-  }
 }
 
 .swiper-wrap .swiper {
   width: 100%;
   height: 100%;
   position: relative;
-}
-
-.swiper-wrap .swiper .slide-image {
-  width: 100%;
-  height: 100%;
-}
-
-.swiper-wrap .dots {
-  position: absolute;
-  right: 24rpx;
-  bottom: 24rpx;
-  display: flex;
-  height: 34rpx;
-  padding: 0 15rpx;
 }
 
 .swiper-wrap .video-wrap {
