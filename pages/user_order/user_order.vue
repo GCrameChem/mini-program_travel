@@ -72,10 +72,16 @@ export default {
   },
   methods: {
     changeShow(index) {
-		if(index != -1) {
-			this.active = index;
-			this.order[index].isShow = true;
-		}
+		if (index != -1) {
+		    // 设置当前tab为选中状态
+		    this.active = index;
+		    // 先将所有isShow设置为false
+		    this.order.forEach((item) => {
+		      item.isShow = false;
+		    });
+		    // 设置当前tab对应的isShow为true
+		    this.order[index].isShow = true;
+		  }
     },
   }
 };

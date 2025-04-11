@@ -356,14 +356,14 @@ export default {
 	async getOrderListFun() {
 	  let { page, orderType, orderList, status } = this;
 
-	  console.log("正在调用：getOrderListFun()");
-	
+	  //console.log("正在调用：getOrderListFun()");
 	  // 调用分页函数
+	  console.log("userId",this.userId);
 	  const data =  await pageLoad(getOrderList, page, orderList, status, {
 	    pageSize: this.pageSize,
 	    userId: this.userId,
+		orderStatus: this.orderType
 	  });
-	  console.log("data:",data);
 	  if (!data) return;
 	  
 	  this.page = data.page; // 更新页码

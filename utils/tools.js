@@ -121,7 +121,6 @@ export async function pageLoad(fun, page, dataList = [], status, params) {
     let { records, total } = data; // 获取返回的数据和总数量
     dataList.push(...records); // 将新数据添加到现有列表中
 	
-	console.log(records);
     page = ++page; // 增加页码
 
     // 计算总页数，如果当前页已经是最后一页，则认为没有更多数据
