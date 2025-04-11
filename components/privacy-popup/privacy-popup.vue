@@ -26,7 +26,7 @@
         >
 
         <button
-          class="btn-comfirm"
+          class="btn-confirm"
           open-type="agreePrivacyAuthorization"
           @agreeprivacyauthorization="handleAgreePrivacyAuthorization"
         >
@@ -100,7 +100,7 @@ export default {
   &-read {
     margin-top: 15rpx;
   }
-  .btn-comfirm {
+  .btn-confirm {
     background-color: $-color-primary;
     color: white;
     height: 80rpx;

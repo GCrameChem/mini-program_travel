@@ -82,7 +82,7 @@
                     </view>
                 </view>
             </view>
-            <template v-if="mode === 'comfirm'">
+            <template v-if="mode === 'confirm'">
                 <view class="delivery" v-if="delivery === 1 && !item.is_express"
                     >该商品不支持快递配送</view
                 >
@@ -145,7 +145,7 @@ export default {
             type: Number,
             default: 1
         },
-        // order | comfirm
+        // order | confirm
         mode: {
             type: String,
             default: 'order'

@@ -155,7 +155,7 @@
               size="sm"
               class="btn plain br60 primary red"
               hover-class="none"
-              @tap.stop="comfirmOrder(item.id, item.pay_way)"
+              @tap.stop="confirmOrder(item.id, item.pay_way)"
             >
               确认收货
             </button>
@@ -197,7 +197,7 @@ import { prepay } from "@/api/app";
 import { loadingType } from "@/utils/type";
 import { mapGetters } from 'vuex';
 import { wxpay, alipay } from "@/utils/pay";
-import { page } from "@/utils/tools";
+import { pageLoad } from "@/utils/tools";
 export default {
   data() {
     return {
@@ -205,7 +205,7 @@ export default {
 	  pageSize:6,
 	  userInfo:this.userInfo,
 	  // 测试时使用
-	  //userId: userInfo.userId,
+	  // 
 	  // IMPORTANT: 暂用测试数据
 	  userId: 1,
       orderList: [],
@@ -273,7 +273,7 @@ export default {
       });
     },
     // 小程序确认收货
-    comfirmReceive(transaction_id) {
+    confirmReceive(transaction_id) {
       return new Promise((resolve, reject) => {
         wx.openBusinessView({
           businessType: "weappOrderConfirm",
@@ -294,7 +294,7 @@ export default {
       });
     },
     //查询是否收货成功
-    querycomfirmReceive(id) {
+    queryconfirmReceive(id) {
       return new Promise((resolve, reject) => {
         getwechatSyncCheck({ id })
           .then(({ data }) => {
@@ -309,7 +309,7 @@ export default {
           });
       });
     },
-    comfirmOrder(id, pay_way) {
+    confirmOrder(id, pay_way) {
       this.orderId = id;
       this.pay_way = pay_way;
       this.type = 2;
@@ -330,8 +330,8 @@ export default {
             const { data } = await getwxReceiveDetail({
               order_id: this.orderId,
             });
-            await this.comfirmReceive(data.transaction_id);
-            await this.querycomfirmReceive(this.orderId);
+            await this.confirmReceive(data.transaction_id);
+            await this.queryconfirmReceive(this.orderId);
             await confirmOrder(this.orderId);
           } catch (error) {
             console.log(error);
@@ -395,7 +395,7 @@ export default {
         let { page, orderType, orderList, status } = this;
 		console.log("正在调用：getOrderListFun()");
 		// BUG: 分页调用函数无法正常加载
-		// const data = await page(getOrderList, page, orderList, status, {
+		// const data =  await pageLoad(getOrderList, page, orderList, status, {
 		// 	page: this.page,
 		// 	pageSize:this.pageSize,
 		// 	userId: this.userId,

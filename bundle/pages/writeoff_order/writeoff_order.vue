@@ -102,7 +102,7 @@
 					order
 				} = this;
 				const type = order[current].type
-				const data = await page(getVerifyLists, page, orderList, status, {
+				const data =  await pageLoad(getVerifyLists, page, orderList, status, {
 					type
 				})
 				if (!data) return

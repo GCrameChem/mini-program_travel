@@ -97,7 +97,7 @@
 					groupList,
 					status
 				} = this;
-				const data = await page(getUserGroup, page, groupList, status, {
+				const data =  await pageLoad(getUserGroup, page, groupList, status, {
 					status: groupType
 				})
 				if (!data) return

@@ -31,11 +31,6 @@ export function getOrderDetail(id) {
 }
 
 // 取消订单
-// export function cancelOrder(id) {
-//   return request.post("order/cancel", {
-//     id,
-//   });
-// }
 export function cancelOrder(data) {
     const { orderId, ...restParams } = data;
     return request.put(`orders/${orderId}`, restParams);  // 把数据放在请求体中
@@ -43,11 +38,6 @@ export function cancelOrder(data) {
 
 
 // 确认收货
-// export function confirmOrder(id) {
-//   return request.post("order/confirm", {
-//     id,
-//   });
-// }
 export function confirmOrder(data) {
 	const { orderId, ...restParams } = data;
 	return request.put(`orders/${orderId}`, restParams);

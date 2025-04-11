@@ -103,29 +103,42 @@ export function paramsToStr(params) {
 }
 
 //分页加载
-export async function page(fun, page, dataList = [], status, params) {
+export async function pageLoad(fun, page, dataList = [], status, params) {
   // 拷贝对象
   dataList = Object.assign([], dataList);
+  // 如果状态是已加载完毕，则不再继续加载
   if (status == loadingType.FINISHED) return false;
+
   const { code, data } = await fun({
     page: page,
     ...params,
   });
-  uni.stopPullDownRefresh();
+  uni.stopPullDownRefresh(); // 停止下拉刷新
+
   if (code == 0) {
-    if (page == 1) dataList = [];
-    let { record, more } = data;
-    dataList.push(...records);
-    page = ++page;
-    if (!more) {
+    if (page == 1) dataList = []; // 如果是第一页，清空原有的数据
+
+    let { records, total } = data; // 获取返回的数据和总数量
+    dataList.push(...records); // 将新数据添加到现有列表中
+	
+	console.log(records);
+    page = ++page; // 增加页码
+
+    // 计算总页数，如果当前页已经是最后一页，则认为没有更多数据
+    const totalPages = Math.ceil(total / params.pageSize); // 计算总页数
+    if (page > totalPages) {
       status = loadingType.FINISHED;
     }
+
+    // 如果数据列表为空，则设置为空状态
     if (dataList.length <= 0) {
       status = loadingType.EMPTY;
     }
   } else {
+    // 如果接口返回失败，设置为错误状态
     status = loadingType.ERROR;
   }
+
   return {
     page,
     dataList,

@@ -124,7 +124,7 @@
     <u-modal
       v-model="delPopup"
       :showCancelButton="true"
-      comfirm-text="狠心删除"
+      confirm-text="狠心删除"
       confirm-color="#FF2C3C"
       :show-title="false"
       @confirm="goodsDelete"

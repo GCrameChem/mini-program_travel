@@ -228,7 +228,7 @@
             @cancel="showModel = false"
             confirm-color="#FF2C3C"
         >
-            <view class="comfirm-box">
+            <view class="confirm-box">
                 <view> 请先阅读并同意 </view>
                 <view class="flex row-center">
                     <navigator
@@ -600,7 +600,7 @@ page {
         }
     }
 }
-.comfirm-box {
+.confirm-box {
     text-align: center;
     padding: 60rpx 0 70rpx 0;
 }

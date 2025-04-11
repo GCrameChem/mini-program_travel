@@ -260,7 +260,7 @@
 					price: priceSort,
 					sales_sum: saleSort
 				}
-				const data = await page(getGoodsSearch, page, goodsList, status, params)
+				const data =  await pageLoad(getGoodsSearch, page, goodsList, status, params)
 				if (!data) return
 				this.page = data.page
 				this.goodsList = data.dataList

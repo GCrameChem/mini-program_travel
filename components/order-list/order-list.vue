@@ -1,5 +1,3 @@
-<!-- FIXME:修改逻辑，通过状态直接控制显示哪种按钮（做个动态样式模板） -->
-
 <template>
   <view>
     <view class="order-list">
@@ -37,11 +35,6 @@
           }}</view> -->
         </view>
         <view class="order-con">
-			<!-- IMPORTANT:暂时没有开发一个订单多个商品的功能,list本应该输入商品数组 -->
-          <!-- <order-goods
-            :list="item.order_goods"
-            :order_type="item.orderStatus"
-          ></order-goods> -->
 		  <order-goods
 		    :list="item.activityList"
 		    :order_type="item.orderStatus"
@@ -82,14 +75,14 @@
 				  查看物流
 				</button>
 			</view>
-			<view v-if="shouldShowTakeButton(item.orderStatus)">
-				<button size="sm" class="btn plain br60 primary red" @tap.stop="comfirmOrder(item.orderId)">
-				  确认收货
-				</button>
-			</view>
 			<view v-if="shouldShowPickupButton(item.orderStatus)">
 				<button size="sm" class="btn plain btn br60 primary red">
 				  查看提货码
+				</button>
+			</view>
+			<view v-if="shouldShowTakeButton(item.orderStatus)">
+				<button size="sm" class="btn plain br60 primary red" @tap.stop="confirmOrder(item.orderId)">
+				  确认收货
 				</button>
 			</view>
 			<view v-if="shouldShowDelButton(item.orderStatus)">
@@ -134,15 +127,13 @@ import { prepay } from "@/api/app";
 import { loadingType } from "@/utils/type";
 import { mapGetters } from 'vuex';
 import { wxpay, alipay } from "@/utils/pay";
-import { page } from "@/utils/tools";
+import { pageLoad } from "@/utils/tools";
 export default {
   data() {
     return {
-      page: 1,
-	  pageSize:6,
-	  userInfo:this.userInfo,
-	  // 测试时使用
-	  //userId: userInfo.userId,
+	  page: 1,
+	  pageSize: 10, // 每页条数
+	  //userInfo:this.userInfo,
 	  // IMPORTANT: 暂用测试数据
 	  userId: 1,
       orderList: [],
@@ -187,6 +178,7 @@ export default {
   methods: {
     reflesh() {
       this.page = 1;
+	  this.pageSize = 10;
       this.orderList = [];
       this.status = loadingType.LOADING;
       this.type = 0;
@@ -211,29 +203,29 @@ export default {
 	  return orderStatus === 'pay';
 	},
 
-	// 根据订单状态确定是否显示评论按钮
+	// 根据订单状态确定是否显示去评论按钮
 	shouldShowCommentButton(orderStatus) {
 	  return orderStatus === 'review';
 	},
 
 	// 根据订单状态确定是否显示查看物流按钮
 	shouldShowDeliveryButton(orderStatus) {
-	  return orderStatus === 'confirm';
-	},
-
-	// 根据订单状态确定是否显示确认收货按钮
-	shouldShowTakeButton(orderStatus) {
-	  return orderStatus === 'comfirm';
+	  return orderStatus === 'confirm'||orderStatus == 'deliver';
 	},
 
 	// 根据订单状态确定是否显示提货码按钮
 	shouldShowPickupButton(orderStatus) {
-	  return orderStatus === 'deliver'||orderStatus === 'confirm';
+	  return orderStatus == 'confirm';
 	},
-
+	
+	// 根据订单状态确定是否显示确认收货按钮
+	shouldShowTakeButton(orderStatus) {
+	  return orderStatus === 'confirm';
+	},
+	
 	// 根据订单状态确定是否显示删除按钮
 	shouldShowDelButton(orderStatus) {
-	  return orderStatus === 'all' || orderStatus === 'refund';
+	  return orderStatus == 'refund';
 	},
 
     delOrder(id) {
@@ -244,7 +236,7 @@ export default {
       });
     },
     // 小程序确认收货
-    comfirmReceive(transaction_id) {
+    confirmReceive(transaction_id) {
       return new Promise((resolve, reject) => {
         wx.openBusinessView({
           businessType: "weappOrderConfirm",
@@ -265,7 +257,7 @@ export default {
       });
     },
     //查询是否收货成功
-    querycomfirmReceive(id) {
+    queryconfirmReceive(id) {
       return new Promise((resolve, reject) => {
         getwechatSyncCheck({ id })
           .then(({ data }) => {
@@ -280,7 +272,7 @@ export default {
           });
       });
     },
-    comfirmOrder(id, pay_way) {
+    confirmOrder(id, pay_way) {
       this.orderId = id;
       this.pay_way = pay_way;
       this.type = 2;
@@ -301,8 +293,8 @@ export default {
             const { data } = await getwxReceiveDetail({
               order_id: this.orderId,
             });
-            await this.comfirmReceive(data.transaction_id);
-            await this.querycomfirmReceive(this.orderId);
+            await this.confirmReceive(data.transaction_id);
+            await this.queryconfirmReceive(this.orderId);
             await confirmOrder(this.orderId);
           } catch (error) {
             console.log(error);
@@ -361,33 +353,24 @@ export default {
       // 	}
       // });
     },
+	async getOrderListFun() {
+	  let { page, orderType, orderList, status } = this;
 
-    async getOrderListFun() {
-        let { page, orderType, orderList, status } = this;
-		console.log("正在调用：getOrderListFun()");
-		// BUG: 分页调用函数无法正常加载
-		// const data = await page(getOrderList, page, orderList, status, {
-		// 	page: this.page,
-		// 	pageSize:this.pageSize,
-		// 	userId: this.userId,
-		// 	//orderStatus: all,
-		// });
-		// if (!data) return;
-		// this.page = data.page;
-		// this.orderList = data.dataList;
-		// this.status = data.status;
-		
-		// HACK:直接请求
-		const data = await getOrderList({
-			page: this.page,
-			pageSize: this.pageSize,
-			userId: this.userId,
-		});
-		if (!data) return;
-		  this.orderList = data.data.records;
-		  // 此处直接定义为返回完全
-		  this.status = loadingType.FINISHED;
-    },
+	  console.log("正在调用：getOrderListFun()");
+	
+	  // 调用分页函数
+	  const data =  await pageLoad(getOrderList, page, orderList, status, {
+	    pageSize: this.pageSize,
+	    userId: this.userId,
+	  });
+	  console.log("data:",data);
+	  if (!data) return;
+	  
+	  this.page = data.page; // 更新页码
+	  this.orderList = data.dataList; // 更新订单列表
+	  this.status = data.status; // 更新加载状态
+	},
+
     goPage(url) {
       uni.navigateTo({
         url,
@@ -445,7 +428,7 @@ export default {
   overflow: hidden;
 
   .order-item {
-    border-radius: 10rpx;
+    border-radius: 30rpx;
 
     .order-header {
       height: 80rpx;
@@ -474,10 +457,9 @@ export default {
         border-color: $-color-primary;
       }
     }
-    /* 可选：按钮的大小和样式可以进一步调整 */
-    button {
+    .button {
       font-size: 28rpx;
-      border-radius: 30rpx;  /* 给按钮添加圆角 */
+      border-radius: 30rpx;
     }
     
 

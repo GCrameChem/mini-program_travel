@@ -28,7 +28,7 @@ export const orderType = {
 	// 待发货
 	DELIVER: 'deliver',
 	// 待收货
-	COMFIRM: 'comfirm',
+	CONFIRM: 'confirm',
 	// 待评价
 	REVIEW: 'review',
 	// 售后/退款

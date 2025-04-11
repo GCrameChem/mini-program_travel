@@ -24,7 +24,7 @@
                 <u-input
                     class="flex1"
                     type="password"
-                    v-model="comfirmPwd"
+                    v-model="confirmPwd"
                     placeholder="请再次确认密码"
                 />
             </view>
@@ -54,7 +54,7 @@ export default {
         return {
             hasPayPwd: false,
             setPwd: '',
-            comfirmPwd: '',
+            confirmPwd: '',
             originPwd: ''
         }
     },
@@ -63,7 +63,7 @@ export default {
     },
     methods: {
         async setPasswordFun() {
-            let { setPwd, comfirmPwd, originPwd, hasPayPwd } = this
+            let { setPwd, confirmPwd, originPwd, hasPayPwd } = this
             if (hasPayPwd) {
                 if (!originPwd) {
                     this.$toast({
@@ -78,13 +78,13 @@ export default {
                 })
                 return
             }
-            if (!comfirmPwd) {
+            if (!confirmPwd) {
                 this.$toast({
                     title: '请填写确认密码'
                 })
                 return
             }
-            if (setPwd != comfirmPwd) {
+            if (setPwd != confirmPwd) {
                 this.$toast({
                     title: '两次密码输入不一致'
                 })

@@ -16,6 +16,7 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
+		// SKIP: 开发阶段跳过登录
 	  // isLogin: this.isLogin || true,
       active: orderType.ALL,
       order: [{
@@ -32,7 +33,7 @@ export default {
         isShow: false
       }, {
         name: '待确认',
-        type: orderType.COMFIRM,
+        type: orderType.CONFIRM,
         isShow: false
       }, {
         name: '待评价',
@@ -72,8 +73,8 @@ export default {
   methods: {
     changeShow(index) {
 		if(index != -1) {
-			this.active = index
-			this.order[index].isShow = true
+			this.active = index;
+			this.order[index].isShow = true;
 		}
     },
   }

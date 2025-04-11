@@ -298,6 +298,28 @@ export default {
                     height: 60rpx;
                     border-radius: 50%;
                 }
+				.like-area {
+				    display: flex;
+				    justify-content: flex-end;
+				    padding-right: 15rpx;
+				}
+				
+				.like-button {
+				    display: flex;
+				    align-items: center;
+				    justify-content: flex-start;
+				}
+				
+				.like-icon {
+				    width: 24rpx;
+				    height: 24rpx;
+				}
+				
+				.like-count {
+				    font-size: 14rpx;
+				    margin-left: 10rpx;
+				}
+
                 .seller-recall-container {
                     padding: 24rpx 20rpx;
                     border-radius: 12rpx;

@@ -123,9 +123,23 @@
                     </view>
                     <view class="sm mt10">待付款</view>
                 </view>
+				
+				<view
+				    class="item column-center mb20"
+				    @tap="goPage('/pages/user_order/user_order?type=deliver')"
+				>
+				    <view class="icon-contain">
+				        <view v-if="userInfo.wait_take" class="badge xs row-center bg-white">
+				            {{ userInfo.wait_take }}
+				        </view>
+				        <image class="nav-icon" src="/static/images/icon_my_shouhuo.png"></image>
+				    </view>
+				    <view class="sm mt10">待收货</view>
+				</view>
+				
                 <view
                     class="item column-center mb20"
-                    @tap="goPage('/pages/user_order/user_order?type=delivery')"
+                    @tap="goPage('/pages/user_order/user_order?type=confirm')"
                 >
                     <view class="icon-contain">
                         <view v-if="userInfo.wait_delivery" class="badge xs row-center bg-white">
@@ -133,20 +147,9 @@
                         </view>
                         <image class="nav-icon mb10" src="/static/images/icon_my_fahuo.png"></image>
                     </view>
-                    <view class="sm">待发货</view>
-                </view>
-                <view
-                    class="item column-center mb20"
-                    @tap="goPage('/pages/user_order/user_order?type=delivery')"
-                >
-                    <view class="icon-contain">
-                        <view v-if="userInfo.wait_take" class="badge xs row-center bg-white">
-                            {{ userInfo.wait_take }}
-                        </view>
-                        <image class="nav-icon" src="/static/images/icon_my_shouhuo.png"></image>
-                    </view>
-                    <view class="sm mt10">待收货</view>
-                </view>
+                    <view class="sm">待确认</view>
+                </view>   
+				
                 <view
                     class="item column-center mb20"
                     @tap="goPage('/bundle/pages/goods_comment_list/goods_comment_list')"
@@ -157,8 +160,9 @@
                         </view>
                         <image class="nav-icon" src="/static/images/icon_my_pingjia.png"></image>
                     </view>
-                    <view class="sm mt10">商品评价</view>
+                    <view class="sm mt10">我的评价</view>
                 </view>
+				
                 <view
                     class="item column-center mb20"
                     @tap="goPage('/bundle/pages/post_sale/post_sale')"
@@ -169,7 +173,7 @@
                         </view>
                         <image class="nav-icon" src="/static/images/icon_my_shouhou.png"></image>
                     </view>
-                    <view class="sm mt10">退款/售后</view>
+                    <view class="sm mt10">售后申请</view>
                 </view>
             </view>
         </view>

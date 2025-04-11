@@ -39,7 +39,7 @@
                 <view class="mt20">
                     <u-input
                         type="password"
-                        v-model="comfirmPwd"
+                        v-model="confirmPwd"
                         :border="true"
                         placeholder="再次确认转账密码"
                         style="width: 100%"
@@ -84,12 +84,12 @@ export default {
             showConfirm: false,
             pwd: '',
             setPwd: '',
-            comfirmPwd: ''
+            confirmPwd: ''
         }
     },
     methods: {
         onSetPwd() {
-            let { setPwd, comfirmPwd } = this
+            let { setPwd, confirmPwd } = this
             this.$refs.uModalSet.clearLoading()
             if (!setPwd) {
                 this.$toast({
@@ -97,13 +97,13 @@ export default {
                 })
                 return
             }
-            if (!comfirmPwd) {
+            if (!confirmPwd) {
                 this.$toast({
                     title: '请填写确认密码'
                 })
                 return
             }
-            if (setPwd != comfirmPwd) {
+            if (setPwd != confirmPwd) {
                 this.$toast({
                     title: '两次密码输入不一致'
                 })

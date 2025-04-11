@@ -40,7 +40,7 @@
 import { loadingType } from '@/utils/type';
 import { getActivityGoodsLists } from "@/api/activity";
 
-import { page } from "@/utils/tools";
+import { pageLoad } from "@/utils/tools";
 export default {
   data() {
     return {
@@ -79,7 +79,7 @@ export default {
 			status,
 			goodsList
 		} = this;
-		const data = await page(getActivityGoodsLists,page, goodsList,status, {id : this.id})
+		const data =  await pageLoad(getActivityGoodsLists,page, goodsList,status, {id : this.id})
 		if (!data) return
 		this.page = data.page
 		this.goodsList = data.dataList

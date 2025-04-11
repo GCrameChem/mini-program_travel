@@ -105,7 +105,7 @@
 						groupList,
 						status
 					} = this;
-					const data = await page(getGroupList, page, groupList, status)
+					const data =  await pageLoad(getGroupList, page, groupList, status)
 					if (!data) return
 					this.page = data.page
 					this.groupList = data.dataList

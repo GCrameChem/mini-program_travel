@@ -213,7 +213,7 @@
                 </view>
                 <view class="modify-row row">
                     <view style="width: 71px">确认密码</view>
-                    <input type="password" v-model="comfirmPwd" placeholder="再次输入新密码确认" />
+                    <input type="password" v-model="confirmPwd" placeholder="再次输入新密码确认" />
                 </view>
                 <view class="btn bg-primary white row-center" @click="$forgetPwd">确定</view>
             </view>
@@ -273,7 +273,7 @@ export default {
             tips: '',
             canSendSms: true,
             pwd: '',
-            comfirmPwd: '',
+            confirmPwd: '',
             smsType: SMSType.FINDPWD,
             code: ''
         }
@@ -471,7 +471,7 @@ export default {
             this.showPwd = true
         },
         $forgetPwd() {
-            let { smsCode, pwd, comfirmPwd } = this
+            let { smsCode, pwd, confirmPwd } = this
             if (!smsCode) {
                 this.$toast({
                     title: '请填写短信验证码'
@@ -484,13 +484,13 @@ export default {
                 })
                 return
             }
-            if (!comfirmPwd) {
+            if (!confirmPwd) {
                 this.$toast({
                     title: '再次输入新密码确认'
                 })
                 return
             }
-            if (pwd != comfirmPwd) {
+            if (pwd != confirmPwd) {
                 this.$toast({
                     title: '两次密码输入不一致'
                 })
@@ -500,7 +500,7 @@ export default {
                 mobile: this.userInfo.mobile,
                 code: smsCode,
                 password: pwd,
-                repassword: comfirmPwd
+                repassword: confirmPwd
             }
             forgetPwd(data).then((res) => {
                 if (res.code == 0) {

@@ -125,7 +125,7 @@ likeshop.cn.team // +-----------------------------------------------------------
                         :list="goodsLists"
                         :delivery="delivery"
                         :order_type="orderInfo.order_type"
-                        mode="comfirm"
+                        mode="confirm"
                     ></order-goods>
                     <!-- <view class="item row-between">
 						<view>配送方式</view>
@@ -261,7 +261,7 @@ export default {
     data() {
         return {
 			userInfo: this.userInfo,
-			// userId: userInfo.userId,
+			//  
 			// IMPORTANT: 暂用测试数据
 			userId: 1,
 			

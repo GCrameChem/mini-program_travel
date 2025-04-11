@@ -266,7 +266,7 @@ import {
   afterSaleDetail,
   applyAgain,
 } from "@/api/user";
-import { page } from "@/utils/tools";
+import { pageLoad } from "@/utils/tools";
 
 export default {
   data() {
@@ -352,7 +352,7 @@ export default {
     },
 
     hideDialog() {
-      this.comfirmDialog = false;
+      this.confirmDialog = false;
     },
   },
 };

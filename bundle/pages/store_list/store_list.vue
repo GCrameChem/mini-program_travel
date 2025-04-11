@@ -70,7 +70,7 @@
 <script>
 import { getStoreList } from "@/api/store";
 import { loadingType } from "@/utils/type";
-import { page } from "@/utils/tools";
+import { pageLoad } from "@/utils/tools";
 export default {
   data() {
     return {

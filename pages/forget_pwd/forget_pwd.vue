@@ -65,7 +65,7 @@
         <!-- <view class="input-item row">
         <input
           type="password"
-          v-model="comfirmPwd"
+          v-model="confirmPwd"
           placeholder="再次输入新密码确认"
         />
       </view> -->
@@ -93,7 +93,7 @@ export default {
       mobile: "",
       smsCode: "",
       resetPwd: "",
-      //   comfirmPwd: "",
+      //   confirmPwd: "",
       time: 59,
       canSendSms: true,
     };
@@ -116,7 +116,7 @@ export default {
       });
     },
     forgetPwdFun() {
-      let { mobile, smsCode, resetPwd, comfirmPwd } = this;
+      let { mobile, smsCode, resetPwd, confirmPwd } = this;
       if (!mobile) {
         this.$toast({
           title: "请填写手机号",
@@ -135,13 +135,13 @@ export default {
         });
         return;
       }
-      //   if (!comfirmPwd) {
+      //   if (!confirmPwd) {
       //     this.$toast({
       //       title: "请填写确认密码",
       //     });
       //     return;
       //   }
-      //   if (resetPwd != comfirmPwd) {
+      //   if (resetPwd != confirmPwd) {
       //     this.$toast({
       //       title: "两次密码输入不一致",
       //     });
@@ -151,7 +151,7 @@ export default {
         mobile: mobile,
         code: smsCode,
         password: resetPwd,
-        // repassword: comfirmPwd,
+        // repassword: confirmPwd,
       };
       forgetPwd(data).then((res) => {
         if (res.code == 0) {

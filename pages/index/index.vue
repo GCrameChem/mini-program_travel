@@ -736,7 +736,7 @@ export default {
         },
         async getBestListFun() {
             let { page, goodsList, status } = this
-            const data = await page(getBestList, page, goodsList, status)
+            const data =  await pageLoad(getBestList, page, goodsList, status)
             if (!data) return
             this.page = data.page
             this.goodsList = data.dataList

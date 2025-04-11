@@ -90,7 +90,7 @@ export default {
         return {
             showTransferInfo: false,
             pwd: '',
-            comfirmPwd: '',
+            confirmPwd: '',
             userSn: '',
             money: '',
             transferInfo: {},

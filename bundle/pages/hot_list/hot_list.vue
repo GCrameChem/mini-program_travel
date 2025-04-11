@@ -79,7 +79,7 @@
 					status,
 					goodsList
 				} = this;
-				const data = await page(getHotGoods,page, goodsList,status)
+				const data =  await pageLoad(getHotGoods,page, goodsList,status)
 				if (!data) return
 				this.page = data.page
 				this.goodsList = data.dataList
