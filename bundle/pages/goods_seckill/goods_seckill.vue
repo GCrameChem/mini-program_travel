@@ -62,7 +62,7 @@
 // +----------------------------------------------------------------------
 import { getSeckillTime, getSeckillGoods } from "@/api/activity";
 import { loadingType } from "@/utils/type";
-import {page} from "@/utils/tools";
+import {loadingFun} from "@/utils/tools";
 
 export default {
   data() {
@@ -101,7 +101,7 @@ export default {
         currentStatus
       } = this;
       getSeckillTime().then(res => {
-        if (res.code == 0) {
+        if (res.code == 1) {
           if (!res.data.length && res.data.length <= 0) {
             this.isDataNull = true
             return;
@@ -142,7 +142,7 @@ export default {
         seckillGoods
       } = this;
 
-      page(getSeckillGoods, page, seckillGoods, this.loadingStatus, {id: id}).then(res => {
+      loadingFun(getSeckillGoods, page, seckillGoods, this.loadingStatus, {id: id}).then(res => {
           if(res) {
               this.page = res.page;
               this.seckillGoods = res.dataList

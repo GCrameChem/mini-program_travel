@@ -93,18 +93,18 @@
 				</view>
 			</view>
 			
-
 		</view>
-		<u-datetime-picker
-			v-if="showBirthdayPicker"
-			:show="showBirthdayPicker"
-			v-model="tempBirthday"
-			mode="date"
-			:min-date="minDate"
-			@confirm="confirmBirthday"
-			@cancel="showBirthdayPicker = false"
-			style="z-index: 1050;"
-		  />
+		<!-- FIXME:查找失败并且打包时报错 -->
+		<!-- <u-datetime-picker
+		    v-if="showBirthdayPicker"
+		    :show="showBirthdayPicker"
+		    v-model="tempBirthday"
+		    mode="date"
+		    :min-date="minDate"
+		    @confirm="confirmBirthday"
+		    @cancel="showBirthdayPicker = false"
+		    style="z-index: 1050;"
+		  /> -->
 		<u-select
 			v-model="showRegion"
 			mode="mutil-column-auto"
@@ -237,7 +237,8 @@ import { mapState, mapGetters } from 'vuex'
 import { uploadFile, isWeixinClient, trottle } from '@/utils/tools'
 import { getWxCode, getUserProfile } from '@/utils/login'
 import area from '@/utils/area'
-import UDatetimePicker from "@/components/uview-ui/components/u-datetime-picker/u-datetime-picker.vue";
+import UDatetimePicker from '@/bundle/components/uview-ui/components/u-datetime-picker/u-datetime-picker'
+
 
 const FieldType = {
     NONE: '',
@@ -250,9 +251,7 @@ const FieldType = {
 }
 export default {
     name: 'userProfile',
-	components: {
-	    "u-datetime-picker": UDatetimePicker, // 注册组件
-	  },
+	
     data() {
         return {
             version: version,

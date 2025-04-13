@@ -1,5 +1,6 @@
 {
   "description": "项目配置文件",
+  "minified": true,
   "packOptions": {
     "ignore": [],
     "include": []
@@ -41,7 +42,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "3.7.11",
-  "appid": "wx462cfafbafa38caf",
+  "appid": "wx57a758416ce52c84",
   "projectname": "LikeShop",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},

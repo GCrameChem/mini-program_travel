@@ -178,14 +178,14 @@
 		"root": "bundle",
 		// 小程序直播插件
 
-		"pages": [{
-			"path": "pages/goods_seckill/goods_seckill",
-			"style": {
-				"navigationBarTitleText": "商品秒杀",
-				"navigationStyle": "custom"
-			}
-		},
-
+		"pages": [
+			{
+				"path": "pages/goods_seckill/goods_seckill",
+				"style": {
+					"navigationBarTitleText": "商品秒杀",
+					"navigationStyle": "custom"
+				}
+			},
 			{
 				"path": "pages/goods_logistics/goods_logistics",
 				"style": {
@@ -483,6 +483,9 @@
 					"enablePullDownRefresh": true
 				}
 			}
+		],
+		"components": [
+		    "components/uview-ui/components/u-datetime-picker/u-datetime-picker"
 		]
 	}],
 	"tabBar": {

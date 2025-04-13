@@ -69,7 +69,7 @@ export function clearSearch() {
 // 评价属性分类
 export function getCommentCategory(data) {
 	const{activityId,...restParams} = data;
-	return request.get(`activity/reviewAttributes/${activityId}`, {params: restParams});
+	return request.get(`review/reviewAttributes/${activityId}`, {params: restParams});
 }
 
 // 获取评价列表
