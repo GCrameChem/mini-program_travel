@@ -12,6 +12,9 @@
     "postcss": true,
     "preloadBackgroundData": false,
     "minified": true,
+	"optimization" : {
+	    "subPackages" : true
+	},
     "newFeature": false,
     "coverView": true,
     "nodeModules": false,
@@ -43,7 +46,7 @@
   "compileType": "miniprogram",
   "libVersion": "3.7.11",
   "appid": "wx57a758416ce52c84",
-  "projectname": "LikeShop",
+  "projectname": "XuelvTravel",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
   "condition": {},

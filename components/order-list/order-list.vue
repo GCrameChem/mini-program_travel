@@ -34,18 +34,19 @@
             item.order_status_desc
           }}</view> -->
         </view>
+		<!-- 订单内商品 -->
         <view class="order-con">
 		  <order-goods
-		    :list="item.activityList"
+		    :list="item.orderActivityList"
 		    :order_type="item.orderStatus"
 		  ></order-goods>
           <view class="all-price row-end">
-            <!-- <text class="muted xs"
-              >共{{ goodCount(item.order_goods) }}件商品，总金额：</text
-            > -->
-			<text class="muted xs"
+            <text class="muted xs"
+              >共{{ goodCount(item.orderActivityList) }}件商品，总金额：</text
+            >
+			<!-- <text class="muted xs"
 			  >共1件商品，总金额：</text
-			>
+			> -->
             <price-format
               :subscript-size="30"
               :first-size="30"
@@ -376,13 +377,11 @@ export default {
         url,
       });
     },
-    goodCount(goodLists) {
-      console.log(goodLists);
-      let count = 0;
-      goodLists.forEach((item) => {
-        count += item.goods_num;
-      });
-      return count;
+    goodCount(orderActivityList) {
+        if (orderActivityList && Array.isArray(orderActivityList)) {
+              return orderActivityList.length;  // 返回数组的长度
+        }
+          return 0;  // 如果不存在或不是数组，返回 0
     },
   },
   computed: {

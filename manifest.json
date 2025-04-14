@@ -77,26 +77,26 @@
                 "oauth" : {
                     "weixin" : {
                         "appid" : "wxe900e56d8f36b6c0",
-                        "appsecret" : "6685551b554315efeb6573d82dd074c3",
+                        //"appsecret" : "6685551b554315efeb6573d82dd074c3",
                         "UniversalLinks" : "https://likeshop.yixiangonline.com/ulink/"
                     }
                 },
                 "payment" : {
                     "weixin" : {
                         "__platform__" : [ "ios", "android" ],
-                        "appid" : "wxe900e56d8f36b6c0",
-                        "UniversalLinks" : "https://likeshop.yixiangonline.com/ulink/"
+                        "appid" : "wxe900e56d8f36b6c0"
                     },
+                    //"UniversalLinks" : "https://likeshop.yixiangonline.com/ulink/"
                     "alipay" : {
                         "__platform__" : [ "ios", "android" ]
                     }
                 },
                 "share" : {
                     "weixin" : {
-                        "appid" : "wxe900e56d8f36b6c0",
-                        "UniversalLinks" : "https://likeshop.yixiangonline.com/ulink/"
+                        "appid" : "wxe900e56d8f36b6c0"
                     }
                 },
+                //"UniversalLinks" : "https://likeshop.yixiangonline.com/ulink/"
                 "ad" : {},
                 "push" : {},
                 "maps" : {
@@ -164,6 +164,9 @@
             "bigPackageSizeSupport" : true
         },
         "usingComponents" : true,
+        "uniStatistics" : {
+            "enable" : false
+        },
         "optimization" : {
             "subPackages" : true
         },
@@ -211,15 +214,15 @@
         },
         "sdkConfigs" : {
             "maps" : {
-                "qqmap" : {
-                    "key" : "6NIBZ-6UGE3-4SM3K-YDO7X-Z5BUV-YBFVJ"
-                }
+                "qqmap" : {}
             }
         },
+        //"key" : "6NIBZ-6UGE3-4SM3K-YDO7X-Z5BUV-YBFVJ"
         "optimization" : {
             "treeShaking" : {
                 "enable" : true
-            }
+            },
+            "subPackages" : true
         }
     }
 }

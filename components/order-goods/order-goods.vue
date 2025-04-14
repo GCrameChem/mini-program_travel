@@ -21,25 +21,25 @@
                             type="primary"
                             mode="plain"
                         />
-                        {{ item.activityName || item.name }}</view
+                        {{ item.activityLocation || item.Activityname }}</view
                     >
-                    
-<!-- 					<view class="goods-spec xs muted mb20">{{
-                        item.spec_value_str || item.spec_value
-                    }}</view> -->
+                    <!-- 选择的样式 -->
+					<view class="goods-spec xs muted mb20">
+					  {{ item.activityInfoList.join(', ') }}
+					</view>
+
                     <view class="row-between">
                         <view class="goods-price row">
-<!--                            <view class="primary">
+                           <view class="primary">
                                 <price-format
-                                    v-if="!item.is_member && order_type === 0"
                                     :weight="500"
                                     :subscript-size="24"
                                     :first-size="34"
                                     :second-size="24"
-                                    :price="item.original_price || item.goods_price"
+                                    :price="item.currentPrice"
                                 ></price-format>
                             
-							</view> -->
+							</view>
 <!--                            <view class="vip-price row" v-if="item.is_member && order_type === 0">
                                 <view class="price-name xxs">会员价</view>
                                 <view style="padding: 0 10rpx">

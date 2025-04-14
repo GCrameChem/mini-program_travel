@@ -14,9 +14,9 @@ const IS_H5 = false
 /** S API BaseURL **/
 const baseURLMap = {
     // 开发环境
-	// 团队接口环境
+	// 团队apifox接口环境
     development: 'http://127.0.0.1:4523/m1/6057514-5747647-default',
-	// 临时测试环境1
+	// 临时apifox测试环境1
 	//development: 'http://127.0.0.1:4523/m1/6191757-5884297-default',
 	// 源码docker环境
 	// development: 'http://127.0.0.1:20208',
