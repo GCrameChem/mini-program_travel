@@ -97,28 +97,29 @@ export default {
   watch: {
     // 监听图片数组和视频链接，更新 urls
     imgUrls: {
-      handler(val) {
-        this.urls = val.map((item) => {
-          return {
-            url: item.uri,
-            type: 'image', // 默认是图片
-          };
-        });
-        if (this.video && this.video !== '') {
-          // 如果存在视频链接，则将视频添加到图片数组前
-          this.urls.unshift({
-            url: this.video,
-            type: 'video',
-          });
-          this.autoplay = false;
-          this.$nextTick(() => {
-            this.videoContext = uni.createVideoContext('myVideo', this);
-            this.videoContexts = uni.createVideoContext('videos', this);
-          });
-        }
-      },
-      immediate: true,
-    },
+       handler(val) {
+         this.urls = val.map((item) => {
+           return {
+             url: item,
+             type: 'image',
+           };
+         });
+   
+         // 如果有视频链接，插入视频到 urls 数组中
+         if (this.video && this.video !== '') {
+           this.urls.unshift({
+             url: this.video,
+             type: 'video',
+           });
+           this.autoplay = false;
+           this.$nextTick(() => {
+             this.videoContext = uni.createVideoContext('myVideo', this);
+             this.videoContexts = uni.createVideoContext('videos', this);
+           });
+         }
+       },
+       immediate: true,
+     },
     isShow: {
       handler(val) {
         if (val == true && !this.showPlay) {
@@ -171,7 +172,7 @@ export default {
         uni.previewImage({
           indicator: "default",
           index,
-          urls: this.imgUrls.map((item) => item.uri),
+          urls: this.urls.map((item) => item.url),
         });
       }
       //#endif

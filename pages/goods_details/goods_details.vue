@@ -7,9 +7,13 @@
 		<loading-view v-if="isFirstLoading"></loading-view>
 		<view class="contain" v-if="!isNull&&goodsDetail" >
 			<bubble-tips top="180rpx"></bubble-tips>
-			<!-- 目前暂无视频接口 -->
+			<!-- 目前无视频数据 -->
 			<product-swiper :imgUrls="goodsDetail.imageUrlList" />
-<!-- 			<product-swiper :imgUrls="goodsDetail.imageUrlList" :video="goodsDetail.videoUrl" /> -->
+			<!-- IMPORTANT: 接口有视频数据就可以用下面的方法 -->
+			<!-- <product-swiper 
+			  :imgUrls="goodsDetail.imageUrlList" 
+			  :video="goodsDetail.videoUrl" 
+			/> -->
 			
 			<!-- 秒杀 -->
 			<!-- <view class="seckill row-between" v-if="goodsType == 1">
@@ -39,10 +43,10 @@
 				</view>
 			</view>
 			 -->
-			<!-- 拼团 -->
-			<!-- <view class="group" v-show="goodsType == 2">
+			<!-- 拼团? -->
+			<view class="group" v-show="goodsType == 2">
 				<view class="row info" style="height: 100%">
-					<view class="row-between ml20 white" style="flex: 1;">
+					<!-- <view class="row-between ml20 white" style="flex: 1;">
 						<view style="align-items: baseline;" class="row">
 							<view class="mr10">拼团价</view>
 							<price-format :subscript-size="32" :first-size="46" :second-size="32"
@@ -55,7 +59,7 @@
 							</view>
 							<view class="xxs ml10 mr10">{{ team.people_num }}人团</view>
 						</view>
-					</view>
+					</view> -->
 					<view class="down column-center">
 						<view class="xxs primary mb10">距活动结束仅剩</view>
 						<u-count-down :timestamp="countTime" color="#fff" bg-color="#FF2C3C" separator-color="#FF2C3C"
@@ -63,7 +67,7 @@
 					</view>
 				</view>
 			</view>
-			 -->
+			
 			<!-- 标题 -->
 			<view class="goods-info bg-white" v-if="goodsDetail">
 				<view class="info-header row" v-if="goodsType != 1">
@@ -102,6 +106,11 @@
 					<view class="name lg bold">{{ goodsDetail.activityName }}</view>
 					<image class="icon-share" src="/static/images/icon_share.png" @tap="showShareBtn = true"
 						v-if="goodsType == 1"></image>
+				</view>
+				<!-- 此处加上地点图标和活动定位地点 -->
+				<!-- 活动描述 -->
+				<view class="content" style="padding: 0 24rpx 20rpx">
+					<u-parse :html="goodsDetail.activityDescription" :lazy-load="true" :show-with-animation="true"></u-parse>
 				</view>
 				<view class="row-between xs lighter" style="padding: 0 24rpx 20rpx">
 					<text v-if="goodsDetail.totalQuota !== true">库存: {{ goodsDetail.totalQuota }}件</text>
@@ -197,7 +206,7 @@
 				<view class="text lighter">已选</view>
 				<!-- 可选择的类型 -->
 				<view class="line1 mr20" style="flex: 1;">{{ '默认' }}</view>
-				<!-- <view class="line1 mr20" style="flex: 1;">{{ checkedGoods.optionalActivityInformation || '默认' }}</view> -->
+				<view class="line1 mr20" style="flex: 1;">{{ checkedGoods.optionalActivityInformationList || '默认' }}</view>
 				<image class="icon-sm" src="/static/images/arrow_right.png"></image>
 			</view>
 			<navigator class="mt20" hover-class="none" url="/bundle/pages/server_explan/server_explan?type=2">
@@ -234,17 +243,26 @@
 				<view class="con row-center muted" v-else>暂无评价</view>
 			</view>
 			
-			<!---->
-			<view class="goods-like mt20 bg-white" v-if="goodsLike.length">
-				<goods-like :list="goodsLike"></goods-like>
-			</view>
-			
+			<!-- 有效URL -->
 			<view class="details mt20 bg-white" v-if="goodsDetail">
-				<view class="title lg">商品详情</view>
-				<view class="content">
-					<u-parse :html="goodsDetail.activityDescription" :lazy-load="true" :show-with-animation="true"></u-parse>
-				</view>
+			  <view class="title lg">活动详情(有效URL版)</view>
+			  <view class="content">
+			    <web-view :src="goodsDetail.detailIntroductionUrl"></web-view>
+			  </view>
 			</view>
+			<!-- 如果是HTML字符串 -->
+			<!-- <view class="details mt20 bg-white" v-if="goodsDetail">
+			  <view class="title lg">活动详情</view>
+			  <view class="content">
+			    <u-parse :html="goodsDetail.detailIntroductionUrl" :lazy-load="true" :show-with-animation="true"></u-parse>
+			  </view>
+			</view> -->
+			
+			<!--其他推荐-->
+			<!-- <view class="goods-like mt20 bg-white" v-if="goodsLike.length">
+				<goods-like :list="goodsLike"></goods-like>
+			</view> -->
+
 			<view class="footer row bg-white fixed" v-if="goodsDetail">
 				<navigator class="btn column-center" hover-class="none"
 					url="/bundle/pages/contact_offical/contact_offical">
@@ -441,8 +459,6 @@
 			    try {
 			        const { data: responseData, code } = await getGoodsDetail({ activityId: this.id });
 			        if (code === 0) {
-			            // 从 responseData 中解构需要的字段
-						
 			            let {
 			                activityName,
 			                currentPrice,
@@ -453,7 +469,7 @@
 			                activityLocation,
 			                imageUrlList,
 			                detailIntroductionUrl,
-			                optionalActivityInformation,
+			                optionalActivityInformationList,
 			                endTime,
 			            } = responseData;
 						
@@ -475,8 +491,8 @@
 			            
 			            this.goodsLocation = activityLocation;  // 商品活动地点
 			            this.imageList = imageUrlList; // 商品图片列表
-			            this.activityLink = detailIntroductionUrl;  // 商品详细介绍链接
-			            this.optionalActivityInfo = optionalActivityInformation; // 可选活动信息
+			            this.detailIntroductionUrl = detailIntroductionUrl;  // 商品详细介绍链接
+			            this.optionalActivityInfo = optionalActivityInformationList; // 可选活动信息
 			            this.countTime = time;  // 活动结束时间剩余秒数
 						
 						//this.team = team ? team : {};
