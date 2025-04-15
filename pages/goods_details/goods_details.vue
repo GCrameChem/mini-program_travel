@@ -16,8 +16,8 @@
 			/> -->
 			
 			<!-- 秒杀 -->
-			<!-- <view class="seckill row-between" v-if="goodsType == 1">
-				<view class="price row">
+			<view class="seckill row-between">
+				<!-- <view class="price row">
 					<view class="row white info">
 						<view style="align-items: baseline;" class="row ml20">
 							<view class="mr10">秒杀价</view>
@@ -35,14 +35,14 @@
 							</view>
 						</view>
 					</view>
-				</view>
+				</view> -->
 				<view class="down column-center">
-					<view class="xxs primary mb10">距活动结束仅剩</view>
+					<view class="xxs primary mb10 bold">距活动结束仅剩</view>
 					<u-count-down :timestamp="countTime" @end="getGoodsDetailFun" color="#fff" bg-color="#FF2C3C"
 						separator-color="#FF2C3C" font-size="24" height="36" separator-size="26"></u-count-down>
 				</view>
 			</view>
-			 -->
+			
 			<!-- 拼团? -->
 			<view class="group" v-show="goodsType == 2">
 				<view class="row info" style="height: 100%">
@@ -103,11 +103,17 @@
 				</view>
 				 -->
 				<view class="row">
-					<view class="name lg bold">{{ goodsDetail.activityName }}</view>
+					<view class="activity-name lg bold">{{ goodsDetail.activityName }}</view>
 					<image class="icon-share" src="/static/images/icon_share.png" @tap="showShareBtn = true"
 						v-if="goodsType == 1"></image>
 				</view>
+				
 				<!-- 此处加上地点图标和活动定位地点 -->
+				<view class="content" style="padding: 0rpx 25rpx 0rpx; display: flex; align-items: center;">
+				    <image class="icon" src="/static/images/add-address.png" style="width: 40rpx; height: 40rpx;" />
+				    <view class="name lg">{{ goodsDetail.activityLocation }}</view>
+				</view>
+				
 				<!-- 活动描述 -->
 				<view class="content" style="padding: 0 24rpx 20rpx">
 					<u-parse :html="goodsDetail.activityDescription" :lazy-load="true" :show-with-animation="true"></u-parse>
@@ -206,9 +212,10 @@
 				<view class="text lighter">已选</view>
 				<!-- 可选择的类型 -->
 				<view class="line1 mr20" style="flex: 1;">{{ '默认' }}</view>
-				<view class="line1 mr20" style="flex: 1;">{{ checkedGoods.optionalActivityInformationList || '默认' }}</view>
+				<!-- <view class="line1 mr20" style="flex: 1;">{{ checkedGoods.optionalActivityInformationList || '默认' }}</view> -->
 				<image class="icon-sm" src="/static/images/arrow_right.png"></image>
 			</view>
+			
 			<navigator class="mt20" hover-class="none" url="/bundle/pages/server_explan/server_explan?type=2">
 				<view class="row bg-white" style="padding: 24rpx 24rpx;">
 					<view class="text lighter flex1">售后保障</view>
@@ -259,9 +266,9 @@
 			</view> -->
 			
 			<!--其他推荐-->
-			<!-- <view class="goods-like mt20 bg-white" v-if="goodsLike.length">
+			<view class="goods-like mt20 bg-white" v-if="goodsLike.length">
 				<goods-like :list="goodsLike"></goods-like>
-			</view> -->
+			</view>
 
 			<view class="footer row bg-white fixed" v-if="goodsDetail">
 				<navigator class="btn column-center" hover-class="none"
@@ -585,6 +592,7 @@
 				this.popupType = type;
 				this.showSpec = true;
 			},
+			
 			onBuy(e) {
 				console.log("onBuy Test");
 				let {
@@ -626,6 +634,7 @@
 					}
 				});
 			},
+			
 			async onAddCart(e) {
 				let {
 					id,
@@ -754,7 +763,7 @@
 		.group {
 			height: 100rpx;
 			width: 100%;
-			background-image: url(../../static/images/pintuan_bg.png);
+			background-image: url(../../static/images/pintuan_bg.jpg);
 			background-size: 100%;
 
 			.group-num {
@@ -814,7 +823,12 @@
 					}
 				}
 			}
-
+			.activity-name {
+				font-size: 45rpx;
+				padding: 5rpx 24rpx;
+				flex: 1;
+			}
+			
 			.name {
 				padding: 20rpx 24rpx;
 				flex: 1;

@@ -327,7 +327,7 @@ export default {
 </script>
 <style lang="scss">
 .user {
-    background-image: url(../../static/images/my_topbg.png);
+    background-image: url(../../static/images/my_topbg.jpg);
     background-size: 100% 420rpx;
     background-repeat: no-repeat;
     .header {

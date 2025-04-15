@@ -12,108 +12,89 @@
         <custom-image
           class="goods-img mr20"
           radius="10rpx"
-          @tap="previewImage(checkedGoods.image)"
-          :src="checkedGoods.image"
+          @tap="previewImage(checkedGoods.imageUrlList[0])"
+          :src="checkedGoods.imageUrlList[0]"
         ></custom-image>
-        <view class="goods-info" v-if="!isBargain">
-          <view class="primary row">
+        <view class="goods-info">
+          <view class="row">
+            <!-- 活动名称 -->
+            <view class="activity-name bold">{{ checkedGoods.activityName }}</view>
+          
+            <!-- 当前价格 -->
             <price-format
+			  class="custom-price"
               :first-size="46"
               :second-size="32"
               :subscript-size="32"
-              :price="group ? checkedGoods.team_price : checkedGoods.price"
+              :price="checkedGoods.currentPrice"
               :weight="500"
             ></price-format>
-            <view
-              class="vip-price row"
-              v-if="!group && !isSeckill && checkedGoods.member_price"
-            >
-              <view class="price-name xxs">会员价</view>
-              <view style="padding: 0 11rpx">
-                <price-format
-                  :price="checkedGoods.member_price"
-                  :first-size="22"
-                  :second-size="22"
-                  :subscript-size="22"
-                  :weight="500"
-                  color="#7B3200"
-                ></price-format>
-              </view>
+          
+            <!-- 原价部分-->
+            <view class="original-price-wrapper">
+              <price-format
+                :price="checkedGoods.originalPrice"
+                class="original-price"
+              ></price-format>
             </view>
           </view>
+
           <view class="sm" v-show="showStock">
-            库存：{{ checkedGoods.stock }}件
+            库存：{{ checkedGoods.remainingQuota }}件
           </view>
           <view class="sm">
-            <!-- <text>已选择：{{checkedGoods.spec_value_str}}，{{goodsNum}}件</text> -->
             <text>{{ specValueText }}</text>
           </view>
-        </view>
-        <view class="goods-info" v-else>
-          <view class="xs">
-            最低可砍至<text class="sm" style="color: #f95f2f"
-              >¥{{ checkedGoods.activity_price }}</text
-            >
-          </view>
-          <view class="muted xs mt10"> 原价 ¥{{ checkedGoods.price }} </view>
-          <view class="sm lighter mt20">
-            <!-- <text>已选择：{{checkedGoods.spec_value_str}}</text> -->
-            <text>{{ specValueText }}</text>
-          </view>
+		  
         </view>
       </view>
       <view class="spec-main">
         <scroll-view style="max-height: 600rpx" scroll-y="true">
-          <view class="spec-list">
+			<view class="spec-list">
+			    <view class="name mb20">
+					<text>时间和上车地点</text>
+				</view>
+			    <view class="row wrap">
+					  <view v-for="(specitem, index2) in specList" :key="index2" :class="['spec-item sm', specitem.checked ? 'checked' : '']" @tap="choseSpecItem(index, index2)">
+						{{ specitem.name }}
+					  </view>
+			    </view>
+			</view>
+		
+          <!-- <view class="spec-list">
             <view v-for="(item, index) in specList" :key="index" class="spec">
               <view class="name mb20">
-                {{ item.name }}
-                <text class="primary xs ml20">{{
-                  checkedGoods.spec_value_ids_arr[index] == ""
-                    ? "请选择" + item.name
-                    : ""
-                }}</text>
+                {{ item }}
+                <text class="primary xs ml20">
+                  {{ checkedGoods.spec_value_ids_arr[index] == ""
+                    ? "请选择" + item
+                    : "" }}
+                </text>
               </view>
               <view class="row wrap">
-                <!-- <view v-for="(specitem, index2) in item.spec_value" :key="index2" :class="'spec-item sm ' + ( specitem.checked ? 'checked' : '' )"
-								 @tap="choseSpecItem(item.id, specitem.id)">
-									{{ specitem.value }}
-								</view> -->
-                <view
-                  v-for="(specitem, index2) in item.spec_value"
-                  :key="index2"
-                  :class="
-                    'spec-item sm ' +
-                    (checkedGoods.spec_value_ids_arr[index] == specitem.id
-                      ? 'checked'
-                      : '') +
-                    (isDisable(specitem.id) ? 'disabled' : '')
-                  "
-                  @click="choseSpecItem(index, index2)"
-                >
-                  {{ specitem.value }}
-                </view>
+				  <view v-for="(specitem, index2) in specList" :key="index2" :class="['spec-item sm', specitem.checked ? 'checked' : '']" @tap="choseSpecItem(index, index2)">
+				    {{ specitem.name }}
+				  </view>
               </view>
             </view>
-          </view>
+          </view> -->
+		  
         </scroll-view>
         <view class="good-num row-between ml20 mr20">
           <view class="label">数量</view>
           <u-number-box
             v-model="goodsNum"
             :min="1"
-            :max="checkedGoods.stock"
+            :max="checkedGoods.remainingQuota"
             :disabled="disabledNumberBox"
           ></u-number-box>
         </view>
       </view>
       <view
         class="btns row-between bg-white"
-        :class="
-          specValueText.indexOf('请选择') != -1 || checkedGoods.stock == 0
+        :class="specValueText.indexOf('请选择') != -1 || checkedGoods.remainingQuota == 0
             ? 'disabled'
-            : ''
-        "
+            : ''"
       >
         <button
           v-if="showAdd"
@@ -150,16 +131,13 @@ export default {
     return {
       checkedGoods: {
         stock: 0,
-      }, //选中的
-      outOfStock: [], //缺货的
-      specList: [], //规格
-      disable: [], //不可选择的
+      }, // 选中的
+      specList: [], // 规格
+      disable: [], // 不可选择的
       goodsNum: 1,
       showPop: false,
     };
   },
-
-  components: {},
   props: {
     show: {
       type: Boolean,
@@ -211,71 +189,84 @@ export default {
       type: Number,
     },
   },
-  mounted() {},
-
   computed: {
     // 选择的规格参数等
     specValueText() {
       let arr = this.checkedGoods.spec_value_ids?.split(",");
-      let spec_str = "";
-      if (arr)
-        arr.forEach((item, index) => {
-          if (item == "") spec_str += this.specList[index].name + ",";
-        });
-      if (this.checkedGoods?.stock != 0 && spec_str == "")
-        return `已选择 ${this.checkedGoods.spec_value_str} ${this.goodsNum} 件`;
-      else return `请选择 ${spec_str.slice(0, spec_str.length - 1)}`;
-    },
+	  let spec_str = "";
+	  
+	  // 判断规格选择情况，生成提示文本
+	  if (arr) {
+		arr.forEach((item, index) => {
+		  if (item === "") {
+			spec_str += this.specList[index] + "，"; // 拼接未选项的文本
+		  }
+		});
+	  }
+	  
+	  // 如果所有项都没有选择，则显示“请选择”提示
+	  if (!this.checkedGoods.spec_value_str || this.checkedGoods.spec_value_str.trim() === "") {
+		return `请选择上车时间和地点`;
+	  } else {
+		// 如果有选项已选择，则显示已选择的内容
+		return `已选择 ${this.checkedGoods.spec_value_str}`;
+	  }
+	}
   },
 
   watch: {
     goods(value) {
-      this.specList = value.goods_spec || [];
-      let goodsItem = value.goods_item || [];
-      this.outOfStock = goodsItem.filter((item) => item.stock == 0);
-      // 找出库存不为0的
-      const resultArr = goodsItem.filter((item) => item.stock != 0);
-      if (resultArr.length != 0) {
-        resultArr[0].spec_value_ids_arr =
-          resultArr[0].spec_value_ids.split(",");
-        this.checkedGoods = resultArr[0];
+      // 活动信息作为规格列表，并为每个规格项添加 checked 属性
+      this.specList = (value.optionalActivityInformationList || []).map(item => ({
+        name: item,        // 假设 item 是字符串，这里可以根据实际结构调整
+        checked: false,    // 默认未选中
+      }));
+    
+      this.outOfStock = []; // 无具体商品库存，但通过剩余配额判断
+    
+      // 使用剩余配额来判断库存情况
+      if (value.remainingQuota > 0) {
+        this.checkedGoods = {
+          activityId: value.activityId,
+          activityName: value.activityName,
+          currentPrice: value.currentPrice,
+          originalPrice: value.originalPrice,
+          totalQuota: value.totalQuota,
+          remainingQuota: value.remainingQuota,
+          imageUrlList: value.imageUrlList,
+          spec_value_ids_arr: [], // 假设没有具体的规格项
+          spec_value_ids: "", // 如果没有具体的规格值，可以设为空
+          spec_value_str: "", // 将规格描述拼接为字符串
+        };
       } else {
-        // 无法选择
-        goodsItem[0].spec_value_ids_arr = [];
-
-        this.disable = goodsItem.map((item) => item.spec_value_ids.split(","));
-        this.checkedGoods = goodsItem[0];
+        this.checkedGoods = {
+          activityId: value.activityId,
+          activityName: value.activityName,
+          currentPrice: value.currentPrice,
+          originalPrice: value.originalPrice,
+          totalQuota: value.totalQuota,
+          remainingQuota: value.remainingQuota,
+          imageUrlList: value.imageUrlList,
+          spec_value_ids_arr: [],
+          spec_value_ids: "",
+          spec_value_str: "",
+        };
+        // 标记为无法选择
+        this.disable = [];
       }
+    
+      // 同步到父组件
+      this.$emit("change", {
+        detail: this.checkedGoods,
+      });
     },
 
     specList(value) {
-      if (this.checkedGoods.stock == 0) return;
+      if (this.checkedGoods.remainingQuota == 0) return;
 
-      const res = this.goods.goods_item.filter((item) => {
-        return this.checkedGoods.spec_value_ids === item.spec_value_ids;
-      });
-
-      // 库存为0的规格
-      const idsArr = this.checkedGoods.spec_value_ids_arr;
-      const outOfStock = this.outOfStock;
-      // 找出规格相同和规格不相同的余数
-      const getArrGather = this.getArrResult(idsArr, outOfStock);
-      // 计算出缺货的规格项
-      this.disable = this.getOutOfStockArr(getArrGather, idsArr);
-
-      if (res.length != 0) {
-        console.log(res, "-----");
-
-        let result = JSON.parse(JSON.stringify(res[0]));
-        result.spec_value_ids_arr = result.spec_value_ids.split(",");
-        if (this.goodsNum > result.stock) {
-          this.goodsNum = result.stock;
-        }
-        this.checkedGoods = result;
-        // 同步到父组件
-        this.$emit("change", {
-          detail: this.checkedGoods,
-        });
+      // 处理库存逻辑，所有规格共享一个库存
+      if (this.goodsNum > this.checkedGoods.remainingQuota) {
+        this.goodsNum = this.checkedGoods.remainingQuota;
       }
     },
 
@@ -283,16 +274,8 @@ export default {
       this.showPop = val;
     },
   },
-  created() {
-    console.log("spec");
-  },
-  methods: {
-    isDisable(e) {
-      const res = this.disable.filter((item) => item == e);
-      if (res.length != 0) return true;
-      else return false;
-    },
 
+  methods: {
     onClose() {
       this.$emit("close");
     },
@@ -303,97 +286,67 @@ export default {
         return this.$toast({
           title: this.specValueText,
         });
-      if (checkedGoods.stock == 0)
+      if (checkedGoods.remainingQuota == 0)
         return this.$toast({
           title: "当前选择库存不足",
         });
-      checkedGoods.goodsNum = goodsNum;
-      this.$emit(type, {
-        detail: checkedGoods,
-      });
+      // 处理确认逻辑
+      if (type == "confirm") {
+        this.$emit("confirm", { checkedGoods, goodsNum });
+      } else if (type == "addcart") {
+        this.$emit("addcart", { checkedGoods, goodsNum });
+      } else if (type == "buynow") {
+        this.$emit("buynow", { checkedGoods, goodsNum });
+      }
     },
 
-    // 选择规格
     choseSpecItem(index, index2) {
-      const id = this.specList[index].spec_value[index2].id;
-
-      // 无法选择
-      const disable = this.disable.filter((item) => item == id);
-      if (disable.length != 0) return;
-
-      let idsArr = this.checkedGoods.spec_value_ids_arr;
-      if (id == idsArr[index]) idsArr[index] = "";
-      else idsArr[index] = id;
-      //保存已选规格
-      this.checkedGoods.spec_value_ids_arr = idsArr;
-      this.checkedGoods.spec_value_ids = idsArr.join(",");
-      // 重新渲染页面
-      this.specList = [...this.specList];
-    },
-
-    // 过滤出需要进行禁用的规格
-    getOutOfStockArr(arr, arr1, result = []) {
-      arr.forEach((el) => {
-        if (el.num >= arr1.length - 1) {
-          result.push(...el.different);
+      // 切换选中状态
+      this.specList.forEach((specItem, i) => {
+        if (i === index2) {
+          specItem.checked = !specItem.checked; // 只改变当前点击项的选中状态
+        } else {
+          specItem.checked = false; // 取消其他项的选中状态
         }
       });
-      return result;
+    
+      // 更新spec_value_ids_arr
+      let specValueArr = this.specList
+        .filter(specItem => specItem.checked) // 仅筛选出被选中的规格项
+        .map(specItem => specItem.name); // 获取选中项的名称
+      this.checkedGoods.spec_value_ids_arr = specValueArr;
+    
+      // 更新规格描述
+      let specValueStr = specValueArr.join(", ");
+      this.checkedGoods.spec_value_str = specValueStr;
     },
 
-    // 匹配出缺货库存和已选中对比结果
-    getArrIdentical(arr1, arr2, arr = [], num = 0) {
-      arr1.forEach((el) => {
-        arr2.forEach((el2) => {
-          if (el == el2) {
-            num += 1;
-            arr.push(el);
-          }
-        });
-      });
-      return {
-        num, //n个相同的
-        different: this.getArrDifference(
-          [...new Set(arr)].map(Number),
-          arr2.map(Number)
-        ),
-        identical: [...new Set(arr)],
-      };
-    },
-
-    // 匹配出已选择和缺库存的
-    getArrResult(arr, outOfStock, result = []) {
-      outOfStock.forEach((item) => {
-        const res = this.getArrIdentical(arr, item.spec_value_ids.split(","));
-        if (res != undefined && res.length != 0) {
-          result.push(res);
-        }
-      });
-      return result;
-    },
-
-    // 找出两个数组中参数不同的
-    getArrDifference(arr1, arr2) {
-      return arr1.concat(arr2).filter(function (v, i, arr) {
-        return arr.indexOf(v) == arr.lastIndexOf(v);
-      });
-    },
-
-    // 查看商品图片
-    previewImage(current) {
+	previewImage(url) {
       uni.previewImage({
-        current,
-        urls: [current], // 需要预览的图片http链接列表
+        urls: [url],
       });
     },
   },
 };
 </script>
+
 <style lang="scss" scoped>
+.goods-info {
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+}
+.row {
+  align-items: flex-end; /* 竖直方向上底部对齐 */
+}
+
 .spec-contain {
   border-radius: 10rpx 10rpx 0 0;
   overflow: hidden;
   position: relative;
+
+  .spec {
+    margin-top: 30rpx;
+  }
 
   .close {
     position: absolute;
@@ -401,38 +354,32 @@ export default {
     top: 10rpx;
   }
 
+  .activity-name {
+    font-size: 45rpx;
+    flex: 1;
+  }
+
   .spec-header {
     padding: 30rpx 20rpx;
     padding-right: 70rpx;
     align-items: flex-start;
     border: $-solid-border;
-    .vip-price {
-      margin: 0 24rpx;
-      background-color: #ffe9ba;
-      line-height: 36rpx;
-      border-radius: 6rpx;
-      overflow: hidden;
-      .price-name {
-        background-color: #101010;
-        padding: 3rpx 12rpx;
-        color: #ffd4b7;
-        position: relative;
-        overflow: hidden;
-        &::after {
-          content: "";
-          display: block;
-          width: 20rpx;
-          height: 20rpx;
-          position: absolute;
-          right: -15rpx;
-          background-color: #ffe9ba;
-          border-radius: 50%;
-          top: 50%;
-          transform: translateY(-50%);
-          box-sizing: border-box;
-        }
-      }
+	
+	.custom-price {
+	  padding-left: 15rpx;
+	  color: red !important; /* 设置字体颜色为红色 */
+	}
+    .original-price-wrapper {
+      padding-left: 8rpx;
+	  align-items: flex-end; /* 竖直方向上底部对齐 */
     }
+
+    .original-price {
+      font-size: 24rpx; /* 小字体 */
+      color: #999999; /* 灰色 */
+      text-decoration: line-through; /* 划线效果 */
+    }
+
     .goods-img {
       width: 180rpx;
       height: 180rpx;
@@ -452,36 +399,31 @@ export default {
         margin: 0 20rpx 20rpx 0;
         border: 1px solid #f4f4f4;
 
-        // &.checked {
-        // 	background-color: $-color-primary;
-        // 	color: #fff;
-        // }
-
         &.checked {
-          background-color: #ffe9eb;
-          color: $-color-primary;
-          border-color: $-color-primary;
+          background-color: #ffb946;  /* 选中时的背景色 */
+          color: white;               /* 选中时的文字颜色 */
+          border-color: #ffb946;      /* 选中时的边框颜色 */
         }
 
         &.disabled {
           opacity: 0.5;
-          text-decoration: line-through;
+          text-decoration: line-through; /* 灰色并划线 */
         }
       }
     }
   }
 
-  // 底部按钮无法选择
   .disabled {
     opacity: 0.4;
   }
+
   .btns {
     height: 120rpx;
     padding: 0 30rpx;
     margin-top: 80rpx;
 
     .add-cart {
-      background-color: #ff9e1e;
+      background-color: #ff9e1e; /* 橙色 */
     }
 
     .btn {

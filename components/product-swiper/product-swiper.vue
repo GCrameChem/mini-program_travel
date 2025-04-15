@@ -238,4 +238,16 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 999;
 }
+/* 页码样式 */
+.dots {
+  position: absolute;
+  bottom: 20rpx; /* 距离底部20rpx */
+  right: 20rpx;  /* 距离右侧20rpx */
+  background-color: rgba(0, 0, 0, 0.7); /* 黑色背景 */
+  color: white; /* 白色字体 */
+  padding: 8rpx 15rpx; /* 内边距 */
+  border-radius: 25rpx; /* 圆角椭圆 */
+  font-size: 28rpx; /* 字体大小 */
+  z-index: 10; /* 确保在最上层 */
+}
 </style>
