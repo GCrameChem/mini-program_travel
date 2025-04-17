@@ -502,15 +502,15 @@ export default {
         return {
 			promoList: [
 				{
-				  image: "http://118.24.44.124/pictures/promo/banner1.jpg",
+				  image: "http://118.24.44.124/pictures/banner1.jpg",
 				  link: "/pages/promo/detail?id=1"
 				},
 				{
-				  image: "http://118.24.44.124/pictures/promo/banner2.jpg",
+				  image: "http://118.24.44.124/pictures/banner2.jpg",
 				  link: "/pages/promo/detail?id=2"
 				},
 				{
-				  image: "http://118.24.44.124/pictures/promo/banner3.jpg",
+				  image: "http://118.24.44.124/pictures/banner3.jpg",
 				  link: "/pages/promo/detail?id=3"
 				}
 			],
@@ -519,7 +519,7 @@ export default {
 				  id: 1,
 				  title: "三日及以上",
 				  desc: "4-8人小团，随走随停",
-				  bgImage: "http://118.24.44.124/pictures/card-bg/3day.png",
+				  bgImage: "http://118.24.44.124/pictures/3day.png",
 				  expanded: false,
 				  details: {}
 				},
@@ -527,7 +527,7 @@ export default {
 				  id: 2,
 				  title: "两日游",
 				  desc: "发起活动，10人即可成行",
-				  bgImage: "http://118.24.44.124/pictures/card-bg/2day.png",
+				  bgImage: "http://118.24.44.124/pictures/2day.png",
 				  expanded: false,
 				  details: {}
 				},
@@ -535,7 +535,7 @@ export default {
 				  id: 3,
 				  title: "一日游",
 				  desc: "成都周边景区直通车",
-				  bgImage: "http://118.24.44.124/pictures/card-bg/1day.png",
+				  bgImage: "http://118.24.44.124/pictures/1day.png",
 				  expanded: false,
 				  details: {}
 				},

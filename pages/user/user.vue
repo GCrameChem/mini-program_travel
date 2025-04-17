@@ -204,10 +204,10 @@
 				<!-- 此处嵌入产品logo -->
 			</view>
 			<view class="row-center">
-				由 xxx 提供技术支持
+				由 -- 提供技术支持
 			</view>
 			<view class="row-center">
-				© xxx
+				© ---
 			</view>
 		</view>
     </view>
@@ -328,16 +328,16 @@ export default {
 <style lang="scss">
 .user {
     background-image: url(../../static/images/my_topbg.jpg);
-    background-size: 100% 420rpx;
+    background-size: 100% 400rpx;
     background-repeat: no-repeat;
     .header {
         display: flex;
         flex-direction: column;
-        height: 350rpx;
+        height: 400rpx;
         .user-info {
             padding: 10rpx 30rpx;
             //#ifdef  H5
-            padding-top: 80rpx;
+            padding-top: 180rpx;
             //#endif
             .avatar {
                 height: 110rpx;
@@ -394,10 +394,10 @@ export default {
         }
         .member {
             flex: 1;
-            padding: 0 20rpx;
+            padding: 0 10rpx;
             .member-entery {
                 color: #ffe0a1;
-                padding: 0 16rpx;
+                padding: 0 30rpx;
                 width: 100%;
                 height: 80rpx;
                 background: url(../../static/images/bg_member_grade.png);

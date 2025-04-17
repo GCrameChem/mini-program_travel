@@ -30,7 +30,7 @@
 				          :secondSize="24" 
 				          :subscript-size="24" 
 				          line-through 
-				          :price="records.originalPrice || records.currentPrice"
+				          :price="records.originalPrice"
 				        ></price-format>
 				      </view>
 				    </view>
@@ -67,7 +67,7 @@
 				          :secondSize="24" 
 				          :subscript-size="24" 
 				          line-through 
-				          :price="records.originalPrice || records.currentPrice"
+				          :price="records.originalPrice"
 				        ></price-format>
 				      </view>
 				    </view>

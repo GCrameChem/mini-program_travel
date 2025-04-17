@@ -130,12 +130,10 @@ export default {
             //         title: '请对配送服务进行评分'
             //     })
 			
-			
-			
 			//activityId:parseInt(this.id),
 			
             goodsComment({
-                userId: this.userId,
+                //userId: this.userId,
 				activityId:this.activity,
                 rating: goodsRate,
 				isSecondaryReview:true,

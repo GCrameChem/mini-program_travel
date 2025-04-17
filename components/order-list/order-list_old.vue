@@ -363,33 +363,33 @@ export default {
         url: `/pages/payment/payment?from=${"order"}&order_id=${id}`,
       });
 
-      // prepay({
-      // 	from: 'order',
-      // 	order_id: id
-      // }).then(res => {
-      // 	let args = res.data;
-      // 	this.showLoading = false
-      // 	if (res.code == 0) {
-      // 		wxpay(args).then((resPay) => {
-      // 			if(resPay == 'success') {
-      // 				this.$toast({
-      // 					title: "支付成功"
-      // 				})
-      // 				uni.$emit("refreshorder")
-      // 			}
-      // 		})
-      // 	}else if(res.code == 20001){
-      // 		alipay(args).then((resPay) => {
-      // 			if(resPay == 'success') {
-      // 				this.$toast({
-      // 					title: "支付成功"
-      // 				})
-      // 				uni.$emit("refreshorder")
-      // 			}
-      // 		})
-      // 	}
-      // });
-    },
+    //   prepay({
+    //   	from: 'order',
+    //   	order_id: id
+    //   }).then(res => {
+    //   	let args = res.data;
+    //   	this.showLoading = false
+    //   	if (res.code == 0) {
+    //   		wxpay(args).then((resPay) => {
+    //   			if(resPay == 'success') {
+    //   				this.$toast({
+    //   					title: "支付成功"
+    //   				})
+    //   				uni.$emit("refreshorder")
+    //   			}
+    //   		})
+    //   	}else if(res.code == 20001){
+    //   		alipay(args).then((resPay) => {
+    //   			if(resPay == 'success') {
+    //   				this.$toast({
+    //   					title: "支付成功"
+    //   				})
+    //   				uni.$emit("refreshorder")
+    //   			}
+    //   		})
+    //   	}
+    //   });
+    // },
 
     async getOrderListFun() {
         let { page, orderType, orderList, status } = this;

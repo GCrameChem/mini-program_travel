@@ -115,34 +115,34 @@
 
 			// 预支付处理
 			handlePrepay() {
-				if (this.loadingPay) return
-				this.loadingPay = true
-				prepay({
-					from: this.from,
-					order_id: this.order_id,
-					pay_way: this.payway,
-				}).then(({
-					code,
-					data
-				}) => {
-					switch (code) {
-						case 1:
-							this.handleWechatPay(data);
-							break;
-						case 10001:
-							this.handleAlipayPay(data);
-							break;
-						case 20001:
-							this.handleWalletPay();
-							break;
-					}
-				}).catch(err => {
+				// if (this.loadingPay) return
+				// this.loadingPay = true
+				// prepay({
+				// 	from: this.from,
+				// 	order_id: this.order_id,
+				// 	pay_way: this.payway,
+				// }).then(({
+				// 	code,
+				// 	data
+				// }) => {
+				// 	switch (code) {
+				// 		case 1:
+				// 			this.handleWechatPay(data);
+				// 			break;
+				// 		case 10001:
+				// 			this.handleAlipayPay(data);
+				// 			break;
+				// 		case 20001:
+				// 			this.handleWalletPay();
+				// 			break;
+				// 	}
+				// }).catch(err => {
 
-				}).finally(() => {
-					setTimeout(() => {
-						this.loadingPay = false
-					}, 500)
-				})
+				// }).finally(() => {
+				// 	setTimeout(() => {
+				// 		this.loadingPay = false
+				// 	}, 500)
+				// })
 			},
 
 			// 微信支付

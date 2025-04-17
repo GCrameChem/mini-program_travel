@@ -1,109 +1,123 @@
 <template>
-    <view>
-        <view class="all_comments">
-            <view class="header bg-white" v-if="!isEmpty">
-                <view class="title xs">
-                    <text class="lighter mr10">商品好评率</text>
-                    <text class="primary">{{ percent }}</text>
-                </view>
-				<view class="tab row">
-					<block v-for="(item, index) in categoryList" :key="index">
-						<view
-							:class="
-								'tab-item xs mr10  br60 mb20 ' +
-								(type == item.reviewAttributes ? 'bg-primary white' : 'common-bg')
-							"
-							:data-id="item.reviewAttributes"
-							@tap="onChangType"
-							v-if="item.count"
-							>
-							{{ item.reviewAttributes }}({{ item.count }})
+	<view class="all_comments">
+		<view class="header bg-white" v-if="!isEmpty">
+		    <view class="title xs">
+		        <text class="lighter mr10">商品好评率</text>
+		        <text class="primary">{{ percent }}</text>
+		    </view>
+		    <view class="tab row">
+		        <view
+		            :class="'tab-item xs mr10 br60 mb20 ' + (type === 'all' ? 'bg-primary white' : 'common-bg')"
+		            :data-id="'all'"
+		            @tap="onChangType"
+		        >
+		            全部
+		        </view>
+		
+		        <block v-for="(item, index) in categoryList" :key="index">
+		            <view
+		                :class="'tab-item xs mr10 br60 mb20 ' + (type === item.reviewAttributes ? 'bg-primary white' : 'common-bg')"
+		                :data-id="item.reviewAttributes"
+		                @tap="onChangType"
+		                v-if="item.count"
+		            >
+		                {{ item.reviewAttributes }}({{ item.count }})
+		            </view>
+		        </block>
+		    </view>
+		</view>
+
+		<!-- <view class="header bg-white" v-if="!isEmpty">
+			<view class="title xs">
+				<text class="lighter mr10">商品好评率</text>
+				<text class="primary">{{ percent }}</text>
+			</view>
+			<view class="tab row">
+				<block v-for="(item, index) in categoryList" :key="index">
+					<view :class="'tab-item xs mr10  br60 mb20 ' + (type == item.reviewAttributes ? 'bg-primary white' : 'common-bg')"
+						:data-id="item.reviewAttributes" @tap="onChangType" v-if="item.count">
+						{{ item.reviewAttributes }}({{ item.count }})
+					</view>
+				</block>
+			</view>
+		</view> -->
+		
+		<view class="main bg-white">
+			<view class="evaluation-list">
+				<view v-for="(item, index) in commentList" :key="index" class="evaluation-item">
+					<!-- 用户信息 -->
+					<view class="user-info row">
+						<image class="avatar mr20" :src="item.avatar"></image>
+						<view class="user-name md mr10">{{ item.nickname }}</view>
+						<u-rate disabled size="26rpx" color="#FF2C3C" v-model="item.rating"></u-rate>
+					</view>
+					
+					<!-- 评论时间 -->
+					<view class="muted xs mt10">
+						<text class="mr20">{{ item.createTime }}</text>
+					</view>
+					
+					<!-- 评论内容 -->
+					<view v-if="item.commentContent" class="dec mt20">{{ item.commentContent }}</view>
+					
+					<!-- 评论图片 -->
+					<view class="img mt20 row" style="flex-wrap: wrap" v-if="item.imageUrlList.length">
+						<view v-for="(imgitem, imgindex) in item.imageUrlList" :key="imgindex" class="img-item mr10 mb20" :data-current="imgitem" :data-uri="item.imageUrlList" @tap="previewImage">
+							<custom-image width="160rpx" fit="cover" height="160rpx" radius="6rpx" lazy-load class="goods-img" :src="imgitem" />
 						</view>
-					</block>
+					</view>
+					
+					<!-- 点赞区域 -->
+					<view class="like-area row mt10">
+						<view class="like-button row" :class="{ liked: item.isLike }" @tap="onLikeComment(item.reviewId, index)">
+							<image class="like-icon" :src="item.isLike ? '/static/images/icons/full_like.png' : '/static/images/icons/empty_like.png'" />
+							<text class="like-count ml10">{{ item.likesCount }}</text> <!-- 显示总点赞数 -->
+						</view>
+					</view>
+		
+					<!-- 回复情况：显示二级评论 -->
+					<view v-if="item.replies && item.replies.length" class="replies-container">
+						<view v-for="(reply, replyIndex) in item.replies" :key="replyIndex" class="reply-item">
+							<!-- 回复者的信息 -->
+							<view class="user-info row">
+								<image class="avatar mr20" :src="reply.avatar"></image>
+								<view class="user-name md mr10">{{ reply.nickname }}</view>
+								<u-rate disabled size="20rpx" color="#FF2C3C" v-model="reply.rating"></u-rate>
+							</view>
+							<view class="muted xs mt10">
+								<text class="mr20">{{ reply.createTime }}</text>
+							</view>
+							
+							<!-- 回复内容 -->
+							<view class="dec mt10">{{ reply.commentContent }}</view>
+							
+							<!-- 回复图片 -->
+							<view class="img mt10 row" style="flex-wrap: wrap" v-if="reply.imageUrlList && reply.imageUrlList.length">
+								<view v-for="(imgitem, imgindex) in reply.imageUrlList" :key="imgindex" class="img-item mr10 mb20" :data-current="imgitem" :data-uri="reply.imageUrlList" @tap="previewImage">
+									<custom-image width="160rpx" fit="cover" height="160rpx" radius="6rpx" lazy-load class="goods-img" :src="imgitem" />
+								</view>
+							</view>
+							
+							<!-- 回复的点赞情况 -->
+							<view class="like-area row mt10">
+								<view class="like-button row" :class="{ liked: reply.isLike }" 
+									  @tap="onLikeComment(reply.reviewId, index, true, replyIndex)">
+									<image class="like-icon" :src="reply.isLike ? '/static/images/icons/full_like.png' : '/static/images/icons/empty_like.png'" />
+									<text class="like-count ml10">{{ reply.likesCount }}</text> <!-- 显示总点赞数 -->
+								</view>
+							</view>
+						</view>
+					</view>
 				</view>
 			</view>
-			
-            <view class="main bg-white">
-                <view class="evaluation-list">
-                    <view v-for="(item, index) in commentList" :key="index" class="evaluation-item">
-                        <!-- 用户信息 -->
-                        <view class="user-info row">
-                            <image class="avatar mr20" :src="item.avatar"></image>
-                            <view class="user-name md mr10">{{ item.nickname }}</view>
-                            <u-rate disabled size="26rpx" color="#FF2C3C" v-model="item.rating"></u-rate>
-                        </view>
-                        
-                        <!-- 评论时间 -->
-                        <view class="muted xs mt10">
-                            <text class="mr20">{{ item.createTime }}</text>
-                        </view>
-                        
-                        <!-- 评论内容 -->
-                        <view v-if="item.commentContent" class="dec mt20">{{ item.commentContent }}</view>
-                        
-                        <!-- 评论图片 -->
-                        <view class="img mt20 row" style="flex-wrap: wrap" v-if="item.imageUrlList.length">
-                            <view v-for="(imgitem, imgindex) in item.imageUrlList" :key="imgindex" class="img-item mr10 mb20" :data-current="imgitem" :data-uri="item.imageUrlList" @tap="previewImage">
-                                <custom-image width="160rpx" fit="cover" height="160rpx" radius="6rpx" lazy-load class="goods-img" :src="imgitem" />
-                            </view>
-                        </view>
-                        
-                        <!-- 点赞区域 -->
-                        <view class="like-area row mt10">
-                            <view class="like-button row" :class="{ liked: item.isLike }" @tap="onLikeComment(item.reviewId, index)">
-                                <image class="like-icon" :src="item.isLike ? '/static/images/icons/full_like.png' : '/static/images/icons/empty_like.png'" />
-                                <text class="like-count ml10">{{ item.likesCount }}</text> <!-- 显示总点赞数 -->
-                            </view>
-                        </view>
-            
-                        <!-- 回复情况：显示二级评论 -->
-                        <view v-if="item.replies && item.replies.length" class="replies-container">
-                            <view v-for="(reply, replyIndex) in item.replies" :key="replyIndex" class="reply-item">
-                                <!-- 回复者的信息 -->
-                                <view class="user-info row">
-                                    <image class="avatar mr20" :src="reply.avatar"></image>
-                                    <view class="user-name md mr10">{{ reply.nickname }}</view>
-                                    <u-rate disabled size="20rpx" color="#FF2C3C" v-model="reply.rating"></u-rate>
-                                </view>
-								<view class="muted xs mt10">
-								    <text class="mr20">{{ reply.createTime }}</text>
-								</view>
-                                
-                                <!-- 回复内容 -->
-                                <view class="dec mt10">{{ reply.commentContent }}</view>
-                                
-                                <!-- 回复图片 -->
-                                <view class="img mt10 row" style="flex-wrap: wrap" v-if="reply.imageUrlList && reply.imageUrlList.length">
-                                    <view v-for="(imgitem, imgindex) in reply.imageUrlList" :key="imgindex" class="img-item mr10 mb20" :data-current="imgitem" :data-uri="reply.imageUrlList" @tap="previewImage">
-                                        <custom-image width="160rpx" fit="cover" height="160rpx" radius="6rpx" lazy-load class="goods-img" :src="imgitem" />
-                                    </view>
-                                </view>
-                                
-                                <!-- 回复的点赞情况 -->
-								<view class="like-area row mt10">
-								    <view class="like-button row" :class="{ liked: reply.isLike }" 
-								          @tap="onLikeComment(reply.reviewId, index, true, replyIndex)">
-								        <image class="like-icon" :src="reply.isLike ? '/static/images/icons/full_like.png' : '/static/images/icons/empty_like.png'" />
-								        <text class="like-count ml10">{{ reply.likesCount }}</text> <!-- 显示总点赞数 -->
-								    </view>
-								</view>
-                            </view>
-                        </view>
-						
-						
-                    </view>
-                </view>
-            </view>
-
-        
 		</view>
-        <loading-footer :status="status" slotEmpty>
-            <view slot="empty" class="column-center" style="padding-top: 200rpx">
-                <image class="img-null" src="/static/images/goods_null.png"></image>
-                <text class="lighter">暂无评价</text>
-            </view>
-        </loading-footer>
-    </view>
+		<loading-footer :status="status" slotEmpty>
+			<view slot="empty" class="column-center" style="padding-top: 200rpx">
+				<image class="img-null" src="/static/images/goods_null.png"></image>
+				<text class="lighter">暂无评价</text>
+			</view>
+		</loading-footer>
+	</view>
 </template>
 
 <script>
@@ -117,7 +131,7 @@ export default {
             status: loadingType.LOADING,
             page: 1,
 			pageSize:'',
-            type: '0',
+            type: 'all',
             commentList: [],
             categoryList: [],
             percent: '暂未开发',
@@ -129,7 +143,6 @@ export default {
 
     components: {},
     props: {},
-
     
     onLoad: async function (options) {
         this.id = options.id;
@@ -153,7 +166,7 @@ export default {
 
     
     // 用户点击右上角分享
-    // onShareAppMessage: function () {},
+    onShareAppMessage: function () {},
 	
 	// 需要用户登录状态
 	computed: {
@@ -166,16 +179,26 @@ export default {
 	},
 	
     methods: {
-        onChangType(e) {
-            let { id } = e.currentTarget.dataset
-            let { type } = this
-            if (id == type) return
-            this.type = id
-            this.page = 1
-            this.commentList = []
-            this.status = loadingType.LOADING
-            this.$nextTick(() => this.getCommentListFun())
-        },
+		onChangType(e) {
+		    let { id } = e.currentTarget.dataset;
+		
+		    // 如果点击的是“全部”，则设置type为'全部'
+		    if (id === 'all') {
+		        this.type = 'all';  // 选择全部评论
+		    } else {
+		        // 否则选择特定的reviewAttributes
+		        if (id === this.type) return;
+		        this.type = id;
+		    }
+		
+		    // 重置评论分页信息和状态
+		    this.page = 1;
+		    this.commentList = [];
+		    this.status = loadingType.LOADING;
+		
+		    // 获取评论列表
+		    this.$nextTick(() => this.getCommentListFun());
+		},
 
         getCommentCategoryFun() {
            return new Promise((resolve) => {
@@ -192,8 +215,9 @@ export default {
                    }
                });
            });
-       },
-	   getCommentListFun() {
+        },
+	
+	    getCommentListFun() {
 	       let { page, status, commentList, type } = this;
 	       if (status == loadingType.FINISHED) return;
 	   
@@ -267,7 +291,7 @@ export default {
 		        if (res.code === 0) {
 		            //this.commentList[index].isLike = res.data.isLike;  // 更新点赞状态
 					this.$set(this.commentList, index, { ...this.commentList[index], isLike: res.data.isLike });
-					console.log("首次查询",this.commentList[index].reviewId,this.commentList[index].isLike);
+					//console.log("首次查询",this.commentList[index].reviewId,this.commentList[index].isLike);
 		        }
 		    });
 		},

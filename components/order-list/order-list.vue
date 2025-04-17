@@ -321,50 +321,59 @@ export default {
     },
 
     payNow(id) {
-      // this.showLoading = true
+      this.showLoading = true
 
       uni.navigateTo({
         url: `/pages/payment/payment?from=${"order"}&order_id=${id}`,
       });
 
-      // prepay({
-      // 	from: 'order',
-      // 	order_id: id
-      // }).then(res => {
-      // 	let args = res.data;
-      // 	this.showLoading = false
-      // 	if (res.code == 0) {
-      // 		wxpay(args).then((resPay) => {
-      // 			if(resPay == 'success') {
-      // 				this.$toast({
-      // 					title: "支付成功"
-      // 				})
-      // 				uni.$emit("refreshorder")
-      // 			}
-      // 		})
-      // 	}else if(res.code == 20001){
-      // 		alipay(args).then((resPay) => {
-      // 			if(resPay == 'success') {
-      // 				this.$toast({
-      // 					title: "支付成功"
-      // 				})
-      // 				uni.$emit("refreshorder")
-      // 			}
-      // 		})
-      // 	}
-      // });
+      prepay({
+      	from: 'order',
+      	order_id: id
+      }).then(res => {
+      	let args = res.data;
+      	this.showLoading = false
+      	if (res.code == 0) {
+      		wxpay(args).then((resPay) => {
+      			if(resPay == 'success') {
+      				this.$toast({
+      					title: "支付成功"
+      				})
+      				uni.$emit("refreshorder")
+      			}
+      		})
+      	}else if(res.code == 20001){
+      		alipay(args).then((resPay) => {
+      			if(resPay == 'success') {
+      				this.$toast({
+      					title: "支付成功"
+      				})
+      				uni.$emit("refreshorder")
+      			}
+      		})
+      	}
+      });
     },
 	async getOrderListFun() {
 	  let { page, orderType, orderList, status } = this;
 
 	  //console.log("正在调用：getOrderListFun()");
+	  if (this.orderType == 'all'){
+		  const data =  await pageLoad(getOrderList, page, orderList, status, {
+		    pageSize: this.pageSize,
+		    userId: this.userId,
+		  });
+	  }
+	  else{
+		  const data =  await pageLoad(getOrderList, page, orderList, status, {
+		    pageSize: this.pageSize,
+		    userId: this.userId,
+		  	orderStatus: this.orderType
+		  });
+	  }
 	  // 调用分页函数
 	  console.log("userId",this.userId);
-	  const data =  await pageLoad(getOrderList, page, orderList, status, {
-	    pageSize: this.pageSize,
-	    userId: this.userId,
-		orderStatus: this.orderType
-	  });
+	  
 	  if (!data) return;
 	  
 	  this.page = data.page; // 更新页码
