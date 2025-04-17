@@ -37,7 +37,8 @@
                 </view>
             </u-navbar>
         </u-sticky>
-        <view class="flex1 row" v-if="showLogo">
+        <!-- <view class="flex1 row" v-if="showLogo"> -->
+		<view class="flex1 row">
             <navigator
                 hover-class="none"
                 @tap="goPage('/bundle/pages/message_center/message_center')"
@@ -154,7 +155,7 @@
 				<goods-list type="triple" :list="goodsList"></goods-list>
 			</view>
 			<!-- 每周活动 -->
-			<view class="special-area mt20" v-if="goodsList.length">
+			<view class="special-area mt20" v-if="newGoods.length">
 				<!-- 标题块 -->
 				<view class="title-container column-center">
 					<view class="title-text">每周活动</view>
@@ -166,7 +167,8 @@
 					<view class="vertical-title">一日游</view>
 					<!-- 活动区域 -->
 					<view class="activity-container">
-						<view v-if="newGoods.length && seting.news" class="new-goods">
+						<!-- <view v-if="newGoods.length && seting.news" class="new-goods"> -->
+						<view v-if="newGoods.length" class="new-goods">
 							<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
 								<navigator
 									slot="header"
@@ -184,7 +186,8 @@
 					<view class="vertical-title">多日游</view>
 					<!-- 活动区域 -->
 					<view class="activity-container">
-						<view v-if="newGoods.length && seting.news" class="new-goods">
+						<!-- <view v-if="newGoods.length && seting.news" class="new-goods"> -->
+						<view v-if="newGoods.length" class="new-goods">
 							<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
 								<navigator
 									slot="header"
@@ -232,7 +235,8 @@
 					<!-- 详细内容 -->
 					<template #content>
 					  <view class="card-detail" v-if="card.expanded">
-						<view v-if="newGoods.length && seting.news" class="new-goods">
+						<!-- <view v-if="newGoods.length && seting.news" class="new-goods"> -->
+						<view v-if="newGoods.length" class="new-goods">
 							<active-area type="news" progressBarColor="#9912FE" :lists="newGoods">
 								<navigator
 								  slot="header"
@@ -262,13 +266,13 @@
 							v-for="(item, index) in activityArea"
 							:key="index"
 							hover-class="none"
-							:url="`/bundle/pages/activity_detail/activity_detail?id=${item.id}&name=${item.title}&title=${item.name}`"
+							:url="`/bundle/pages/activity_detail/activity_detail?id=${item.activityId}&name=${item.activityName}&title=${item.activityName}`"
 						>
 							<view class="column-center">
 								<custom-image
 									width="300rpx"
 									height="436rpx"
-									:src="item.image"
+									:src="item.imageUrlList[0]"
 								></custom-image>
 							</view>
 						</navigator>
@@ -484,10 +488,10 @@ export default {
 	        desc: '默认描述文字'
 	      })
 	    },
-	    newGoods: {
-	      type: Array,
-	      default: () => []
-	    },
+	    // newGoods: {
+	    //   type: Array,
+	    //   default: () => []
+	    // },
 	    seting: {
 	      type: Object,
 	      default: () => ({ news: true })
@@ -498,51 +502,51 @@ export default {
         return {
 			promoList: [
 				{
-				  image: "/static/images/promo/banner1.png",
+				  image: "http://118.24.44.124/pictures/promo/banner1.jpg",
 				  link: "/pages/promo/detail?id=1"
 				},
 				{
-				  image: "/static/images/promo/banner2.png",
+				  image: "http://118.24.44.124/pictures/promo/banner2.jpg",
 				  link: "/pages/promo/detail?id=2"
 				},
 				{
-				  image: "/static/images/promo/banner3.png",
+				  image: "http://118.24.44.124/pictures/promo/banner3.jpg",
 				  link: "/pages/promo/detail?id=3"
 				}
 			],
 			tourCards: [
-			        {
-			          id: 1,
-			          title: "三日及以上",
-			          desc: "4-8人小团，随走随停",
-			          bgImage: "/static/images/card-bg/3day.png",
-			          expanded: false,
-			          details: {}
-			        },
-			        {
-			          id: 2,
-			          title: "两日游",
-			          desc: "发起活动，10人即可成行",
-			          bgImage: "/static/images/card-bg/2day.png",
-			          expanded: false,
-			          details: {}
-			        },
-					{
-					  id: 3,
-					  title: "一日游",
-					  desc: "成都周边景区直通车",
-					  bgImage: "/static/images/card-bg/1day.png",
-					  expanded: false,
-					  details: {}
-					},
+				{
+				  id: 1,
+				  title: "三日及以上",
+				  desc: "4-8人小团，随走随停",
+				  bgImage: "/static/images/card-bg/3day.png",
+				  expanded: false,
+				  details: {}
+				},
+				{
+				  id: 2,
+				  title: "两日游",
+				  desc: "发起活动，10人即可成行",
+				  bgImage: "/static/images/card-bg/2day.png",
+				  expanded: false,
+				  details: {}
+				},
+				{
+				  id: 3,
+				  title: "一日游",
+				  desc: "成都周边景区直通车",
+				  bgImage: "/static/images/card-bg/1day.png",
+				  expanded: false,
+				  details: {}
+				},
 			],
             // 导览数据
 			guideItems: [
-				{ image: '/static/images/img1.jpg', text: '示例 1' },
-				{ image: '/static/images/img2.jpg', text: '示例 2' },
-				{ image: '/static/images/img3.jpg', text: '示例 3' },
-				{ image: '/static/images/img4.jpg', text: '示例 4' },
-				{ image: '/static/images/img5.jpg', text: '示例 5' },
+				{ image: '/static/images/guide-icon/face.png', text: '咨询客服' },
+				{ image: '/static/images/guide-icon/message.png', text: '提供需求' },
+				{ image: '/static/images/guide-icon/list-print.png', text: '购买发起' },
+				{ image: '/static/images/guide-icon/address-book.png', text: '邀请好友' },
+				{ image: '/static/images/guide-icon/address.png', text: '建群出发' },
 			],
 			scrollTop: 0,
             navSwiperH: 374,
@@ -618,18 +622,19 @@ export default {
         // #endif
     },
     async onShow() {
-        // this.$nextTick(function () {
-        //     getRect('.index').then((res) => {
-        //         if (res.top == 0) {
-        //             this.navBg = 0
-        //         }
-        //     })
-        // })
+        this.$nextTick(function () {
+            getRect('.index').then((res) => {
+                if (res.top == 0) {
+                    this.navBg = 0
+                }
+            })
+        })
 
         // #ifdef H5
         this.enable = true
         // #endif
-        await this.getHomeFun()
+		console.log("onshow test");
+        await this.getHomeFun();
         //this.getCartNum()
         //this.isLogin && this.getRegisterCouponFun()
 
@@ -657,7 +662,7 @@ export default {
         this.getBestListFun()
     },
     onPullDownRefresh() {
-        this.getHomeFun()
+        this.getHomeFun();
         //this.getMenuFun()
     },
     onShareAppMessage() {
@@ -705,14 +710,12 @@ export default {
             }
         },
         async getHomeFun() {
-			
 			// TEMP:目前只有清单数据。前面的newGoods现在都共用一个活动数组
 			console.log("test: getHomeFun");
-			this.getBestListFun();
-			// uni.stopPullDownRefresh();
+			await this.getBestListFun();
+			uni.stopPullDownRefresh();
 			this.newGoods = this.goodsList;
-			console.log("this.goodsList",this.goodsList);
-			
+			//console.log("this.goodsList",this.goodsList);
 			console.log("this.newGoods",this.newGoods);
 
 			// 原接口参考
@@ -1014,13 +1017,6 @@ export default {
                         margin-top: 60rpx;
                         margin-bottom: 20rpx;
                     }
-
-                    // .desc {
-                    //     background-color: #fee9eb;
-                    //     padding: 6rpx 20rpx;
-                    //     border-radius: 60rpx;
-                    //     max-width: 260rpx;
-                    // }
                 }
             }
 
@@ -1032,13 +1028,6 @@ export default {
 			.activity-container {
 			    flex: 1; /* 让活动区域填充剩余空间 */
 			}
-			
-            // .seckill {
-            //     .dec {
-            //         background-color: #fffbdb;
-            //         width: 150rpx;
-            //     }
-            // }
 
             .hot,
             .new-goods {
@@ -1046,13 +1035,13 @@ export default {
                     width: 144rpx;
                     height: 55rpx;
                 }
+				
             }
         }
 
         .goods {
             .goods-title {
                 height: 160rpx;
-
                 .line {
                     width: 58rpx;
                     height: 1px;
@@ -1076,7 +1065,7 @@ export default {
 	}
 
 	.title-text {
-		font-size: 40rpx;  /* 标题较大 */
+		font-size: 40rpx;
 		font-weight: bold;
 		color: #3b3b3b;
 	}
@@ -1090,13 +1079,13 @@ export default {
 	}
 	.goods-section {
 		display: flex;
-		align-items: stretch; /* 让左右两栏高度一致 */
+		align-items: stretch;
 		width: 100%;
 	}
 
 	.vertical-title {
-	    writing-mode: vertical-rl; /* 竖向排列 */
-	    background-color: #ddd; /* 灰色背景 */
+	    writing-mode: vertical-rl;
+	    background-color: #ddd;
 	    padding: 20rpx;
 	    font-size: 30rpx;
 	    font-weight: bold;
@@ -1105,7 +1094,7 @@ export default {
 	    display: flex;
 	    align-items: center;
 	    justify-content: center;
-	    min-width: 60rpx; /* 设定固定宽度 */
+	    min-width: 60rpx;
 	}
 
 	.goods-name {
@@ -1150,41 +1139,41 @@ export default {
         }
     }
 	
-	.guide-container {
+.guide-container {
+	display: flex;
+	justify-content: space-between;
+	padding: 20rpx;
+	.guide-item {
+		width: calc(20% - 10rpx);
+		margin-bottom: 20rpx;
+		border-radius: 15rpx;
+		box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.2);
+		border: 1rpx solid #ddd;
+		text-align: center;
+		padding: 20rpx; 
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		padding: 10rpx;
-		
-		.guide-item {
-			width: calc(20% - 10rpx); /* 一行5个元素，每个元素占宽度的20%，减去间隙 */
-			margin-bottom: 16rpx; /* 底部间隙 */
-			background: #fff;
-			border-radius: 8rpx;
-			box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1); /* 阴影 */
-			border: 1rpx solid #ddd; /* 浅灰色边框 */
-			text-align: center;
-			padding: 10rpx;
-		}
-
+		flex-direction: column;
 		.image-container {
-			width: 100%;
-			height: 150rpx; /* 固定高度，保持图片正方形 */
-			margin-bottom: 8rpx;
+		    width: 100%;
+		    height: 50rpx;
+		    margin-bottom: 15rpx;
+		    display: flex;
+		    justify-content: center;
+			.guide-image {
+			    width: 60%;
+			    height: auto;
+			    border-radius: 6rpx;
+			    object-fit: cover;
+			}
 		}
-
-		.guide-image {
-			width: 100%;
-			height: 100%;
-			border-radius: 6rpx; /* 图片容器圆角 */
-			object-fit: cover; /* 保证图片自适应容器 */
-		}
-
 		.text-container {
-			font-size: 20rpx;
-			color: #333;
-			opacity: 0.8;
+		    font-size: 10rpx !important;
+		    color: #070707;
+		    opacity: 0.8;
+		    margin-top: 8rpx;
 		}
+	}
+	
 	}
 	
     .coupons-popup {

@@ -11,15 +11,15 @@
 			<scroll-view v-else style="white-space: nowrap;" scroll-x="true" scroll-with-animation="true">
 				<navigator v-for="(item, index) in lists" :key="index"
 					:style="{background: type == 'seckill' && '#f8f8f8'}" class="goods-item bg-white" hover-class="none"
-					:url="'/pages/goods_details/goods_details?id=' + item.id">
-					<custom-image width="240rpx" height="240rpx" radius="10rpx" lazy-load :src="item.image">
+					:url="'/pages/goods_details/goods_details?id=' + item.activityId">
+					<custom-image width="240rpx" height="240rpx" radius="10rpx" lazy-load :src="item.imageUrlList[0]">
 					</custom-image>
 					<view style="padding: 8rpx">
-						<view class="goods-name line1">{{item.name}}</view>
+						<view class="goods-name line1">{{item.activityName}}</view>
 						<view class="row wrap">
-							<price-format class="mr10" :weight="500" :price="item.seckill_price || item.price" :first-size="32"
+							<price-format class="mr10" :weight="500" :price="item.currentPrice" :first-size="32"
 								:second-size="22" :subscript-size="22" color="#FF2C3C"></price-format>
-							<price-format :price="item.min_price || item.market_price" color="#999999" :second-size="22"
+							<price-format :price="item.originalPrice" color="#999999" :second-size="22"
 								:first-size="22" :subscript-size="22" :line-through="true"></price-format>
 						</view>
 					</view>
@@ -89,6 +89,8 @@
 				display: inline-block;
 				border-radius: 10rpx;
 				overflow: hidden;
+				
+				box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
 
 				&:first-of-type {
 					margin-left: 20rpx;
