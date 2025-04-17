@@ -152,7 +152,7 @@ export default {
         },
 		// IMPORTANT: order_type原类型为Number
         order_type: {
-            type: String,
+            type: Number,
             default: 0
         }
     },

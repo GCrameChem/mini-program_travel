@@ -55,9 +55,10 @@
 					<text>时间和上车地点</text>
 				</view>
 			    <view class="row wrap">
-					  <view v-for="(specitem, index2) in specList" :key="index2" :class="['spec-item sm', specitem.checked ? 'checked' : '']" @tap="choseSpecItem(index, index2)">
-						{{ specitem.name }}
+					  <view v-for="(specitem, index2) in specList" :key="index2" :class="['spec-item sm', specitem.checked ? 'checked' : '']" @tap="choseSpecItem(index2)">
+					    {{ specitem.name }}
 					  </view>
+
 			    </view>
 			</view>
 		
@@ -131,6 +132,7 @@ export default {
     return {
       checkedGoods: {
         stock: 0,
+		imageUrlList: [] // 确保有一个空数组来避免 undefined 错误
       }, // 选中的
       specList: [], // 规格
       disable: [], // 不可选择的
@@ -215,52 +217,49 @@ export default {
   },
 
   watch: {
+	
     goods(value) {
-      // 活动信息作为规格列表，并为每个规格项添加 checked 属性
+    // 通过检查数据结构和初始化specList
+    if (value && value.optionalActivityInformationList) {
       this.specList = (value.optionalActivityInformationList || []).map(item => ({
-        name: item,        // 假设 item 是字符串，这里可以根据实际结构调整
-        checked: false,    // 默认未选中
+        name: item,
+        checked: false,
       }));
-    
-      this.outOfStock = []; // 无具体商品库存，但通过剩余配额判断
-    
-      // 使用剩余配额来判断库存情况
-      if (value.remainingQuota > 0) {
-        this.checkedGoods = {
-          activityId: value.activityId,
-          activityName: value.activityName,
-          currentPrice: value.currentPrice,
-          originalPrice: value.originalPrice,
-          totalQuota: value.totalQuota,
-          remainingQuota: value.remainingQuota,
-          imageUrlList: value.imageUrlList,
-          spec_value_ids_arr: [], // 假设没有具体的规格项
-          spec_value_ids: "", // 如果没有具体的规格值，可以设为空
-          spec_value_str: "", // 将规格描述拼接为字符串
-        };
-      } else {
-        this.checkedGoods = {
-          activityId: value.activityId,
-          activityName: value.activityName,
-          currentPrice: value.currentPrice,
-          originalPrice: value.originalPrice,
-          totalQuota: value.totalQuota,
-          remainingQuota: value.remainingQuota,
-          imageUrlList: value.imageUrlList,
-          spec_value_ids_arr: [],
-          spec_value_ids: "",
-          spec_value_str: "",
-        };
-        // 标记为无法选择
-        this.disable = [];
-      }
-    
-      // 同步到父组件
-      this.$emit("change", {
-        detail: this.checkedGoods,
-      });
-    },
+    }
+	
+    if (value.remainingQuota > 0) {
+      this.checkedGoods = {
+        activityId: value.activityId,
+        activityName: value.activityName,
+        currentPrice: value.currentPrice,
+        originalPrice: value.originalPrice,
+        totalQuota: value.totalQuota,
+        remainingQuota: value.remainingQuota,
+        imageUrlList: value.imageUrlList || [], // 确保 imageUrlList 存在
+        spec_value_ids_arr: [],
+        spec_value_ids: "",
+        spec_value_str: "",
+      };
+    } else {
+      this.checkedGoods = {
+        activityId: value.activityId,
+        activityName: value.activityName,
+        currentPrice: value.currentPrice,
+        originalPrice: value.originalPrice,
+        totalQuota: value.totalQuota,
+        remainingQuota: value.remainingQuota,
+        imageUrlList: value.imageUrlList || [],
+        spec_value_ids_arr: [],
+        spec_value_ids: "",
+        spec_value_str: "",
+      };
+      this.disable = [];
+    }
 
+    this.$emit("change", {
+      detail: this.checkedGoods,
+    });
+  },
     specList(value) {
       if (this.checkedGoods.remainingQuota == 0) return;
 
@@ -268,6 +267,9 @@ export default {
       if (this.goodsNum > this.checkedGoods.remainingQuota) {
         this.goodsNum = this.checkedGoods.remainingQuota;
       }
+	  this.$emit("change", {
+	    detail: this.checkedGoods,
+	  });
     },
 
     show(val) {
@@ -296,38 +298,56 @@ export default {
       } else if (type == "addcart") {
         this.$emit("addcart", { checkedGoods, goodsNum });
       } else if (type == "buynow") {
-        this.$emit("buynow", { checkedGoods, goodsNum });
+		this.$emit("buynow", {
+		  detail: {
+		    checkedGoods: this.checkedGoods,
+		    goodsNum: this.goodsNum
+		  }
+		});
+        // this.$emit("buynow", { checkedGoods, goodsNum });
       }
     },
 
-    choseSpecItem(index, index2) {
-      // 切换选中状态
-      this.specList.forEach((specItem, i) => {
-        if (i === index2) {
-          specItem.checked = !specItem.checked; // 只改变当前点击项的选中状态
-        } else {
-          specItem.checked = false; // 取消其他项的选中状态
-        }
-      });
+    choseSpecItem(index2) {
+        this.specList.forEach((specItem, i) => {
+          if (i === index2) {
+            specItem.checked = !specItem.checked;
+          } else {
+            specItem.checked = false;
+          }
+        });
     
-      // 更新spec_value_ids_arr
-      let specValueArr = this.specList
-        .filter(specItem => specItem.checked) // 仅筛选出被选中的规格项
-        .map(specItem => specItem.name); // 获取选中项的名称
-      this.checkedGoods.spec_value_ids_arr = specValueArr;
+        // 更新 spec_value_ids_arr 和 spec_value_str
+        let specValueArr = this.specList
+          .filter(specItem => specItem.checked)
+          .map(specItem => specItem.name);
     
-      // 更新规格描述
-      let specValueStr = specValueArr.join(", ");
-      this.checkedGoods.spec_value_str = specValueStr;
-    },
-
+        this.checkedGoods.spec_value_ids_arr = specValueArr;
+        this.checkedGoods.spec_value_str = specValueArr.join(", ");
+    
+        // 重新计算禁用项（如需要）
+        this.updateDisabledSpecs();
+      },
+    
+      // 计算禁用项（如果有相关需求）
+      updateDisabledSpecs() {
+        // 例如：禁用当前选择项不符合库存的其他规格
+        let disableList = [];
+        // 计算禁用项的逻辑
+        this.disable = disableList;
+      },
 	previewImage(url) {
-      uni.previewImage({
-        urls: [url],
-      });
-    },
+	  if (url) {
+	    uni.previewImage({
+	      urls: [url],
+	    });
+	  } else {
+	    console.log('没有可预览的图片');
+	  }
+	},
   },
 };
+
 </script>
 
 <style lang="scss" scoped>

@@ -154,7 +154,7 @@
 				<goods-list type="triple" :list="goodsList"></goods-list>
 			</view>
 			<!-- 每周活动 -->
-			<view class="special-area mt20" v-if="seckillGoods.length">
+			<view class="special-area mt20" v-if="goodsList.length">
 				<!-- 标题块 -->
 				<view class="title-container column-center">
 					<view class="title-text">每周活动</view>
@@ -389,6 +389,8 @@
 					<view class="desc-text">这是一个新青年社交旅行平台，做大学生最喜欢的旅行，在这里，你能结交来自天南海北志同道合的朋友，我们为你提供各种好玩有趣、深度体验、值得信赖的精品活动。</view>
 				</view>
 			</view>
+			<!-- <recommend /> -->
+			
             <!-- 好物优选 -->
 <!--            <view class="goods mt20" v-if="goodsList.length">
                 <view class="goods-title row-center">
@@ -467,7 +469,7 @@
 import { mapMutations, mapGetters, mapActions } from 'vuex'
 import { getHome, getMenu, getBestList } from '@/api/store'
 import { loadingType } from '@/utils/type'
-import { page, menuJump, arraySlice, setTabbar, getRect, trottle } from '@/utils/tools'
+import { pageLoad, menuJump, arraySlice, setTabbar, getRect, trottle } from '@/utils/tools'
 import { toLogin } from '@/utils/login'
 import Cache from '@/utils/cache'
 import { getConfig, userShare, getRegisterCoupon } from '@/api/app'
@@ -491,6 +493,7 @@ export default {
 	      default: () => ({ news: true })
 	    }
 	},
+	components: {},
     data() {
         return {
 			promoList: [
@@ -605,7 +608,7 @@ export default {
         setTabbar()
         this.navHeight = app.globalData.navHeight
         this.isDischarge = false
-        await this.getMenuFun()
+        // await this.getMenuFun()
         this.getBestListFun()
         console.log(this.appConfig)
         // #ifdef H5
@@ -615,20 +618,20 @@ export default {
         // #endif
     },
     async onShow() {
-        this.$nextTick(function () {
-            getRect('.index').then((res) => {
-                if (res.top == 0) {
-                    this.navBg = 0
-                }
-            })
-        })
+        // this.$nextTick(function () {
+        //     getRect('.index').then((res) => {
+        //         if (res.top == 0) {
+        //             this.navBg = 0
+        //         }
+        //     })
+        // })
 
         // #ifdef H5
         this.enable = true
         // #endif
         await this.getHomeFun()
-        this.getCartNum()
-        this.isLogin && this.getRegisterCouponFun()
+        //this.getCartNum()
+        //this.isLogin && this.getRegisterCouponFun()
 
         // #ifdef MP
         wx.getUpdateManager().onUpdateReady(function () {
@@ -655,7 +658,7 @@ export default {
     },
     onPullDownRefresh() {
         this.getHomeFun()
-        this.getMenuFun()
+        //this.getMenuFun()
     },
     onShareAppMessage() {
         console.log(this.inviteCode)
@@ -702,21 +705,32 @@ export default {
             }
         },
         async getHomeFun() {
-            const { code, data } = await getHome()
-            uni.stopPullDownRefresh()
-            if (code == 1) {
-                const { coupon, news, seckill, host_goods, shop_logo, new_goods, activity_area } =
-                    data
-                this.remainTime = Math.abs(seckill.end_time - Date.parse(new Date()) / 1000)
-                this.logo = shop_logo
-                this.news = news
-                this.seckillGoods = seckill.goods
-                this.seckill = seckill
-                this.hotGoods = host_goods
-                this.coupon = coupon
-                this.newGoods = new_goods
-                this.activityArea = activity_area
-            }
+			
+			// TEMP:目前只有清单数据。前面的newGoods现在都共用一个活动数组
+			console.log("test: getHomeFun");
+			this.getBestListFun();
+			// uni.stopPullDownRefresh();
+			this.newGoods = this.goodsList;
+			console.log("this.goodsList",this.goodsList);
+			
+			console.log("this.newGoods",this.newGoods);
+
+			// 原接口参考
+            // const { code, data } = await getHome()
+            // uni.stopPullDownRefresh()
+            // if (code == 1) {
+            //     const { coupon, news, seckill, host_goods, shop_logo, new_goods, activity_area } =
+            //         data
+            //     this.remainTime = Math.abs(seckill.end_time - Date.parse(new Date()) / 1000)
+            //     this.logo = shop_logo
+            //     this.news = news
+            //     this.seckillGoods = seckill.goods
+            //     this.seckill = seckill
+            //     this.hotGoods = host_goods
+            //     this.coupon = coupon
+            //     this.newGoods = new_goods
+            //     this.activityArea = activity_area
+            // }
         },
 
         async getMenuFun() {
@@ -735,12 +749,26 @@ export default {
             }
         },
         async getBestListFun() {
-            let { page, goodsList, status } = this
-            const data =  await pageLoad(getBestList, page, goodsList, status)
-            if (!data) return
-            this.page = data.page
-            this.goodsList = data.dataList
-            this.status = data.status
+			try {
+			const res = await getBestList({
+			    page: 1,
+			    pageSize: 6
+			  });
+							
+			  if (res.code === 0) {
+			    let { records } = res.data;  // 解构出records字段
+			    if (records && records.length > 0) {
+			      this.goodsList = records;  // 将 records 赋值给 goodsList
+			    } else {
+			      this.goodsList = [];  // 如果 records 为空，则确保 goodsList 为空数组
+			      console.error('没有获取到商品列表数据');
+			    }
+			  } else {
+			    console.error('获取商品列表失败，code:', code);
+			  }
+			} catch (error) {
+			  console.error('请求错误:', error);
+			}
         },
 		
 		// 轮换图，留接口

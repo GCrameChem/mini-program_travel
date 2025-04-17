@@ -222,8 +222,37 @@
 					<image class="icon-sm" src="/static/images/arrow_right.png"></image>
 				</view>
 			</navigator>
-
+			
+			
 			<view class="evaluation bg-white mt20" v-if="goodsDetail">
+			  <navigator hover-class="none" :url="'/pages/all_comments/all_comments?id=' + goodsDetail.activityId" class="title row-between">
+			    <view>
+			      <text class="black md mr10">用户评价</text>
+			      <text class="primary sm">好评率（开发中）{{ commentList.rating || '100%' }}</text>
+			    </view>
+			    <view class="row">
+			      <text class="lighter">查看全部</text>
+			      <image class="icon-sm" src="/static/images/arrow_right.png"></image>
+			    </view>
+			  </navigator>
+			  
+			  <view v-for="(comment, index) in commentList" :key="index" class="con">
+			    <view class="user-info row">
+			      <image class="avatar mr20" :src="comment.avatar"></image>
+			      <view class="user-name md mr10">{{ comment.nickname }}</view>
+				  <u-rate disabled size="26rpx" color="#FF2C3C" v-model="comment.rating"></u-rate>
+			    </view>
+			    <view class="muted xs mt10">
+			      <text class="mr20">{{ comment.createTime }}</text>
+			    </view>
+			    <view v-if="comment.commentContent" class="dec mt20">{{ comment.commentContent }}</view>
+			  </view>
+			  
+			  <view v-if="commentList.length === 0" class="con row-center muted">暂无评价</view>
+			</view>
+
+
+			<!-- <view class="evaluation bg-white mt20" v-if="goodsDetail">
 				<navigator hover-class="none" :url="'/pages/all_comments/all_comments?id=' + goodsDetail.activityId"
 					class="title row-between">
 					<view>
@@ -237,10 +266,8 @@
 				</navigator>
 				<view class="con" v-if="comment.rating">
 					<view class="user-info row">
-						<!-- 此处修改所有有关user-info需要通过用户id查询头;评论预览功能尚未加入 -->
 						<image class="avatar mr20" :src="comment.avatar"></image>
-						<!-- <view class="user-name md mr10">{{ comment.nickname }}</view> -->
-						<view class="user-name md mr10">{{ comment.activityId }}</view>
+						<view class="user-name md mr10">{{ comment.nickname }}</view>
 					</view>
 					<view class="muted xs mt10">
 						<text class="mr20">{{ comment.create_time }}</text>
@@ -248,7 +275,7 @@
 					<view v-if="comment.commentContent" class="dec mt20">{{ comment.commentContent }}</view>
 				</view>
 				<view class="con row-center muted" v-else>暂无评价</view>
-			</view>
+			</view> -->
 			
 			<!-- 有效URL -->
 			<view class="details mt20 bg-white" v-if="goodsDetail">
@@ -266,9 +293,10 @@
 			</view> -->
 			
 			<!--其他推荐-->
-			<view class="goods-like mt20 bg-white" v-if="goodsLike.length">
+			<recommend></recommend>
+			<!-- <view class="goods-like mt20 bg-white" v-if="goodsLike.length">
 				<goods-like :list="goodsLike"></goods-like>
-			</view>
+			</view> -->
 
 			<view class="footer row bg-white fixed" v-if="goodsDetail">
 				<navigator class="btn column-center" hover-class="none"
@@ -302,7 +330,6 @@
 				<image class="img-null" src="/static/images/goods_null.png"></image>
 				<view class="xs muted">该商品已下架或不存在，去逛逛别的吧~</view>
 			</view>
-			<recommend></recommend>
 		</view>
 		<spec-popup :show="showSpec" :goods="goodsDetail" :is-seckill="goodsType == 1" @close="showSpec = false"
 			:show-add="popupType == 1 || popupType == 0" :show-buy="popupType == 2 || popupType == 0"
@@ -360,7 +387,8 @@
 		getGoodsDetail,
 		addCart,
 		getPoster,
-		getCartNum
+		getCartNum,
+		getCommentList
 	} from '@/api/store';
 	import {
 		collectGoods
@@ -407,6 +435,7 @@
 				checkedGoods: {},
 				couponList: [],
 				imageList:[],
+				commentList:[],
 				comment: {},
 				countTime: 0,
 				tagStyle: {
@@ -419,6 +448,11 @@
 				showDownload: false,
 				distribution: {}
 			};
+		},
+		props: {
+		    type: {
+		        type: Number | String
+		    }
 		},
 		onLoad(options) {
 			this.onPageScroll = trottle(this.onPageScroll, 500, this)
@@ -442,14 +476,13 @@
 			} else {
 				this.id = options.id;
 			}
+			this.getExampleCommentListFun();
 			this.getGoodsCouponFun();
 			this.getCartNum();
 		},
 		async onShow() {
 			await this.getGoodsDetailFun(); // 等待异步完成
-			console.log('goodsDetail.activityId:', this.goodsDetail.activityId);
-
-			//console.log("页面展示时获取的商品详情：", this.goodsDetail);
+			//console.log('goodsDetail.activityId:', this.goodsDetail.activityId);
 		},
 		onPageScroll(e) {
 			const top = uni.upx2px(100)
@@ -467,6 +500,7 @@
 			        const { data: responseData, code } = await getGoodsDetail({ activityId: this.id });
 			        if (code === 0) {
 			            let {
+							activityId,
 			                activityName,
 			                currentPrice,
 			                originalPrice,
@@ -488,6 +522,7 @@
 						// 	team_found = arraySlice(team_found, [], 2);
 						// }
 			            // 更新页面数据
+						this.activityId = activityId;
 			            this.goodsDetail = responseData;  // 更新商品详情数据
 						this.content = activityDescription; // 商品详情内容
 			            this.goodsName = activityName;  // 商品名称
@@ -530,7 +565,33 @@
 			        this.isFirstLoading = false;
 			    }
 			},
-
+			
+			// async getExampleCommentListFun() {
+			// 	const { data, code } = await getCommentList({ activityId: this.id });
+			// 	// 过滤出rating >= 4.5的评论并赋值给comment
+			// 	const filteredComments = data.records.filter(comment => comment.rating >= 4.5);
+			// 	// 如果过滤后的评论数量大于或等于2，取前两个评论
+			// 	this.comment = filteredComments.slice(0, 2);
+			// 	console.log("comment", this.comment);
+			// },
+			async getExampleCommentListFun() {
+				console.log("1111");
+			    const { data, code } = await getCommentList({ activityId: this.id, page: 1, pageSize:5});
+				console.log("1111");
+			    if (code === 0) {
+			        // 过滤出rating >= 4.5的评论并赋值给comment
+			        const filteredComments = data.records.filter(comment => comment.rating >= 4.5);
+			
+			        // 如果过滤后的评论数量大于或等于2，取前两个评论
+			        this.commentList = filteredComments.slice(0, 2);
+			        
+			        console.log("commentList", this.commentList);  // 打印filtered comments
+			    } else {
+			        this.commentList = [];  // 如果没有数据或者请求失败，清空评论列表
+			        console.error("获取评论失败");
+			    }
+			},
+			
 			async getGoodsCouponFun() {
 				const {
 					data,
@@ -574,14 +635,14 @@
 				// this.showCoupon = true;
 			},
 			onChangeGoods(e) {
-				console.log(e);
+				// console.log("onChangeGoods", e);
 				this.checkedGoods = e.detail;
 			},
 			showSpecFun(type, id) {
 				// SKIP:跳过登录
 				// if (!this.isLogin) return toLogin();
-				console.log("Goods Type:", this.goodsType);
-				console.log("Type:", type);
+				//console.log("Goods Type:", this.goodsType);
+				//console.log("Type:", type);
 				if (this.goodsType == 2 && [2, 3].includes(type)) {
 					this.isGroup = 1;
 					this.foundId = id;
@@ -594,9 +655,9 @@
 			},
 			
 			onBuy(e) {
-				console.log("onBuy Test");
+				// 检查 e.detail 是否存在并包含 id 和 goodsNum
 				let {
-					id,
+					checkedGoods,
 					goodsNum // 目前仅1
 				} = e.detail;
 				const {
@@ -604,7 +665,7 @@
 					team
 				} = this;
 				let goods = [{
-					activityId: id,
+					checkedGoods: checkedGoods,
 					num: goodsNum
 				}];
 				const params = {
@@ -616,7 +677,6 @@
 				uni.navigateTo({
 					url: '/pages/confirm_order/confirm_order?data=' + encodeURIComponent((JSON.stringify(params)))
 				})
-				console.log(1111)
 			},
 			onConfirm(e) {
 				console.log("onConfirm Test");
@@ -637,14 +697,14 @@
 			
 			async onAddCart(e) {
 				let {
-					id,
+					checkedGoods,
 					goodsNum
 				} = e.detail;
 
 				if (this.goodsType == 2) {
 					// 拼团单独购买
 					let goods = [{
-						activityId: id,
+						checkedGoods: checkedGoods,
 						num: goodsNum
 					}];
 					uni.navigateTo({
@@ -659,7 +719,7 @@
 					data,
 					msg
 				} = await addCart({
-					activityId: id,
+					checkedGoods: checkedGoods,
 					goods_num: goodsNum
 				});
 				if (code == 0) {
@@ -738,6 +798,7 @@
 			}
 		}
 	};
+
 </script>
 
 <style lang="scss" scoped>

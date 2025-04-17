@@ -15,9 +15,9 @@ export function getMenu(data) {
 
 // ？？广告位
 export function getAdList(data) {
-	return request.get('ad_content/lists', {
-		params: data
-	});
+	// return request.get('ad_content/lists', {
+	// 	params: data
+	// });
 }
 
 // TODO购物车列表
@@ -33,9 +33,9 @@ export function getBestList(data) {
 	});
 }
 
-// ？商品分类
+// TODO 商品分类，目前用默认活动清单代替
 export function getCatrgory() {
-	return request.get('goods_category/lists');
+	return request.get('activity/list');
 }
 
 // 商品详情

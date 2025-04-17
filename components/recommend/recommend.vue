@@ -8,7 +8,7 @@
         <text class="line"></text>
         <view class="row">
             <image class="mr10" src="/static/images/icon_like.png"></image>
-            <text class="bold xxl">好物优选</text>
+            <text class="bold xxl">更多精选</text>
         </view>
         <text class="line"></text>
     </view>
@@ -60,6 +60,7 @@ export default {
         console.error('请求错误:', error);
       }
     }
+  
   }
 
 

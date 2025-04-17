@@ -249,48 +249,46 @@ export default {
     data() {
         return {
 			userInfo: this.userInfo,
-			//  
 			// IMPORTANT: 暂用测试数据
 			userId: 1,
-			
 			// 默认加入时待付款
 			orderStatus: 'pay',
 			
-            isFirstLoading: true, // 首次页面加载loading
-            showLoading: false, // Loading: 显示 | 隐藏
-            address: {}, // 收货地址信息
-            orderInfo: {}, // 订单信息
-            goodsLists: [], // 商品列表
-            addressId: '', // 收货地址ID
-            useIntegral: 0, // 使用积分
-            userRemark: '', // 用户留言
-            userConsignee: '', // 取货人
-            userMobile: '', // 联系电话
-            storeInfo: {}, // 门店信息
+			isFirstLoading: true,
+			showLoading: false,
+			address: {}, // 收货地址信息
+			orderInfo: {}, // 订单信息
+			goodsLists: [], // 商品列表
+			addressId: '', // 收货地址ID
+			useIntegral: 0, // 使用积分
+			userRemark: '', // 用户留言
+			userConsignee: '', // 取货人
+			userMobile: '', // 联系电话
+			storeInfo: {}, // 门店信息
 
-            couponId: '', // 优惠券ID
-            showCoupon: false, // 显示优惠券Popup
-            couponTabsIndex: 0, // 优惠券Tabs索引
-            usableCoupon: [], // 优惠券--可使用
-            unusableCoupon: [], // 优惠券--不可用
+			couponId: '', // 优惠券ID
+			showCoupon: false, // 显示优惠券Popup
+			couponTabsIndex: 0, // 优惠券Tabs索引
+			usableCoupon: [], // 优惠券--可使用
+			unusableCoupon: [], // 优惠券--不可用
 
-            bargainLaunchId: -1,
+			bargainLaunchId: -1,
 
-            addressTabsIndex: 0, // 地址Tabs索引
-            // 地址Tabs列表
-            addressTabsList: [
-                {
-                    id: 1,
-                    sign: 'express',
-                    name: '快递配送'
-                },
-                {
-                    id: 2,
-                    sign: 'store',
-                    name: '门店自提'
-                }
-            ]
-        }
+			addressTabsIndex: 0, // 地址Tabs索引
+			// 地址Tabs列表
+			addressTabsList: [
+				{
+					id: 1,
+					sign: 'express',
+					name: '快递配送'
+				},
+				{
+					id: 2,
+					sign: 'store',
+					name: '门店自提'
+				}
+			]
+		}
     },
 
     computed: {
@@ -337,30 +335,30 @@ export default {
             })
             // 监听全局事件
             .then(() => {
-                uni.$on('selectaddress', (params) => {
-                    this.addressId = params.id
-                    this.handleOrderMethods('info')
-                })
+                // uni.$on('selectaddress', (params) => {
+                //     this.addressId = params.id
+                //     this.handleOrderMethods('info')
+                // })
 
-                uni.$on('payment', (params) => {
-                    setTimeout(() => {
-                        uni.$off('payment')
+                // uni.$on('payment', (params) => {
+                //     setTimeout(() => {
+                //         uni.$off('payment')
 
-                        if (params.result) {
-                            uni.redirectTo({
-                                url: `/pages/pay_result/pay_result?id=${params.order_id}`
-                            })
-                        } else {
-                            uni.redirectTo({
-                                url: '/pages/user_order/user_order'
-                            })
-                        }
-                    }, 500)
-                })
+                //         if (params.result) {
+                //             uni.redirectTo({
+                //                 url: `/pages/pay_result/pay_result?id=${params.order_id}`
+                //             })
+                //         } else {
+                //             uni.redirectTo({
+                //                 url: '/pages/user_order/user_order'
+                //             })
+                //         }
+                //     }, 500)
+                // })
 
-                uni.$on('store', (params) => {
-                    this.storeInfo = params
-                })
+                // uni.$on('store', (params) => {
+                //     this.storeInfo = params
+                // })
             })
             .catch((err) => {
                 console.log(err)
@@ -369,134 +367,140 @@ export default {
 
     onUnload() {
         // 取消全局监听
-        uni.$off(['selectaddress', 'store'])
+        // uni.$off(['selectaddress', 'store'])
     },
 
     methods: {
         // 更改配送方式
         changeDelivery(index) {
-            this.addressTabsIndex = index
-            this.handleOrderMethods('info')
+            // this.addressTabsIndex = index
+            // this.handleOrderMethods('info')
         },
 
         // 点击选择收货地址
         onAddressExpress() {
-            uni.navigateTo({
-                url: `/pages/user_address/user_address?type=${1}`
-            })
+            // uni.navigateTo({
+            //     url: `/pages/user_address/user_address?type=${1}`
+            // })
         },
 
         // 点击门店自提
         onAddressStore() {
-            uni.navigateTo({
-                url: `/bundle/pages/store_list/store_list`
-            })
+            // uni.navigateTo({
+            //     url: `/bundle/pages/store_list/store_list`
+            // })
         },
 
         // 更改积分使用
         changeIntegral() {
-            const useIntegral = this.useIntegral
+            // const useIntegral = this.useIntegral
 
-            const orderInfo = this.orderInfo
-            const integral_limit = orderInfo.integral_limit
-            const user_integral = orderInfo.user_integral
+            // const orderInfo = this.orderInfo
+            // const integral_limit = orderInfo.integral_limit
+            // const user_integral = orderInfo.user_integral
 
-            if (integral_limit > user_integral) return this.$toast({ title: '未满足使用条件' })
+            // if (integral_limit > user_integral) return this.$toast({ title: '未满足使用条件' })
 
-            this.useIntegral = useIntegral ? 0 : 1
-            this.$nextTick(() => this.handleOrderMethods('info'))
+            // this.useIntegral = useIntegral ? 0 : 1
+            // this.$nextTick(() => this.handleOrderMethods('info'))
         },
 
         // 积分使用说明Dialog
         dialogIntegralDesc() {
-            const desc = this.orderInfo.integral_desc
+            // const desc = this.orderInfo.integral_desc
 
-            uni.showModal({
-                title: '积分使用说明',
-                content: desc,
-                confirmColor: '#FF2C3C',
-                showCancel: false
-            })
+            // uni.showModal({
+            //     title: '积分使用说明',
+            //     content: desc,
+            //     confirmColor: '#FF2C3C',
+            //     showCancel: false
+            // })
         },
 
         // 选择优惠券
         onSelectCoupon(value) {
-            this.couponId = value
-            this.showCoupon = false
-            this.handleOrderMethods('info')
+            // this.couponId = value
+            // this.showCoupon = false
+            // this.handleOrderMethods('info')
         },
 
         // 获取微信授权
         authWechatMessage() {
-            return new Promise((resolve, reject) => {
-                getMnpNotice({
-                    scene: 1
-                })
-                    .then(({ code, data, msg }) => {
-                        if (code != 1) throw new Error(msg)
-                        return data
-                    })
-                    .then((data) => {
-                        if (!data.length) return reject()
-                        uni.requestSubscribeMessage({
-                            tmplIds: data,
-                            success(res) {
-                                resolve(res)
-                            },
-                            fail(err) {
-                                reject(err)
-                            }
-                        })
-                    })
-                    .catch((err) => {
-                        reject(err)
-                    })
-            })
-        },
+        //     return new Promise((resolve, reject) => {
+        //         getMnpNotice({
+        //             scene: 1
+        //         })
+        //             .then(({ code, data, msg }) => {
+        //                 if (code != 1) throw new Error(msg)
+        //                 return data
+        //             })
+        //             .then((data) => {
+        //                 if (!data.length) return reject()
+        //                 uni.requestSubscribeMessage({
+        //                     tmplIds: data,
+        //                     success(res) {
+        //                         resolve(res)
+        //                     },
+        //                     fail(err) {
+        //                         reject(err)
+        //                     }
+        //                 })
+        //             })
+        //             .catch((err) => {
+        //                 reject(err)
+        //             })
+        //     })
+        
+		},
 
         // 点击订单提交
         onSubmitOrder() {
-            uni.showModal({
-                title: '温馨提示',
-                content: '是否确认下单?',
-                confirmColor: '#FF2C3C',
-                success: ({ confirm }) => {
-                    if (!confirm) return
+        //     uni.showModal({
+        //         title: '温馨提示',
+        //         content: '是否确认下单?',
+        //         confirmColor: '#FF2C3C',
+        //         success: ({ confirm }) => {
+        //             if (!confirm) return
 
-                    // #ifdef MP-WEIXIN
-                    this.authWechatMessage()
-                        .catch((err) => {
-                            console.log(err)
-                        })
-                        .finally(() => {
-                            this.handleOrderMethods('submit')
-                        })
-                    // #endif
+        //             // #ifdef MP-WEIXIN
+        //             this.authWechatMessage()
+        //                 .catch((err) => {
+        //                     console.log(err)
+        //                 })
+        //                 .finally(() => {
+        //                     this.handleOrderMethods('submit')
+        //                 })
+        //             // #endif
 
-                    // #ifndef MP-WEIXIN
-                    this.handleOrderMethods('submit')
-                    // #endif
-                }
-            })
-        },
+        //             // #ifndef MP-WEIXIN
+        //             this.handleOrderMethods('submit')
+        //             // #endif
+        //         }
+        //     })
+			// SKIP:自动提交 
+            this.handleOrderMethods('submit');
+        
+		},
 
         // 初始化优惠券数据
-        initCouponData() {
-            getOrderCoupon({
-                goods: this.goods
-            })
-                .then(({ code, data, msg }) => {
-                    if (code != 1) throw new Error(msg)
-                    return data
-                })
-                .then((data) => {
-                    this.usableCoupon = data.usable
-                    this.unusableCoupon = data.unusable
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        },
+        // initCouponData() {
+        //     getOrderCoupon({
+        //         goods: this.goods
+        //     })
+        //         .then(({ code, data, msg }) => {
+        //             if (code != 1) throw new Error(msg)
+        //             return data
+        //         })
+        //         .then((data) => {
+        //             this.usableCoupon = data.usable
+        //             this.unusableCoupon = data.unusable
+        //         })
+        //         .catch((err) => {
+        //             console.log(err)
+        //         })
+        // },
+
+
 
         // 初始化页面数据
         async initPageData(form) {
@@ -506,6 +510,7 @@ export default {
                 const { code, data, msg } = this.teamId ? await teamBuy(form) : await orderBuy(form)
 
                 if (code == 0) {
+					//TODO 需修改订单提交接口以返回相应数据
                     this.address = data.address
                     this.goodsLists = data.goods_lists
                     //TODO
@@ -545,9 +550,9 @@ export default {
 				
 				const { code, data, msg } = await orderBuy(form)
 				
-                if (code == 0) {
+                if (code === 0) {
 					this.$toast({ title: '订单创建成功' })
-					// IMPORTANT:接口无返回数据，尚未实现自动跳转
+					// SKIP:接口无返回数据，尚未实现自动跳转
                     // uni.redirectTo({
                     //     url: `/pages/payment/payment?form=${data.orderStatus}&order_id=${data.order_id}`
                     // })
@@ -565,8 +570,23 @@ export default {
         // 订单处理
         handleOrderMethods(action) {
             // 订单提交数据
-            const orderForm = {
-				// 原接口请求数据
+			
+			const orderForm = {
+				action,
+				userId: this.userId,
+				orderStatus: this.orderStatus,
+				orderInformation: this.userRemark,
+				shippingAddressDescription: this.address ? `${this.address.province} ${this.address.city} ${this.address.district} ${this.address.detailAddress}` : '',
+				orderAmount: this.goodsLists.reduce((total, item) => total + item.price * item.quantity, 0), // 总订单金额
+				orderActivityList: this.goodsLists.map(item => ({
+					activityId: item.activityId,  // 商品活动ID
+					currentPrice: item.price, // 商品价格
+					activityInfoList: item.activityInfoList || []  // 活动信息列表
+				}))
+			};
+			
+			//原接口请求数据
+    //         const orderForm = {
 				// action,
 				// goods: this.goods,
 				// delivery_type: this.delivery,
@@ -574,14 +594,7 @@ export default {
 				// address_id: this.addressId,
 				// coupon_id: this.couponId,
 				// bargain_launch_id: this.bargainLaunchId == -1 ? '' : this.bargainLaunchId
-                
-				action,
-                goods: this.goods,
-				userId: this.userId,
-				orderStatus: this.orderStatus,
-                // address_id: this.addressId,
-                //coupon_id: this.couponId,
-            }
+    //         }
 
             switch (action) {
                 case 'info':
@@ -595,6 +608,7 @@ export default {
     
 	}
 }
+
 </script>
 <style>
 .confirm-order .confirm-con {
