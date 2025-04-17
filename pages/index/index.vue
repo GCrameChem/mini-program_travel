@@ -519,7 +519,7 @@ export default {
 				  id: 1,
 				  title: "三日及以上",
 				  desc: "4-8人小团，随走随停",
-				  bgImage: "/static/images/card-bg/3day.png",
+				  bgImage: "http://118.24.44.124/pictures/card-bg/3day.png",
 				  expanded: false,
 				  details: {}
 				},
@@ -527,7 +527,7 @@ export default {
 				  id: 2,
 				  title: "两日游",
 				  desc: "发起活动，10人即可成行",
-				  bgImage: "/static/images/card-bg/2day.png",
+				  bgImage: "http://118.24.44.124/pictures/card-bg/2day.png",
 				  expanded: false,
 				  details: {}
 				},
@@ -535,7 +535,7 @@ export default {
 				  id: 3,
 				  title: "一日游",
 				  desc: "成都周边景区直通车",
-				  bgImage: "/static/images/card-bg/1day.png",
+				  bgImage: "http://118.24.44.124/pictures/card-bg/1day.png",
 				  expanded: false,
 				  details: {}
 				},

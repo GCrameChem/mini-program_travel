@@ -247,7 +247,7 @@ export default {
 		let data = {
 		    nickName: "用户_" + Math.random().toString(36).substr(2, 6), // 示例随机昵称
 		    password: password,
-		    avatarUrl: "https://default-avatar.png",
+		    avatarUrl: "http://118.24.44.124/pictures/default-avatar.png",
 		    points: 0,
 		    phoneNumber: mobile,
 		    gender: "unknown",

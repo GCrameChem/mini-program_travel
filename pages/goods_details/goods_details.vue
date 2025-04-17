@@ -228,7 +228,7 @@
 			  <navigator hover-class="none" :url="'/pages/all_comments/all_comments?id=' + goodsDetail.activityId" class="title row-between">
 			    <view>
 			      <text class="black md mr10">用户评价</text>
-			      <text class="primary sm">好评率（开发中）{{ commentList.rating || '100%' }}</text>
+			      <text class="primary sm">好评率{{ commentList.rating || '100%' }}</text>
 			    </view>
 			    <view class="row">
 			      <text class="lighter">查看全部</text>

@@ -15,10 +15,10 @@ const IS_H5 = false
 const baseURLMap = {
     // 开发环境
 	// 服务器
-	// development: 'http://118.24.44.124',
+	development: 'http://118.24.44.124',
 	
 	// 团队apifox接口环境
-    development: 'http://127.0.0.1:4523/m1/6057514-5747647-default',
+    //development: 'http://127.0.0.1:4523/m1/6057514-5747647-default',
 	
 	// 临时apifox测试环境1
 	//development: 'http://127.0.0.1:4523/m1/6191757-5884297-default',
@@ -57,7 +57,7 @@ wx.addInterceptor('request', {
 ///////////////////////////////////////
 
 module.exports = {
-    version: '3.0.3', // 版本号
+    version: '0.1.3', // 版本号
     baseURL, // API Base URL
     basePath: '/mobile'
 }

@@ -21,82 +21,46 @@
 						</view>
 					</block>
 				</view>
+				
+            
 			</view>
-			
             <view class="main bg-white">
                 <view class="evaluation-list">
                     <view v-for="(item, index) in commentList" :key="index" class="evaluation-item">
-                        <!-- 用户信息 -->
                         <view class="user-info row">
                             <image class="avatar mr20" :src="item.avatar"></image>
                             <view class="user-name md mr10">{{ item.nickname }}</view>
                             <u-rate disabled size="26rpx" color="#FF2C3C" v-model="item.rating"></u-rate>
                         </view>
-                        
-                        <!-- 评论时间 -->
                         <view class="muted xs mt10">
                             <text class="mr20">{{ item.createTime }}</text>
                         </view>
-                        
-                        <!-- 评论内容 -->
                         <view v-if="item.commentContent" class="dec mt20">{{ item.commentContent }}</view>
-                        
-                        <!-- 评论图片 -->
                         <view class="img mt20 row" style="flex-wrap: wrap" v-if="item.imageUrlList.length">
                             <view v-for="(imgitem, imgindex) in item.imageUrlList" :key="imgindex" class="img-item mr10 mb20" :data-current="imgitem" :data-uri="item.imageUrlList" @tap="previewImage">
                                 <custom-image width="160rpx" fit="cover" height="160rpx" radius="6rpx" lazy-load class="goods-img" :src="imgitem" />
                             </view>
                         </view>
-                        
-                        <!-- 点赞区域 -->
+                    
+                        <!-- 点赞情况 -->
                         <view class="like-area row mt10">
                             <view class="like-button row" :class="{ liked: item.isLike }" @tap="onLikeComment(item.reviewId, index)">
                                 <image class="like-icon" :src="item.isLike ? '/static/images/icons/full_like.png' : '/static/images/icons/empty_like.png'" />
                                 <text class="like-count ml10">{{ item.likesCount }}</text> <!-- 显示总点赞数 -->
                             </view>
                         </view>
-            
-                        <!-- 回复情况：显示二级评论 -->
-                        <view v-if="item.replies && item.replies.length" class="replies-container">
-                            <view v-for="(reply, replyIndex) in item.replies" :key="replyIndex" class="reply-item">
-                                <!-- 回复者的信息 -->
-                                <view class="user-info row">
-                                    <image class="avatar mr20" :src="reply.avatar"></image>
-                                    <view class="user-name md mr10">{{ reply.nickname }}</view>
-                                    <u-rate disabled size="20rpx" color="#FF2C3C" v-model="reply.rating"></u-rate>
-                                </view>
-								<view class="muted xs mt10">
-								    <text class="mr20">{{ reply.createTime }}</text>
-								</view>
-                                
-                                <!-- 回复内容 -->
-                                <view class="dec mt10">{{ reply.commentContent }}</view>
-                                
-                                <!-- 回复图片 -->
-                                <view class="img mt10 row" style="flex-wrap: wrap" v-if="reply.imageUrlList && reply.imageUrlList.length">
-                                    <view v-for="(imgitem, imgindex) in reply.imageUrlList" :key="imgindex" class="img-item mr10 mb20" :data-current="imgitem" :data-uri="reply.imageUrlList" @tap="previewImage">
-                                        <custom-image width="160rpx" fit="cover" height="160rpx" radius="6rpx" lazy-load class="goods-img" :src="imgitem" />
-                                    </view>
-                                </view>
-                                
-                                <!-- 回复的点赞情况 -->
-								<view class="like-area row mt10">
-								    <view class="like-button row" :class="{ liked: reply.isLike }" 
-								          @tap="onLikeComment(reply.reviewId, index, true, replyIndex)">
-								        <image class="like-icon" :src="reply.isLike ? '/static/images/icons/full_like.png' : '/static/images/icons/empty_like.png'" />
-								        <text class="like-count ml10">{{ reply.likesCount }}</text> <!-- 显示总点赞数 -->
-								    </view>
-								</view>
+                    
+                        <!-- 回复情况 -->
+                        <view class="seller-recall-container common-bg mt10" v-if="item.reply">
+                            <view class="lighter nr" style="word-wrap: break-word">
+                                回复：<span class="normal two-txt-cut">{{ item.reply }}</span>
                             </view>
                         </view>
-						
-						
                     </view>
-                </view>
-            </view>
 
-        
-		</view>
+				</view>
+            </view>
+        </view>
         <loading-footer :status="status" slotEmpty>
             <view slot="empty" class="column-center" style="padding-top: 200rpx">
                 <image class="img-null" src="/static/images/goods_null.png"></image>
@@ -225,7 +189,6 @@ export default {
 	   
 	               // 将一级评论赋值给 commentList
 	               commentList.push(...primaryComments);
-				   console.log("commentList", commentList);
 	   
 	               // 为每个一级评论查找并关联相应的二级评论
 	               primaryComments.forEach((primary) => {
@@ -236,7 +199,6 @@ export default {
 	               });
 	   
 	               this.commentList = commentList;
-				   console.log("commentList", commentList);
 	               this.page++;
 	   
 	               // 查询每个评论的点赞状态
@@ -259,6 +221,45 @@ export default {
 	           }
 	       });
 	   },
+
+
+    //     getCommentListFun() {
+    //         let { page, status, commentList, type } = this
+    //         if (status == loadingType.FINISHED) return
+    //         getCommentList({
+				// page: page,
+				// pageSize: this.pageSize,
+    //             activityId: this.id,
+				// reviewAttributes: this.type,
+				// //userId:,
+				// //reviewID:,
+    //         }).then((res) => {
+    //             if (res.code == 0) {
+    //                 let { records, total } = res.data;
+    //                 commentList.push(...records);
+    //                 this.commentList = commentList;
+    //                 this.page++;
+					
+				// 	// 查询每个评论的点赞状态
+				// 	this.commentList.forEach((item, index) => {
+				// 		this.checkIfLiked(item.reviewId, index);  // 查询每条评论是否已点赞
+				// 	});
+					
+    //                 this.$nextTick(() => {
+    //                     if (total--) {
+    //                         this.status = loadingType.FINISHED
+    //                     }
+
+    //                     if (total == 0) {
+    //                         this.status = loadingType.EMPTY
+    //                     } else {
+    //                         console.log('commentList false')
+    //                         this.isEmpty = false
+    //                     }
+    //                 })
+    //             }
+    //         })
+    //     },
 		
 		checkIfLiked(reviewId, index) {
 			// 正式登录后使用
@@ -272,48 +273,36 @@ export default {
 		    });
 		},
 		// 点赞情况
-		onLikeComment(reviewId, index, isReply = false, replyIndex = null) {
-		    // 正式登录后使用
+		
+		onLikeComment(reviewId, index) {
+			// 正式登录后使用
 		    const userId = this.userId;
 		
 		    // 查询用户是否已经点赞
 		    getCommentLike({ reviewId, userId }).then((res) => {
 		        if (res.code === 0) {
 		            const hasLiked = res.data.isLike;
-		            console.log("查询点赞中");
-		
+					console.log("查询点赞中");
 		            if (hasLiked) {
-		                console.log("取消点赞！", reviewId);
+						console.log("取消点赞！",reviewId);
 		                // 取消点赞操作
 		                addCommentLike({ reviewId, userId, likeAction: 'remove' }).then((likeRes) => {
 		                    if (likeRes.code === 0) {
-		                        if (isReply) {
-		                            // 取消点赞二级评论
-		                            this.commentList[index].replies[replyIndex].likesCount -= 1;
-		                            this.commentList[index].replies[replyIndex].isLike = false;
-		                        } else {
-		                            // 取消点赞一级评论
-		                            this.commentList[index].likesCount -= 1;
-		                            this.commentList[index].isLike = false;
-		                        }
+		                        // 取消点赞成功
+		                        this.commentList[index].likesCount -= 1;  // 点赞数减1
+		                        this.commentList[index].isLike = false;  // 更新点赞状态
 		                    } else {
 		                        uni.showToast({ title: '取消点赞失败，请稍后再试', icon: 'none' });
 		                    }
 		                });
 		            } else {
-		                console.log("点赞！", reviewId);
 		                // 点赞操作
+						console.log("点赞！",reviewId);
 		                addCommentLike({ reviewId, userId, likeAction: 'add' }).then((likeRes) => {
 		                    if (likeRes.code === 0) {
-		                        if (isReply) {
-		                            // 点赞二级评论
-		                            this.commentList[index].replies[replyIndex].likesCount += 1;
-		                            this.commentList[index].replies[replyIndex].isLike = true;
-		                        } else {
-		                            // 点赞一级评论
-		                            this.commentList[index].likesCount += 1;
-		                            this.commentList[index].isLike = true;
-		                        }
+		                        // 点赞成功
+		                        this.commentList[index].likesCount += 1;  // 点赞数加1
+		                        this.commentList[index].isLike = true;  // 更新点赞状态
 		                    } else {
 		                        uni.showToast({ title: '点赞失败，请稍后再试', icon: 'none' });
 		                    }
@@ -324,7 +313,6 @@ export default {
 		        }
 		    });
 		},
-
 		
 		previewImage(e) {
 		    const { current, uri } = e.currentTarget.dataset
@@ -362,94 +350,64 @@ export default {
     .common-bg {
         background-color: #f5f5f5;
     }
-	.main {
-	    .evaluation-list {
-	        .evaluation-item {
-	            padding: 10rpx;
-	            &:not(:last-of-type) {
-	                border-bottom: $-solid-border;
-	            }
-	            .avatar {
-	                width: 60rpx;
-	                height: 60rpx;
-	                border-radius: 50%;
-	            }
-	            .like-area {
-	                display: flex;
-	                justify-content: flex-end;
-	                padding-right: 15rpx;
-	            }
-	            
-	            .like-button {
-	                display: flex;
-	                align-items: center;
-	                justify-content: flex-start;
-	            }
-	            
-	            .like-icon {
-	                width: 24rpx;
-	                height: 24rpx;
-	            }
-	            
-	            .like-count {
-	                font-size: 14rpx;
-	                margin-left: 10rpx;
-	            }
-	
-	            .seller-recall-container {
-	                padding: 24rpx 20rpx;
-	                border-radius: 12rpx;
-	            }
-	            .like-button.liked .like-count {
-	                color: #FF2C3C;
-	            }
-	        }
-	        
-	        /* 一级评论图片 */
-	        .evaluation-item .img {
-	            display: flex;
-	            flex-wrap: wrap;
-	            justify-content: flex-start;  // 左对齐，避免中间空隙过大
-	            gap: 10rpx;  // 设置图片之间的间隔
-	            padding-left: 20rpx;  // 增加左边的间距，确保图片离左边更远
-	        }
-	
-	        /* 回复区域的样式 */
-	        .replies-container {
-	            margin-left: 15rpx; /* 为二级评论设置缩进 */
-	            padding-left: 5rpx;
-	            margin-top: 15rpx;
-	            border-left: 2rpx solid #ddd; /* 增加左边的边框来表示层级 */
-	            background-color: #f9f9f9;
-	        }
-	
-	        .reply-item {
-	            padding: 15rpx;
-	            background-color: #fff;
-	            border-radius: 10rpx;
-	            margin-bottom: 15rpx;
-	        }
-	
-	        .dec {
-	            font-size: 14rpx;
-	            color: #333;
-	            margin-top: 10rpx;
-	        }
-	
-	        .img {
-	            display: flex;
-	            flex-wrap: wrap;
-	            justify-content: flex-start;  // 左对齐，避免中间空隙过大
-	            gap: 10rpx;  // 设置图片之间的间隔
-	        }
-	        
-	        .img-item {
-	            margin-bottom: 20rpx;  // 图片下方的间隙
-	        }
-	    }
-	}
 
+    .main {
+        .evaluation-list {
+            .evaluation-item {
+                padding: 20rpx;
+                &:not(:last-of-type) {
+                    border-bottom: $-solid-border;
+                }
+                .avatar {
+                    width: 60rpx;
+                    height: 60rpx;
+                    border-radius: 50%;
+                }
+				.like-area {
+				    display: flex;
+				    justify-content: flex-end;
+				    padding-right: 15rpx;
+				}
+				
+				.like-button {
+				    display: flex;
+				    align-items: center;
+				    justify-content: flex-start;
+				}
+				
+				.like-icon {
+				    width: 24rpx;
+				    height: 24rpx;
+				}
+				
+				.like-count {
+				    font-size: 14rpx;
+				    margin-left: 10rpx;
+				}
 
-    
+                .seller-recall-container {
+                    padding: 24rpx 20rpx;
+                    border-radius: 12rpx;
+                }
+				.like-button {
+				    align-items: center;
+				}
+				.like-button.liked image {
+				    filter: brightness(1.2);
+				}
+				.like-icon {
+				    width: 24rpx;
+				    height: 24rpx;
+				}
+				.like-count {
+				    font-size: 24rpx;
+				    color: #666;
+				}
+				.like-button.liked .like-count {
+				    color: #FF2C3C;
+				}
+            }
+        }
+    }
 }
 </style>

@@ -381,7 +381,6 @@ export default {
                 })
             }
         },
-		///////////////////////
 		// 模拟登录
 		async mockLogin(queryParams) {
 			try {

@@ -32,9 +32,12 @@ export function getMnpNotice(data) {
   });
 }
 
-//TOCO账号登录
+// 账号(手机和密码)登录
+// export function accountLogin(data) {
+//   return request.post("user/api/auth/login", { ...data, client });
+// }
 export function accountLogin(data) {
-  return request.post("account/login", { ...data, client });
+  return request.post("user/api/auth/login", { ...data});
 }
 
 //TODO微信配置

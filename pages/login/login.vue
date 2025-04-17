@@ -379,9 +379,9 @@ export default {
             }
             if (this.loginType == 0) {
                 const { code, data } = await accountLogin({
-                    account,
+					phoneNumber: account,
                     password,
-                    client: client
+                    //client: client
                 })
                 if (code == 0) {
                     this.loginHandle(data)
